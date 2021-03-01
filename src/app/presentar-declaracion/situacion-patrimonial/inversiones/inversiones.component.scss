@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  flex: 1;
+  background-color: #ffffff;
+}
+
+button {
+  text-transform: uppercase;
+}
+h2,
+h3 {
+  font-weight: 400;
+}
+mat-card-content > div {
+  padding: 10px 0 25px 0;
+}
+.background-white {
+  height: 120px;
+}
+.card-padding {
+  padding-bottom: 40px;
+}
+.grid-4-col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 25px;
+  grid-row-gap: 25px;
+}

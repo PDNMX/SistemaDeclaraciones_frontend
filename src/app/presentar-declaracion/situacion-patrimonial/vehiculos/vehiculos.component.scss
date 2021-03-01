@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex: 1;
+  background-color: #ffffff;
+}
+
+button {
+  text-transform: uppercase;
+}
+h2,
+h3 {
+  font-weight: 400;
+}
+.bg-no-public {
+  background-color: var(--no-public-color);
+  display: inline-block;
+  padding: 3px 10px;
+}

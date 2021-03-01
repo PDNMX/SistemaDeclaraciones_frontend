@@ -1,0 +1,212 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header
+      section="I. Declaración de situación patrimonial"
+      [simplificada]="declaracionSimplificada"
+      progress="13.5"
+      type="{{ tipoDeclaracion }}"
+    ></section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 3. Datos curriculares del declarante</label>
+    </mat-toolbar>
+
+    <mat-divider></mat-divider>
+
+    <p>
+      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      resaltados <span class="no-public-inline"></span> no serán públicos.<br />
+      Información relativa a las instituciones educativas hasta los
+      <span class="negritas">cinco últimos grados de escolaridad</span>, iniciando con la más reciente
+    </p>
+
+    <mat-card class="info" *ngFor="let e of escolaridad; let i = index">
+      <mat-card-content>
+        <div class="flex">
+          <div class="left paragraph-flex">
+            <mat-icon matPrefix class="icon">star</mat-icon>
+            <p>
+              {{ e?.nivel.valor }}
+            </p>
+          </div>
+          <div class="right paragraph-flex">
+            <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
+            <p>
+              {{ e.documentoObtenido }}
+            </p>
+          </div>
+          <div class="left resaltar paragraph-flex">
+            <mat-icon matPrefix class="icon">wb_iridescent</mat-icon>
+            <p>
+              <span class="negritas">{{ e.carreraAreaConocimiento }}</span>
+            </p>
+          </div>
+          <div class="right paragraph-flex">
+            <mat-icon matPrefix class="icon">date_range</mat-icon>
+            <p>
+              {{ e.fechaObtencion | date: 'dd/MM/yyyy' }}
+            </p>
+          </div>
+          <div class="left paragraph-flex">
+            <mat-icon matPrefix class="icon">school</mat-icon>
+            <p>
+              {{ e.institucionEducativa.nombre }}
+            </p>
+          </div>
+          <div class="right paragraph-flex">
+            <mat-icon matPrefix class="icon">public</mat-icon>
+            <p>
+              {{ e.institucionEducativa.ubicacion === 'MX' ? 'En México' : 'En el extranjero' }}
+            </p>
+          </div>
+          <div class="left paragraph-flex">
+            <mat-icon matPrefix class="icon">timelapse</mat-icon>
+            <p>
+              {{ e.estatus }}
+            </p>
+          </div>
+        </div>
+
+        <!--<mat-divider></mat-divider>
+        <div class="paragraph-flex">
+          <span class="no-public-inline"></span>
+          <mat-icon matPrefix class="icon">insert_comment</mat-icon>
+          <p class="aclaraciones">Aclaraciones/Observaciones</p>
+        </div>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum optio illo inventore vitae incidunt amet,
+          magnam enim consequuntur totam nam ducimus error facilis expedita quibusdam iusto aliquam doloremque in!
+          Error?
+        </p>-->
+
+        <mat-divider></mat-divider>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
+        <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <div class="boton-agregar" *ngIf="escolaridad.length && !editMode">
+      <button mat-raised-button color="primary" (click)="addItem()">AGREGAR ESCOLARIDAD</button>
+    </div>
+
+    <form (ngSubmit)="saveItem()" [formGroup]="datosCurricularesDeclaranteForm" *ngIf="editMode">
+      <div class="padding-agregar" formGroupName="escolaridad">
+        <mat-divider></mat-divider>
+        <p>Agregar escolaridad</p>
+        <div class="grid-2-col">
+          <mat-form-field appearance="fill">
+            <mat-label>Nivel</mat-label>
+            <mat-icon matPrefix>star</mat-icon>
+            <mat-select formControlName="nivel">
+              <mat-option *ngFor="let opt of nivelCatalogo" [value]="opt">
+                {{ opt.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" formGroupName="institucionEducativa">
+            <mat-label>Institución Educativa</mat-label>
+            <mat-icon matPrefix>school</mat-icon>
+            <input matInput type="text" formControlName="nombre" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Estatus</mat-label>
+            <mat-icon matPrefix>timelapse</mat-icon>
+            <mat-select formControlName="estatus">
+              <mat-option *ngFor="let opt of estatusCatalogo" value="{{ opt }}">
+                {{ opt }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Carrera o Área de conocimiento</mat-label>
+            <mat-icon matPrefix>wb_iridescent</mat-icon>
+            <input matInput type="text" formControlName="carreraAreaConocimiento" />
+          </mat-form-field>
+        </div>
+        <div class="grid-3-col grid-margin">
+          <mat-form-field appearance="fill">
+            <mat-label>Documento Obtenido</mat-label>
+            <mat-icon matPrefix>insert_drive_file</mat-icon>
+            <mat-select formControlName="documentoObtenido">
+              <mat-option *ngFor="let opt of documentoObtenidoCatalogo" [value]="opt">
+                {{ opt }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Fecha de obtención de documento</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fechaObtencion" />
+            <mat-hint>dd/mm/yyyy</mat-hint>
+            <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="fill" formGroupName="institucionEducativa">
+            <mat-label>Lugar dónde se ubica la Institución Educativa</mat-label>
+            <mat-icon matPrefix>public</mat-icon>
+            <mat-select formControlName="ubicacion">
+              <mat-option value="MX"> MÉXICO </mat-option>
+              <mat-option value="EX"> EN EL EXTRANJERO </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="boton" *ngIf="!aclaraciones">
+        <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div *ngIf="aclaraciones">
+        <div class="flex">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          *ngIf="escolaridad.length && editMode"
+          (click)="cancelEditMode()"
+        >
+          CANCELAR
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="datosCurricularesDeclaranteForm.reset()">
+          LIMPIAR FORMULARIO
+        </button>
+        <button mat-raised-button color="primary" [disabled]="datosCurricularesDeclaranteForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+    <mat-divider></mat-divider>
+
+    <div class="boton center">
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/datos-empleo'"
+      >
+        CONTINUAR 4 DE 15
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

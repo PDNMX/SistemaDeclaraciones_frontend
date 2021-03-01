@@ -1,0 +1,116 @@
+<div fxFill fxLayout="column">
+  <app-header></app-header>
+  <mat-toolbar class="background-white title-toolbar">
+    <label class="step-title">Comienza tu declaración</label>
+  </mat-toolbar>
+  <div class="contenedor">
+    <p>
+      Para agilizar el llenado de la declaración es conveniente que se disponga de la siguiente documentación, entre
+      otra, sin que sea necesaria su entrega.
+    </p>
+    <ul class="mb">
+      <li>a) Clave Única de Registro de Población (CURP) emitida por la Secretaría de Gobernación.</li>
+      <li>b) Registro Federal de Contribuyentes (RFC) emitido por el Servicio de Administración Tributaria (SAT).</li>
+      <li>c) Acta de matrimonio.</li>
+      <li>d) Comprobante de domicilio.</li>
+      <li>e) Currículum vitae</li>
+      <li>f) Recibo de nómina y/o declaración fiscal.</li>
+      <li>g) Escrituras públicas y/o contratos de bienes inmuebles.</li>
+      <li>h) Factura de vehículos y bienes muebles.</li>
+      <li>i) Contratos y estados de cuanta bancarios.</li>
+      <li>k) Contratos y estados de cuenta de gravámenes y adeudos.</li>
+      <li>j) Comprobantes de percepción de sueldo o de otro tipo de ingreso.</li>
+      <li>l) Actas cosntitutivas de sociedades y asociaciones.</li>
+      <li>m) Cualquier otro documento necesario para las Declaraciones.</li>
+    </ul>
+    <mat-divider></mat-divider>
+    <div class="grid-margin" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="35px">
+      <mat-card class="info" fxFlex="30" fxLayout="column">
+        <mat-card-content fxFlex="grow">
+          <p class="title">Declaración inicial</p>
+          <p>
+            <span class="resaltar">Plazo: </span>Dentro de los sesenta días naturales siguientes a la toma de posesión
+            con motivo del Ingreso al servicio público por primera vez o reingreso al servicio público después de
+            sesenta días naturales de la conclusión de su último encargo.
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <mat-checkbox color="primary" #inicialSimplificada>Declaración simplificada</mat-checkbox>
+          <button
+            *ngIf="inicialSimplificada.checked"
+            mat-raised-button
+            color="primary"
+            [routerLink]="['/inicial/simplificada/situacion-patrimonial']"
+          >
+            <small>Comenzar declaración simplificada</small>
+          </button>
+          <button
+            *ngIf="!inicialSimplificada.checked"
+            mat-raised-button
+            color="primary"
+            [routerLink]="['/inicial/situacion-patrimonial']"
+          >
+            Comenzar declaración
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-card class="info" fxFlex="30" fxLayout="column">
+        <mat-card-content fxFlex="grow">
+          <p class="title">Declaración de Modificación</p>
+          <p>
+            <span class="resaltar">Plazo: </span>Durante el mes de mayo de cada año, siempre y cuando haya laborado al
+            menos un día del año inmediato anterior.
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <mat-checkbox color="primary" #modificacionSimplificada>Declaración simplificada</mat-checkbox>
+          <button
+            *ngIf="modificacionSimplificada.checked"
+            mat-raised-button
+            color="primary"
+            [routerLink]="['/modificacion/simplificada/situacion-patrimonial']"
+          >
+            <small>Comenzar declaración simplificada</small>
+          </button>
+          <button
+            *ngIf="!modificacionSimplificada.checked"
+            mat-raised-button
+            color="primary"
+            [routerLink]="['/modificacion/situacion-patrimonial']"
+          >
+            Comenzar declaración
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-card class="info" fxFlex="30" fxLayout="column">
+        <mat-card-content fxFlex="grow">
+          <p class="title">Declaración de Conclusión</p>
+          <p>
+            <span class="resaltar">Plazo: </span>Dentro de los sesenta días naturales siguientes a la conclusión del
+            encargo.
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <mat-checkbox color="primary" #conclusionSimplificada>Declaración simplificada</mat-checkbox>
+          <button
+            *ngIf="conclusionSimplificada.checked"
+            mat-raised-button
+            color="primary"
+            [routerLink]="['/conclusion/simplificada/situacion-patrimonial']"
+          >
+            <small>Comenzar declaración simplificada</small>
+          </button>
+          <button
+            *ngIf="!conclusionSimplificada.checked"
+            mat-raised-button
+            color="primary"
+            [routerLink]="['/conclusion/situacion-patrimonial']"
+          >
+            Comenzar declaración
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

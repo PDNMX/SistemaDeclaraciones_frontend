@@ -1,0 +1,21 @@
+<div fxFill fxLayout="column" fxLayoutAlign="center">
+  <app-header></app-header>
+  <mat-toolbar class="background-white title-toolbar">
+    <label class="step-title">Bienvenido {{ username }}</label>
+  </mat-toolbar>
+  <mat-divider></mat-divider>
+  <div class="home-container" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex="70%" class="home-box">
+      <iframe
+        width="100%"
+        height="400"
+        src="https://www.youtube.com/embed/JQNPwOOG4yw"
+        frameborder="0"
+        title="Video"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen=""
+      ></iframe>
+    </mat-card>
+  </div>
+  <app-footer></app-footer>
+</div>

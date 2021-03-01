@@ -1,0 +1,278 @@
+/*
+ * Global application theme.
+ * Framework overrides and customization goes here.
+ */
+
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans:400,700");
+
+// stylelint-disable-next-line selector-max-universal
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  height: 100%;
+  font-family: "Noto Sans";
+  font-size: 14px;
+  --primary-color: #34b3eb;
+  --no-public-color: #c9ee2e;
+  --step-completed-color: #4dc31b;
+  --progress-bar-color: #c049fe;
+  --app-max-width: 1280px;
+  --stepper-width: 290px;
+}
+
+/*---------- TEXT ---------*/
+.text-primary {
+  color: var(--primary-color);
+}
+
+.section-main-container {
+  max-width: calc(var(--app-max-width) - var(--stepper-width));
+  display: block;
+  position: relative;
+  margin: auto;
+}
+
+.step-title {
+  font-size: 36px;
+  white-space: normal;
+}
+
+.background-white {
+  background-color: #ffffff;
+}
+
+.title-toolbar {
+  height: 145px;
+  padding: 0 min(20%, 180px);
+}
+
+.form-card {
+  padding: 0 25px 25px 25px !important;
+  box-shadow: none !important;
+
+  &.mat-card .mat-divider-horizontal {
+    left: auto;
+    width: calc(100% - 70px);
+  }
+}
+
+.no-public-inline {
+  border: solid var(--no-public-color) 6px;
+  height: 100%;
+  display: inline-block;
+  margin: 0 2.5px;
+  height: 20px;
+}
+.no-public-inline-margin {
+  margin-top: 5px;
+}
+.no-public::before {
+  content: " ";
+  border: solid var(--no-public-color) 4px;
+  margin-left: -8px;
+  margin-left: -10px;
+  height: 40px;
+  z-index: 1;
+  position: absolute;
+  margin-top: -16px;
+}
+.card-no-public::before {
+  content: " ";
+  border: solid var(--no-public-color) 4px;
+  margin-left: -8px;
+  margin-left: -10px;
+  height: 20px;
+  z-index: 1;
+  position: absolute;
+  margin-top: 0;
+}
+.no-public-picker::before {
+  content: " ";
+  border: solid var(--no-public-color) 4.2px;
+  margin-left: -10px;
+  height: 40px;
+  z-index: 1;
+  position: absolute;
+  margin-top: -10px;
+}
+.aclaraciones-no-public::before {
+  content: " ";
+  border: solid var(--no-public-color) 4px;
+  margin-left: -10px;
+  height: 176px;
+  z-index: 1;
+  position: absolute;
+  margin-top: -152px;
+}
+
+mat-form-field {
+  width: calc(100% - 10px);
+}
+
+// Bloque de infotmacion
+mat-card.info {
+  margin-bottom: 40px;
+  padding: 20px 50px;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.left {
+  flex: 0 0 80%;
+}
+.resaltar {
+  font-size: 17px;
+  font-weight: 700;
+}
+.negritas {
+  color: black;
+}
+.right {
+  flex: 0 0 20%;
+}
+.paragraph-flex {
+  display: flex;
+}
+.paragraph-flex .icon {
+  margin-top: 12px;
+  margin-right: 10px;
+}
+.shadow {
+  box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.15);
+}
+/* Prueba */
+
+.padding-card-section {
+  padding: 20px 0 25px 0;
+}
+.padding-card-section p {
+  margin: 0 0 15px 0;
+}
+.padding-card-section .paragraph-flex .icon {
+  margin-top: 0px;
+  margin-right: 10px;
+}
+.size-20 {
+  font-size: 20px;
+}
+.size-20 .icon {
+  margin-top: 20px;
+}
+.padding-card-section .aclaraciones .icon {
+  margin-top: 3px;
+}
+/* Fin prueba */
+.aclaraciones {
+  font-size: 20px;
+}
+.text-uppercase,
+.info button {
+  text-transform: uppercase;
+}
+
+.grid-2-col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 25px;
+  grid-row-gap: 25px;
+}
+.grid-3fr-1fr {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  padding: 10px 0 25px 0;
+}
+.grid-3-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 25px;
+  grid-row-gap: 25px;
+}
+.card-grid-3-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 15px;
+  padding-top: 20px;
+  padding-bottom: 50px;
+}
+.card-grid-2-col {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  grid-column-gap: 15px;
+}
+.grid-margin {
+  margin-top: 25px;
+}
+.row-2 {
+  grid-row-start: 2;
+}
+.boton {
+  display: block;
+  padding: 50px 0;
+}
+.boton-agregar {
+  text-align: right;
+  padding-bottom: 50px;
+}
+
+.btn-finalizar {
+  background-color: #4cc41a;
+  color: white;
+  font-weight: 700;
+}
+.center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.bloque {
+  padding: 50px 0;
+}
+.hidden {
+  display: none !important;
+}
+.checkbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.checkbox .mat-radio-label-content {
+  padding-left: 3px;
+}
+.question {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  margin: 0;
+}
+.double-row {
+  grid-row: span 2;
+}
+.double-col {
+  grid-column: span 2;
+}
+.quadruple-col {
+  grid-column: span 4;
+}
+.padding-agregar {
+  padding: 50px 0;
+}
+
+.inline-loader {
+  display: inline-block;
+}

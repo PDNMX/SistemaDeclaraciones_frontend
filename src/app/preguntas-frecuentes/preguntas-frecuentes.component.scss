@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex: 1;
+  background-color: #ffffff;
+}
+button {
+  width: 30%;
+  max-width: 300px;
+}
+.contenedor {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}

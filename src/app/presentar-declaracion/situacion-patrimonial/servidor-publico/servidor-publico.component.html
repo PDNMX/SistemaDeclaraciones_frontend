@@ -1,0 +1,345 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header
+      section="I. Declaración de situación patrimonial"
+      [simplificada]="declaracionSimplificada"
+      progress="40.5"
+      type="{{ tipoDeclaracion }}"
+    ></section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 9. ¿Te desempeñaste como servidor público en el año inmediato anterior?</label>
+    </mat-toolbar>
+
+    <mat-divider></mat-divider>
+
+    <p>
+      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      resaltados <span class="no-public-inline"></span> no serán públicos.
+    </p>
+
+    <form (ngSubmit)="confirmSaveInfo()" [formGroup]="actividadAnualAnteriorForm">
+      <div class="bloque">
+        <h3>¿Te desempeñaste como servidor público en el año inmediato anterior?</h3>
+        <mat-radio-group class="grid-2-col" formControlName="servidorPublicoAnioAnterior">
+          <mat-radio-button [value]="true">Si</mat-radio-button>
+          <mat-radio-button class="example-radio-button" [value]="false">No</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div *ngIf="actividadAnualAnteriorForm.value.servidorPublicoAnioAnterior">
+        <div>
+          <div class="grid-2-col fecha-publico">
+            <mat-form-field appearance="fill">
+              <mat-label>Fecha de inicio</mat-label>
+              <input matInput [matDatepicker]="pickerInicio" formControlName="fechaIngreso" />
+              <mat-hint>dd/mm/yyyy</mat-hint>
+              <mat-datepicker-toggle matPrefix [for]="pickerInicio"></mat-datepicker-toggle>
+              <mat-datepicker #pickerInicio></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Fecha de fin</mat-label>
+              <input matInput [matDatepicker]="pickerFin" formControlName="fechaConclusion" />
+              <mat-hint>dd/mm/yyyy</mat-hint>
+              <mat-datepicker-toggle matPrefix [for]="pickerFin"></mat-datepicker-toggle>
+              <mat-datepicker #pickerFin></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="bloque" formGroupName="remuneracionNetaCargoPublico">
+          <h3>
+            I. Remuneración neta del declarante, recibida durante el tiempo en el que se desempeñó como servidor público
+            en el año inmediato anterior (por concepto de sueldos, honorarios, compensaciones, bonos, aguinaldos y otras
+            prestaciones)(cantidades netas después de impuestos)
+          </h3>
+          <div class="grid-2-col">
+            <mat-form-field appearance="fill">
+              <mat-label>Monto</mat-label>
+              <input matInput type="number" formControlName="valor" min="0" />
+              <mat-icon matPrefix>attach_money</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="bloque">
+          <h3>
+            II. Otros ingresos del declarante, recibidos durante el tiempo en el que se desempeñó como servidor público
+            en el año inmediato anterior (suma del II.1 al II.5)
+          </h3>
+          <p class="total">{{ otrosIngresosDeclarante | currency }}</p>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="bloque text-right" formGroupName="actividadIndustrialComercialEmpresarial">
+          <h3 class="text-left">II.1. Por actividad industrial, comercial y/o empresarial (después de impuestos)</h3>
+          <div formArrayName="actividades">
+            <div *ngFor="let actividad of actividadIndustrialComercialEmpresarial.controls; let i = index">
+              <div class="grid-3-col" [formGroupName]="i">
+                <mat-form-field appearance="fill" formGroupName="remuneracion">
+                  <mat-label>Monto</mat-label>
+                  <input matInput type="number" formControlName="valor" min="0" />
+                  <mat-icon matPrefix>attach_money</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>Nombre o razón social</mat-label>
+                  <input matInput type="text" formControlName="nombreRazonSocial" />
+                  <mat-icon matPrefix>dns</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>Tipo de Negocio</mat-label>
+                  <input matInput type="text" formControlName="tipoNegocio" />
+                  <mat-icon matPrefix>aspect_ratio</mat-icon>
+                </mat-form-field>
+              </div>
+              <button
+                class="delete-button"
+                mat-button
+                type="button"
+                color="warn"
+                (click)="deleteFormArrayItem('actividadIndustrialComercialEmpresarial', i)"
+              >
+                Eliminar <mat-icon matSofix>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <button mat-button type="button" color="primary" (click)="addActividadIndustrialComercialEmpresarial()">
+            Agregar
+            <mat-icon matSofix>add</mat-icon>
+          </button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="bloque text-right" formGroupName="actividadFinanciera">
+          <h3 class="text-left">II.2. Por actividad financiera (rendimientos o ganancias)(después de impuestos)</h3>
+          <div formArrayName="actividades">
+            <div *ngFor="let actividad of actividadFinanciera.controls; let i = index">
+              <div class="grid-2-col" [formGroupName]="i">
+                <mat-form-field appearance="fill" formGroupName="remuneracion">
+                  <mat-label>Monto</mat-label>
+                  <input matInput type="number" formControlName="valor" min="0" />
+                  <mat-icon matPrefix>attach_money</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>Tipo de instrumento que generó el rendimiento o ganancia</mat-label>
+                  <mat-icon matPrefix>wb_iridescent</mat-icon>
+                  <mat-select formControlName="tipoInstrumento">
+                    <mat-option *ngFor="let instrumento of tipoInstrumentoCatalogo" [value]="instrumento">
+                      {{ instrumento.valor }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <button
+                class="delete-button"
+                mat-button
+                type="button"
+                color="warn"
+                (click)="deleteFormArrayItem('actividadFinanciera', i)"
+              >
+                Eliminar <mat-icon matSofix>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <button mat-button type="button" color="primary" (click)="addActividadFinanciera()">
+            Agregar
+            <mat-icon matSofix>add</mat-icon>
+          </button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="bloque text-right" formGroupName="serviciosProfesionales">
+          <h3 class="text-left">
+            II.3. Por servicios profesionales, consejos, consultorías y/o asesorías (después de impuestos)
+          </h3>
+          <div formArrayName="servicios">
+            <div *ngFor="let servicio of serviciosProfesionales.controls; let i = index">
+              <div class="grid-2-col" [formGroupName]="i">
+                <mat-form-field appearance="fill" formGroupName="remuneracion">
+                  <mat-label>Monto</mat-label>
+                  <input matInput type="number" formControlName="valor" min="0" />
+                  <mat-icon matPrefix>attach_money</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>Tipo de servicio prestado</mat-label>
+                  <mat-icon matPrefix>wb_iridescent</mat-icon>
+                  <input matInput type="text" formControlName="tipoServicio" />
+                </mat-form-field>
+              </div>
+              <button
+                class="delete-button"
+                mat-button
+                type="button"
+                color="warn"
+                (click)="deleteFormArrayItem('serviciosProfesionales', i)"
+              >
+                Eliminar <mat-icon matSofix>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <button mat-button type="button" color="primary" (click)="addServiciosProfesionales()">
+            Agregar
+            <mat-icon matSofix>add</mat-icon>
+          </button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="bloque text-right" formGroupName="enajenacionBienes">
+          <h3 class="text-left">II.4. Por enajenación de bienes (después de impuestos)</h3>
+          <div formArrayName="bienes">
+            <div *ngFor="let bien of enajenacionBienes.controls; let i = index">
+              <div class="grid-2-col" [formGroupName]="i">
+                <mat-form-field appearance="fill" formGroupName="remuneracion">
+                  <mat-label>Monto</mat-label>
+                  <input matInput type="number" formControlName="valor" min="0" />
+                  <mat-icon matPrefix>attach_money</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>Tipo de bien enajenado</mat-label>
+                  <mat-icon matPrefix>wb_iridescent</mat-icon>
+                  <mat-select formControlName="tipoBienEnajenado">
+                    <mat-option *ngFor="let bien of tipoBienEnajenadoCatalogo" value="{{ bien }}">
+                      {{ bien }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <button
+                class="delete-button"
+                mat-button
+                type="button"
+                color="warn"
+                (click)="deleteFormArrayItem('enajenacionBienes', i)"
+              >
+                Eliminar <mat-icon matSofix>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <button mat-button type="button" color="primary" (click)="addEnajenacionBienes()">
+            Agregar
+            <mat-icon matSofix>add</mat-icon>
+          </button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="bloque text-right" formGroupName="otrosIngresos">
+          <h3 class="text-left">II.4. Otros ingresos no considerados a los anteriores (después de impuestos)</h3>
+          <div formArrayName="ingresos">
+            <div *ngFor="let ingreso of otrosIngresos.controls; let i = index">
+              <div class="grid-2-col" [formGroupName]="i">
+                <mat-form-field appearance="fill" formGroupName="remuneracion">
+                  <mat-label>Monto</mat-label>
+                  <input matInput type="number" formControlName="valor" min="0" />
+                  <mat-icon matPrefix>attach_money</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>Especificar tipo de ingreso (arrendamiento, regalías, sorteos, etc.)</mat-label>
+                  <mat-icon matPrefix>wb_iridescent</mat-icon>
+                  <input matInput type="text" formControlName="tipoIngreso" />
+                </mat-form-field>
+              </div>
+              <button
+                class="delete-button"
+                mat-button
+                type="button"
+                color="warn"
+                (click)="deleteFormArrayItem('otrosIngresos', i)"
+              >
+                Eliminar <mat-icon matSofix>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <button mat-button type="button" color="primary" (click)="addOtrosIngresos()">
+            Agregar
+            <mat-icon matSofix>add</mat-icon>
+          </button>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="bloque">
+          <h3>A. Ingreso neto del declarante, recibido en el año inmediato anterior (suma del numeral I y II).</h3>
+          <p class="total">{{ ingresoNetoDeclarante | currency }}</p>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="bloque" formGroupName="ingresoNetoAnualParejaDependiente">
+          <h3>
+            B. Ingreso neto de la pareja y/o dependientes económicos, recibido en el año inmediato anterior (después de
+            impuestos)
+          </h3>
+          <div class="grid-2-col">
+            <mat-form-field appearance="fill" class="grid-item">
+              <mat-label>Monto</mat-label>
+              <input matInput type="number" formControlName="valor" min="0" />
+              <mat-icon matPrefix class="no-public">attach_money</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="bloque">
+          <h3>
+            C.-Total de ingresos netos percibidos por el declarante, pareja y/o dependientes económicos, en el año
+            inmediato anterior (suma de Apartados A y B)
+          </h3>
+          <p class="total">{{ ingresosTotales | currency }}</p>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton" *ngIf="!aclaraciones">
+        <button class="text-primary" mat-raised-button (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div *ngIf="aclaraciones">
+        <div class="flex grid-margin">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button mat-raised-button color="primary" [disabled]="actividadAnualAnteriorForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+
+    <mat-divider></mat-divider>
+
+    <div class="boton center">
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/bienes-inmuebles'"
+      >
+        CONTINUAR 10 DE 15
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

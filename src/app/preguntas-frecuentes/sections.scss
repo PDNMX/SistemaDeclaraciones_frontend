@@ -1,0 +1,29 @@
+:host {
+  color: rgba(96, 96, 96, 0.87);
+  margin: 30px 0;
+}
+ul {
+  list-style: none;
+}
+li ul {
+  margin-left: 40px;
+}
+.question {
+  font-size: 20px;
+  margin: 50px 0 10px 0;
+}
+.no-pd {
+  padding: 0px;
+}
+.no-mg {
+  margin-left: 0px;
+}
+p {
+  margin-left: 40px;
+}
+.no-public-inline {
+  border: solid #c9ee2e 4px;
+  display: inline-block;
+  margin: 0 2.5px;
+  height: 15px;
+}

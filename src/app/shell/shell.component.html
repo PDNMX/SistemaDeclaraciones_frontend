@@ -1,0 +1,53 @@
+<div fxFlex>
+  <app-header></app-header>
+  <mat-sidenav-container fxFill>
+    <mat-sidenav
+      #sidenav
+      [mode]="isMobile ? 'over' : 'side'"
+      [opened]="!isMobile"
+      [disableClose]="!isMobile"
+      ngClass.gt-sm="has-border"
+    >
+      <mat-expansion-panel>
+        <mat-expansion-panel-header
+          [ngClass]="{
+            active:
+              url?.startsWith('/' + tipoDeclaracion + '/situacion-patrimonial') ||
+              url?.startsWith('/' + tipoDeclaracion + '/simplificada/situacion-patrimonial')
+          }"
+        >
+          <mat-panel-title> I. Declaración de situación patrimonial </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-vertical-stepper (selectionChange)="goToSituacionPatrimonialSection($event.selectedStep)">
+          <ng-container *ngFor="let opt of situacionPatrimonialOptions">
+            <mat-step *ngIf="!declaracionSimplificada || opt.simplificada" label="{{ opt.text }}">
+              <!--<ng-template matStepLabel>
+                <a routerLink="{{ opt.url }}">{{ opt.text }}</a>
+              </ng-template>-->
+            </mat-step>
+          </ng-container>
+        </mat-vertical-stepper>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel *ngIf="!declaracionSimplificada">
+        <mat-expansion-panel-header [ngClass]="{ active: url?.startsWith('/' + tipoDeclaracion + '/intereses') }">
+          <mat-panel-title> II. Declaración de intereses </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-vertical-stepper (selectionChange)="goToInteresesSection($event.selectedIndex)">
+          <mat-step *ngFor="let opt of interesesOptions" label="{{ opt.text }}"></mat-step>
+        </mat-vertical-stepper>
+      </mat-expansion-panel>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mat-toolbar class="menu-button-container">
+        <button class="menu-button" mat-icon-button (click)="sidenav.toggle()" fxHide.gt-sm>
+          <mat-icon>menu</mat-icon>
+        </button>
+      </mat-toolbar>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  <app-footer></app-footer>
+</div>

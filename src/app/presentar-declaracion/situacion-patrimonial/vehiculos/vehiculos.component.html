@@ -1,0 +1,453 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header section="I. Declaración de situación patrimonial" progress="49.5" type="{{ tipoDeclaracion }}">
+    </section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 11. Vehículos (situción actual)</label>
+    </mat-toolbar>
+
+    <mat-divider></mat-divider>
+
+    <p>
+      Todos los campos son obligatorios. Todos los datos de vehículos declarados a nombre de la
+      <span class="negritas">pareja, dependientes económicos y/o terceros</span> o que sean en copropiedad con el
+      declarante no seran públicos y los campos resaltados <span class="no-public-inline"></span> no serán públicos.
+    </p>
+
+    <!-- Botones iniciales -->
+    <div *ngIf="!vehiculo?.length && !editMode && !vehiculosForm.value.ninguno">
+      <mat-grid-list cols="2" rowHeight="150px">
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="noVehicle()">Ninguno</button>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="addItem()">Agregar Vehículo</button>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+
+    <!-- card de información -->
+    <div class="">
+      <mat-card class="info" *ngIf="vehiculosForm.value.ninguno">
+        <p>Ningún vehículo</p>
+      </mat-card>
+      <mat-card class="info" *ngFor="let v of vehiculo; let i = index">
+        <mat-card-content class="">
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">directions_car</mat-icon>
+              <p>
+                <span class="resaltar">{{ v.tipoVehiculo.valor }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">assistant</mat-icon>
+              <p>
+                Modelo: <span class="resaltar"> {{ v.modelo }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">group</mat-icon>
+              <p>
+                Titular: <span class="resaltar" *ngFor="let t of v.titular">{{ t.valor }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">date_range</mat-icon>
+              <p>
+                Año: <span class="resaltar">{{ v.anio }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">aspect_ratio</mat-icon>
+              <p>
+                Marca: <span class="resaltar">{{ v.marca }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">image_aspect_ratio</mat-icon>
+              <p>
+                Número de Serie: <span class="resaltar">{{ v.numeroSerieRegistro }}</span>
+              </p>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <p>Nombre del Tercero o Terceros</p>
+          <div class="card-grid-3-col" *ngFor="let datos of v.tercero">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">person</mat-icon>
+              <p>
+                {{ datos.nombreRazonSocial }}
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">fingerprint</mat-icon>
+              <p>
+                {{ datos.rfc }}
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+              <p>
+                {{ datos.tipoPersona }}
+              </p>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <p>Nombre o razón social del Transmisor de la propiedad</p>
+          <div class="card-grid-3-col" *ngFor="let datos of v.transmisor">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+              <p>
+                {{ datos.nombreRazonSocial }}
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">fingerprint</mat-icon>
+              <p>
+                {{ datos.rfc }}
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+              <p>
+                {{ datos.tipoPersona }}
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">group</mat-icon>
+              <p>
+                Relación con el titular: <span class="resaltar">{{ datos.relacion.valor }}</span>
+              </p>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">credit_card</mat-icon>
+              <p>
+                Forma de adquisición: <span class="resaltar">{{ v.formaAdquisicion.valor }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">credit_card</mat-icon>
+              <p>
+                Forma de pago: <span class="resaltar">{{ v.formaPago | replace: '_':' ' }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">date_range</mat-icon>
+              <p>
+                Fecha de adquisición del inmueble: <span class="resaltar">{{ v.formaAdquisicion.valor }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">account_balance_wallet</mat-icon>
+              <p>
+                Valor de adquisición:
+                <span class="resaltar">{{ v.valorAdquisicion.valor | currency }} {{ v.valorAdquisicion.moneda }}</span>
+              </p>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">public</mat-icon>
+              <p>Lugar de registro</p>
+            </div>
+
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">location_city</mat-icon>
+              <p *ngIf="v.lugarRegistro.pais">{{ v.lugarRegistro.pais }}</p>
+              <p *ngIf="v.lugarRegistro.entidadFederativa">{{ v.lugarRegistro.entidadFederativa.valor }}</p>
+            </div>
+            <div>
+              <p *ngIf="v.lugarRegistro.entidadFederativa">En México</p>
+              <p *ngIf="v.lugarRegistro.pais">En el extranjero</p>
+            </div>
+          </div>
+
+          <!-- <mat-divider></mat-divider>
+
+          <div class="padding-card-section">
+            <div class="paragraph-flex aclaraciones">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Aclaraciones/Observaciones</p>
+            </div>
+            <p>
+              {{ v.aclaracionesObservaciones }}
+            </p>
+          </div> -->
+
+          <mat-divider></mat-divider>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
+          <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
+        </mat-card-actions>
+      </mat-card>
+      <div class="boton-agregar" *ngIf="(vehiculo.length && !editMode) || vehiculosForm.value.ninguno">
+        <button mat-raised-button color="primary" (click)="addItem()">Agregar Vehículo</button>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="saveItem()" [formGroup]="vehiculosForm" *ngIf="editMode">
+      <!-- Agregar empleo, cargo o comisión -->
+      <div class="padding-agregar" formGroupName="vehiculo">
+        <mat-divider></mat-divider>
+
+        <!-- Datos dependiente -->
+        <div class="">
+          <h2>Agregar vehículo</h2>
+          <div class="grid-2-col grid-margin">
+            <mat-form-field appearance="fill">
+              <mat-label>Tipo de Vehículo</mat-label>
+              <mat-icon matPrefix>directions_car</mat-icon>
+              <mat-select formControlName="tipoVehiculo">
+                <mat-option *ngFor="let tipoVehiculo of tipoVehiculoCatalogo" [value]="tipoVehiculo">
+                  {{ tipoVehiculo.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="vehiculosForm.value.vehiculo.tipoVehiculo?.clave === 'OTRO'">
+              <mat-label>Especifique</mat-label>
+              <mat-icon matPrefix class="no-public">group</mat-icon>
+              <input matInput type="text" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Titular del Vehículo</mat-label>
+              <mat-icon matPrefix class="no-public">person</mat-icon>
+              <mat-select formControlName="titular">
+                <mat-option *ngFor="let titularBien of titularBienCatalogo" [value]="titularBien">
+                  {{ titularBien.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Tercero -->
+          <div class="grid-3-col grid-margin" formGroupName="tercero">
+            <mat-radio-group class="checkbox" formControlName="tipoPersona">
+              <p class="question double-col">Tercero</p>
+              <mat-radio-button value="Fisica"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
+              <mat-radio-button value="Moral">Persona Moral</mat-radio-button>
+            </mat-radio-group>
+            <mat-form-field appearance="fill">
+              <mat-label>Nombre del Tercero o Terceros</mat-label>
+              <mat-icon matPrefix>group</mat-icon>
+              <input matInput type="text" formControlName="nombreRazonSocial" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>RFC</mat-label>
+              <mat-icon matPrefix>fingerprint</mat-icon>
+              <input matInput #input_rfc_tercero formControlName="rfc" type="text" maxlength="13" />
+              <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-3-col grid-margin">
+            <div formGroupName="transmisor">
+              <mat-radio-group class="checkbox" formControlName="tipoPersona">
+                <p class="question double-col">Transmisor de la propiedad</p>
+                <mat-radio-button value="Fisica"
+                  ><span class="no-public-inline"></span>Persona Física
+                </mat-radio-button>
+                <mat-radio-button value="Moral">Persona Moral</mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <mat-form-field appearance="fill" formGroupName="transmisor">
+              <mat-label>Nombre o razón social del transmisor</mat-label>
+              <mat-icon matPrefix class="no-public">dns</mat-icon>
+              <input matInput type="text" formControlName="nombreRazonSocial" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" formGroupName="transmisor">
+              <mat-label>RFC</mat-label>
+              <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+              <input matInput #input_rfc_transmisor formControlName="rfc" type="text" maxlength="13" />
+              <mat-hint align="end">{{ input_rfc_transmisor.value?.length || 0 }}/13</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" formGroupName="transmisor">
+              <mat-label>Relación del transmisor del vehículo con el titular</mat-label>
+              <mat-icon matPrefix class="no-public">group</mat-icon>
+              <mat-select formControlName="relacion">
+                <mat-option *ngFor="let parentescoRelacion of parentescoRelacionCatalogo" [value]="parentescoRelacion">
+                  {{ parentescoRelacion.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field
+              appearance="fill"
+              class="double-col"
+              *ngIf="vehiculosForm.value.vehiculo.transmisor?.relacion?.clave === 'OTRO'"
+            >
+              <mat-label>Especifique</mat-label>
+              <mat-icon matPrefix class="no-public">group</mat-icon>
+              <input matInput type="text" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Marca</mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <input matInput type="text" formControlName="marca" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Modelo</mat-label>
+              <mat-icon matPrefix>assistant</mat-icon>
+              <input matInput type="text" formControlName="modelo" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Año</mat-label>
+              <mat-icon matPrefix>date_range</mat-icon>
+              <mat-select formControlName="anio">
+                <mat-option [value]="2007"> 2007 </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Número de Serie o Registro</mat-label>
+              <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
+              <input matInput type="text" formControlName="numeroSerieRegistro" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" formGroupName="lugarRegistro">
+              <mat-label>¿Donde se encuentra registrado?</mat-label>
+              <mat-icon matPrefix class="no-public">public</mat-icon>
+              <mat-select #location (selectionChange)="locationChanged($event.value)">
+                <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
+                <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div formGroupName="lugarRegistro">
+              <!-- extranjero -->
+              <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'EXTRANJERO'">
+                <mat-label>País</mat-label>
+                <mat-icon matPrefix class="no-public">beenhere</mat-icon>
+                <mat-select formControlName="pais">
+                  <mat-option *ngFor="let pais of paisesCatalogo" [value]="pais.clave">
+                    {{ pais.valor }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <!-- En México -->
+              <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'MEXICO'">
+                <mat-label>Entidad Federativa</mat-label>
+                <mat-icon matPrefix class="no-public">beenhere</mat-icon>
+                <mat-select formControlName="entidadFederativa">
+                  <mat-option *ngFor="let estados of estadosCatalogo" [value]="estados">
+                    {{ estados.valor }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Forma de Adquisición</mat-label>
+              <mat-icon matPrefix>credit_card</mat-icon>
+              <mat-select formControlName="formaAdquisicion">
+                <mat-option *ngFor="let formaAdquisicion of formaAdquisicionCatalogo" [value]="formaAdquisicion">
+                  {{ formaAdquisicion.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Forma de Pago</mat-label>
+              <mat-icon matPrefix>credit_card</mat-icon>
+              <mat-select formControlName="formaPago">
+                <mat-option *ngFor="let formaPago of formaPagoCatalogo" value="{{ formaPago }}">
+                  {{ formaPago | replace: '_':' ' }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" formGroupName="valorAdquisicion">
+              <mat-label>Valor de Adquisición del vehículo</mat-label>
+              <mat-icon matPrefix>credit_card</mat-icon>
+              <input matInput type="number" formControlName="valor" min="0" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" formGroupName="valorAdquisicion">
+              <mat-label>Tipo de Moneda</mat-label>
+              <mat-icon matPrefix>call_merge</mat-icon>
+              <mat-select formControlName="moneda">
+                <mat-option *ngFor="let m of monedasCatalogo" [value]="m.clave">
+                  {{ m.clave }} - {{ m.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Fecha de Adquisición del Vehículo</mat-label>
+              <input matInput [matDatepicker]="pickerAdquisicion" formControlName="fechaAdquisicion" />
+              <mat-hint>dd/mm/yyyy</mat-hint>
+              <mat-datepicker-toggle matPrefix [for]="pickerAdquisicion"> </mat-datepicker-toggle>
+              <mat-datepicker #pickerAdquisicion></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton" *ngIf="!aclaraciones">
+        <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div class="grid-margin" *ngIf="aclaraciones">
+        <div class="flex">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button mat-raised-button color="primary" type="button" *ngIf="editMode" (click)="cancelEditMode()">
+          CANCELAR
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="vehiculosForm.reset()">
+          LIMPIAR FORMULARIO
+        </button>
+        <button mat-raised-button color="primary" [disabled]="vehiculosForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+
+    <mat-divider></mat-divider>
+
+    <div class="boton center">
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/bienes-muebles'"
+      >
+        CONTINUAR 12 DE 15
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

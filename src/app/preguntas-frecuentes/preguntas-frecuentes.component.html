@@ -1,0 +1,44 @@
+<div fxFill fxLayout="column">
+  <app-header></app-header>
+  <mat-toolbar class="background-white title-toolbar">
+    <label class="step-title">Preguntas frecuentes</label>
+  </mat-toolbar>
+  <mat-divider></mat-divider>
+  <div class="contenedor">
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <div class="grid-margin buttons">
+        <button
+          mat-raised-button
+          [color]="section === 'GENERALIDADES' ? 'primary' : ''"
+          class="text-primary"
+          (click)="sectionChanged('GENERALIDADES')"
+        >
+          1. GENERALIDADES
+        </button>
+        <button
+          mat-raised-button
+          [color]="section === 'DECLARACIONES' ? 'primary' : ''"
+          class="text-primary"
+          (click)="sectionChanged('DECLARACIONES')"
+        >
+          2. LLENADO DE LAS DECLARACIONES
+        </button>
+        <button
+          mat-raised-button
+          [color]="section === 'TRATAMIENTO' ? 'primary' : ''"
+          class="text-primary"
+          (click)="sectionChanged('TRATAMIENTO')"
+        >
+          3. TRATAMIENTO DE LA INFORMACIÓN
+        </button>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center">
+        <app-generalidades *ngIf="section === 'GENERALIDADES'"></app-generalidades>
+        <app-llenado-de-declaraciones *ngIf="section === 'DECLARACIONES'"></app-llenado-de-declaraciones>
+        <app-tratamiento-de-informacion *ngIf="section === 'TRATAMIENTO'"></app-tratamiento-de-informacion>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

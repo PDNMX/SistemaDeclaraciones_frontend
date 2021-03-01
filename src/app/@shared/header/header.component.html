@@ -1,0 +1,28 @@
+<mat-toolbar>
+  <img class="pdn-logo" src="assets/pdn.png" alt="PDN" (click)="goTo('')" />
+  <div class="divider"></div>
+  <div class="title">Declaración Patrimonial <br />y de Intereses</div>
+  <div fxFlex></div>
+  <div>
+    <button *ngIf="isLoggedIn && isAdmin" mat-button (click)="goTo('admin/usuarios')">USUARIOS</button>
+    <button *ngIf="isLoggedIn && isDeclarant" mat-button (click)="goTo('comienza-tu-declaracion')">
+      COMIENZA TU DECLARACIÓN
+    </button>
+    <button *ngIf="isLoggedIn && isAdmin" mat-button (click)="goTo('admin/declaraciones')">DECLARACIONES</button>
+    <button *ngIf="isLoggedIn && isDeclarant" mat-button (click)="goTo('declaraciones')">MIS DECLARACIONES</button>
+    <button *ngIf="!isLoggedIn" mat-button (click)="goTo('preguntas-frecuentes')">PREGUNTAS FRECUENTES</button>
+
+    <button *ngIf="isLoggedIn" mat-icon-button [matMenuTriggerFor]="accountMenu">
+      <mat-icon>person</mat-icon>
+    </button>
+    <mat-menu #accountMenu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="goTo('perfil')">MI PERFIL</button>
+      <button mat-menu-item (click)="goTo('preguntas-frecuentes')">PREGUNTAS FRECUENTES</button>
+      <button mat-menu-item (click)="logout()">CERRAR SESIÓN <mat-icon>exit_to_app</mat-icon></button>
+    </mat-menu>
+
+    <button *ngIf="!isLoggedIn" mat-button (click)="goTo('registro')">
+      REGISTRARSE <mat-icon>how_to_reg</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>

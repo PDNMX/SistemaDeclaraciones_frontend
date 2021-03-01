@@ -1,0 +1,20 @@
+<mat-grid-list cols="3" rowHeight="60px">
+  <mat-grid-tile>
+    {{ section }}
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-label class="progress-bar-label">Progreso</mat-label>
+    <mat-progress-bar mode="determinate" value="{{ progress }}"></mat-progress-bar>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-label class="declaration-type" *ngIf="type === 'inicial'"
+      >Declaración inicial {{ simplificada ? 'simplificada' : '' }}</mat-label
+    >
+    <mat-label class="declaration-type" *ngIf="type === 'modificacion'"
+      >Declaración de modificación {{ simplificada ? 'simplificada' : '' }}</mat-label
+    >
+    <mat-label class="declaration-type" *ngIf="type === 'conclusion'"
+      >Declaración de conclusión {{ simplificada ? 'simplificada' : '' }}</mat-label
+    >
+  </mat-grid-tile>
+</mat-grid-list>

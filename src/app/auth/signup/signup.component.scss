@@ -1,0 +1,66 @@
+@import "src/theme/theme-variables";
+
+:host {
+  display: flex;
+  flex: 1;
+  background-color: #ffffff;
+}
+
+.inline-loader {
+  display: inline-block;
+}
+
+.version {
+  margin: 0;
+}
+
+.signup-container {
+  min-height: calc(80vh - 280px);
+}
+
+.signup-container,
+.mat-form-field {
+  width: 100%;
+}
+
+.signup-fields > :not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.signup-fields {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.signup-fields > mat-form-field {
+  width: 50%;
+  padding: 0 10px;
+}
+
+.signup-error {
+  color: mat-color($app-warn);
+}
+
+.title-toolbar {
+  height: 145px;
+  padding: 0 min(20%, 180px);
+}
+
+.signup-btn {
+  width: 50%;
+  transform: translateX(100%);
+}
+
+.signup-box {
+  box-shadow: none;
+}
+
+.login-button {
+  display: block;
+  font-weight: 700;
+  margin: auto;
+  padding-left: 0;
+  padding-right: 0;
+  position: relative;
+  text-decoration: underline;
+}

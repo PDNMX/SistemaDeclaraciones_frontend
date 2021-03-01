@@ -1,0 +1,50 @@
+<div fxFill fxLayout="column">
+  <app-header class="mg-btm-80px"></app-header>
+  <div class="contenedor">
+    <mat-toolbar class="background-white title-toolbar mg-top-100px pd-0">
+      <label class="step-title">Detalle de perfil</label>
+    </mat-toolbar>
+
+    <div class="pd-lateral pb-100px">
+      <mat-card class="contenedor info">
+        <mat-card-content>
+          <div class="size-20">
+            <p>
+              <span class="negritas">
+                nombre usuario
+                <!-- {{ user?.nombre }} {{ user?.primerApellido }} {{ user?.segundoApellido }} --></span
+              >
+            </p>
+          </div>
+          <div class="grid-2-col">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">date_range</mat-icon>
+              <p>
+                Fecha de Registro:
+                <span class="resaltar">
+                  23/12/2015
+                  <!-- {{ user?.createdAt | date: 'dd/MM/yyyy' }} --></span
+                >
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">email</mat-icon>
+              <p>
+                Correo Electrónico
+                <span class="resaltar">
+                  any@mail.com
+                  <!-- {{ user?.username }} --></span
+                >
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <!--<mat-card-actions class="boton-agregar">
+              <button mat-button color="primary">Editar</button>
+            </mat-card-actions>-->
+      </mat-card>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

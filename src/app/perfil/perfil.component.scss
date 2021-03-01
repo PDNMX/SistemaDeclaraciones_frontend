@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex: 1;
+  background-color: #ffffff;
+  color: rgba(96, 96, 96, 0.87);
+}
+.mg-btm-80px {
+  margin-bottom: 80px;
+}
+.contenedor {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.paragraph-flex p {
+  margin: 8px 0;
+}
+.paragraph-flex .icon {
+  margin-top: 8px;
+  margin-right: 10px;
+}
+.btn-guardar {
+  width: 200px;
+}
+.center {
+  margin-bottom: 20px;
+}

@@ -1,0 +1,706 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header
+      section="I. Declaración de situación patrimonial"
+      progress="31.5"
+      type="{{ tipoDeclaracion }}"
+    ></section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 7. Datos del dependiente económico</label>
+    </mat-toolbar>
+
+    <mat-divider></mat-divider>
+
+    <p>
+      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      resaltados <span class="no-public-inline"></span> no serán públicos. Todos los datos relativos a menores de edad
+      no serán públicos.
+    </p>
+
+    <!-- Botones iniciales -->
+    <div class="" *ngIf="!dependienteEconomico?.length && !editMode && !datosDependientesEconomicosForm.value.ninguno">
+      <mat-grid-list cols="2" rowHeight="150px">
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="noDependent()">Ninguno</button>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="addItem()">Agregar dependiente económico</button>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+
+    <!-- card de información -->
+    <div class="">
+      <mat-card class="info" *ngIf="datosDependientesEconomicosForm.value.ninguno">
+        <p>Ningún dependiente económico</p>
+      </mat-card>
+
+      <mat-card class="info" *ngFor="let d of dependienteEconomico; let i = index">
+        <mat-card-content class="">
+          <p class="bg-no-public">Ningún campo será público</p>
+
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">people</mat-icon>
+              <p>
+                Parentesco o relación: <span class="resaltar">{{ d.parentescoRelacion.valor }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">people</mat-icon>
+              <p>{{ d.extranjero ? 'Es' : 'No es' }} ciudadano extranjero</p>
+            </div>
+            <div class="paragraph-flex size-20">
+              <mat-icon matPrefix class="icon">person</mat-icon>
+              <p class="negritas">{{ d.nombre }} {{ d.primerApellido }} {{ d.segundoApellido }}</p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">fingerprint</mat-icon>
+              <p>
+                RFC: <span class="size-16">{{ d.rfc }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">date_range</mat-icon>
+              <p>
+                Fecha de nacimiento: <span class="size-16">{{ d.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">fingerprint</mat-icon>
+              <p>
+                CURP: <span class="size-16">{{ d.curp }}</span>
+              </p>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="card-grid-3-col">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">public</mat-icon>
+              <p>Lugar donde reside</p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">streetview</mat-icon>
+              <p>Habita en el domicilio del declarante</p>
+            </div>
+
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">location_city</mat-icon>
+              <p>Domicilio de la pareja</p>
+            </div>
+            <div class="">
+              <p>{{ d.lugarDondeReside | replace: '_':' ' }}</p>
+            </div>
+            <div class="">
+              <p>{{ d.habitaDomicilioDeclarante ? 'Sí' : 'No' }}</p>
+            </div>
+            <div class="paragraph-flex">
+              <p *ngIf="d.domicilioMexico">
+                {{ d.domicilioMexico.calle }}
+                {{ d.domicilioMexico.numeroExterior }}
+                <span *ngIf="d.domicilioMexico.numeroInterior">int. {{ d.domicilioMexico.numeroInterior }}</span>
+                {{ d.domicilioMexico.coloniaLocalidad }}, {{ d.domicilioMexico.municipioAlcaldia.valor }},
+                {{ d.domicilioMexico.entidadFederativa.valor }}, C.P. {{ d.domicilioMexico.codigoPostal }}.
+              </p>
+              <p *ngIf="d.domicilioExtranjero">
+                {{ d.domicilioExtranjero.calle }}
+                {{ d.domicilioExtranjero.numeroExterior }}
+                <span *ngIf="d.domicilioExtranjero.numeroInterior"
+                  >int. {{ d.domicilioExtranjero.numeroInterior }}</span
+                >
+                {{ d.domicilioExtranjero.ciudadLocalidad }}, {{ d.domicilioExtranjero.estadoProvincia }},
+                {{ d.domicilioExtranjero.pais }}, C.P. {{ d.domicilioExtranjero.codigoPostal }}.
+              </p>
+            </div>
+          </div>
+
+          <!-- Actividad Laboral -->
+          <div class="bloque">
+            <mat-divider></mat-divider>
+
+            <h3>Actividad Laboral</h3>
+            <div class="grid-3fr-1fr">
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">aspect_ratio</mat-icon>
+                <p>
+                  Sector: <span class="resaltar">{{ d.actividadLaboral.valor }}</span>
+                </p>
+              </div>
+              <div class="paragraph-flex" *ngIf="d.actividadLaboralSectorPublico">
+                <mat-icon matPrefix class="icon">star</mat-icon>
+                <p>
+                  Nivel:
+                  <span class="resaltar">{{
+                    d.actividadLaboralSectorPublico.nivelOrdenGobierno | replace: '_':' '
+                  }}</span>
+                </p>
+              </div>
+            </div>
+            <!-- Publico -->
+            <div class="grid-3fr-1fr" *ngIf="d.actividadLaboralSectorPublico">
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">dns</mat-icon>
+                <p>
+                  Ámbito:
+                  <span class="resaltar">{{ d.actividadLaboralSectorPublico.ambitoPublico | replace: '_':' ' }}</span>
+                </p>
+              </div>
+              <div class="paragraph-flex double-row">
+                <mat-icon matPrefix class="icon">wb_iridescent</mat-icon>
+                <p>
+                  Área de Adscripción: <br />
+                  {{ d.actividadLaboralSectorPublico.areaAdscripcion }}
+                </p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+                <p>Nombre del Ente Público: {{ d.actividadLaboralSectorPublico.nombreEntePublico }}</p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">work</mat-icon>
+                <p>
+                  <span class="negritas">{{ d.actividadLaboralSectorPublico.empleoCargoComision }} </span>
+                </p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">date_range</mat-icon>
+                <p>
+                  Fecha de ingreso:
+                  <span class="size-16">{{ d.actividadLaboralSectorPublico.fechaIngreso | date: 'dd/MM/yyyy' }}</span>
+                </p>
+              </div>
+            </div>
+            <!-- Otro y Privado-->
+            <div class="grid-3fr-1fr" *ngIf="d.actividadLaboralSectorPrivadoOtro">
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">dns</mat-icon>
+                <p>
+                  RFC: <span class="resaltar">{{ d.actividadLaboralSectorPrivadoOtro.rfc }} </span>
+                </p>
+              </div>
+              <div class="paragraph-flex double-row">
+                <mat-icon matPrefix class="icon">wb_iridescent</mat-icon>
+                <p>
+                  {{ d.actividadLaboralSectorPrivadoOtro.proveedorContratistaGobierno ? 'Es' : 'No es' }} provedor o
+                  contratista de gobierno.
+                </p>
+              </div>
+
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+                <p>Nombre de la Empresa: {{ d.actividadLaboralSectorPrivadoOtro.nombreEmpresaSociedadAsociacion }}</p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">work</mat-icon>
+                <p>
+                  <span class="negritas"> {{ d.actividadLaboralSectorPrivadoOtro.empleoCargoComision }} </span>
+                </p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">date_range</mat-icon>
+                <p>
+                  Fecha de ingreso:
+                  <span class="size-16">{{
+                    d.actividadLaboralSectorPrivadoOtro.fechaIngreso | date: 'dd/MM/yyyy'
+                  }}</span>
+                </p>
+              </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div
+              class="card-grid-2-col padding-card-section"
+              *ngIf="d.actividadLaboralSectorPublico || d.actividadLaboralSectorPrivadoOtro"
+            >
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+                <p *ngIf="d.actividadLaboralSectorPublico">Especifique funcion principal</p>
+                <p *ngIf="d.actividadLaboralSectorPrivadoOtro">Sector al que pertenece</p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">account_balance_wallet</mat-icon>
+                <p>Salario Mensual Neto</p>
+              </div>
+              <div>
+                {{
+                  d.actividadLaboralSectorPublico
+                    ? d.actividadLaboralSectorPublico.funcionPrincipal
+                    : d.actividadLaboralSectorPrivadoOtro.sector.valor
+                }}
+              </div>
+              <div>
+                {{ d.actividadLaboralSectorPublico?.salarioMensualNeto.valor | currency }}
+                {{ d.actividadLaboralSectorPrivadoOtro?.salarioMensualNeto.valor | currency }}
+              </div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <!--<div class="padding-card-section">
+            <div class="paragraph-flex aclaraciones">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Aclaraciones/Observaciones</p>
+            </div>
+            <p>
+              {{ d.aclaracionesObservaciones }}
+            </p>
+          </div>
+
+          <mat-divider></mat-divider>-->
+        </mat-card-content>
+        <mat-card-actions class="">
+          <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
+          <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div
+        class="boton-agregar"
+        *ngIf="(dependienteEconomico.length && !editMode) || datosDependientesEconomicosForm.value.ninguno"
+      >
+        <button mat-raised-button color="primary" (click)="addItem()">Agregar dependiente económico</button>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="saveItem()" [formGroup]="datosDependientesEconomicosForm" *ngIf="editMode">
+      <!-- Agregar empleo, cargo o comisión -->
+      <div class="padding-agregar" formGroupName="dependienteEconomico">
+        <mat-divider></mat-divider>
+
+        <!-- Datos dependiente -->
+        <div class="">
+          <h2>Agregar datos del dependiente económico</h2>
+          <div class="grid-3-col grid-margin">
+            <mat-form-field appearance="fill">
+              <mat-label>Nombre</mat-label>
+              <mat-icon matPrefix class="no-public">person</mat-icon>
+              <input matInput type="text" formControlName="nombre" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Primer Apellido</mat-label>
+              <mat-icon matPrefix class="no-public">person</mat-icon>
+              <input matInput type="text" formControlName="primerApellido" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Segundo Apellido</mat-label>
+              <mat-icon matPrefix class="no-public">person</mat-icon>
+              <input matInput type="text" formControlName="segundoApellido" />
+            </mat-form-field>
+          </div>
+
+          <div class="grid-2-col grid-margin">
+            <mat-form-field appearance="fill">
+              <mat-label>Fecha de Nacimiento</mat-label>
+              <input matInput [matDatepicker]="pickerNacimiento" formControlName="fechaNacimiento" />
+              <mat-hint>dd/mm/yyyy</mat-hint>
+              <mat-datepicker-toggle matPrefix class="no-public-picker" [for]="pickerNacimiento">
+              </mat-datepicker-toggle>
+              <mat-datepicker #pickerNacimiento></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>RFC</mat-label>
+              <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+              <input matInput #input_rfc type="text" minlength="10" maxlength="10" formControlName="rfc" />
+              <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/10</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-3-col grid-margin">
+            <mat-form-field appearance="fill">
+              <mat-label>Parentesco o relación con el declarante</mat-label>
+              <mat-icon matPrefix class="no-public">supervisor_account</mat-icon>
+              <mat-select formControlName="parentescoRelacion">
+                <mat-option *ngFor="let relacion of parentescoRelacionCatalogo" [value]="relacion">
+                  {{ relacion.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field
+              appearance="fill"
+              class="double-col"
+              *ngIf="datosDependientesEconomicosForm.value.dependienteEconomico.parentescoRelacion?.clave === 'OTRO'"
+            >
+              <mat-label>Especifique</mat-label>
+              <mat-icon matPrefix class="no-public">star</mat-icon>
+              <input matInput type="text" />
+            </mat-form-field>
+            <mat-radio-group class="checkbox" formControlName="extranjero">
+              <p class="question double-col">¿Es ciudadano extranjero?</p>
+              <mat-radio-button [value]="true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false">No</mat-radio-button>
+            </mat-radio-group>
+            <mat-form-field appearance="fill">
+              <mat-label>CURP</mat-label>
+              <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+              <input matInput #input_curp type="text" maxlength="18" formControlName="curp" />
+              <mat-hint align="end">{{ input_curp.value?.length || 0 }}/18</mat-hint>
+            </mat-form-field>
+            <mat-radio-group class="checkbox" formControlName="habitaDomicilioDeclarante">
+              <p class="question double-col">¿Habita en el domicilio del declarante?</p>
+              <mat-radio-button [value]="true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false">No</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div class="bloque">
+          <h2>Domicilio del dependiente económico</h2>
+          <div class="grid-2-col grid-margin">
+            <mat-form-field appearance="fill">
+              <mat-label>Lugar en el que reside</mat-label>
+              <mat-icon matPrefix class="no-public">public</mat-icon>
+              <mat-select formControlName="lugarDondeReside" (selectionChange)="lugarDondeResideChanged($event.value)">
+                <mat-option *ngFor="let opt of lugarDondeResideCatalogo" value="{{ opt }}">
+                  {{ opt | replace: '_':' ' }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <mat-grid-list *ngIf="tipoDomicilio === 'MEXICO'" cols="15" rowHeight="100px" formGroupName="domicilioMexico">
+            <mat-grid-tile colspan="6">
+              <mat-form-field appearance="fill">
+                <mat-label>Calle</mat-label>
+                <mat-icon matPrefix class="no-public">streetview</mat-icon>
+                <input matInput type="text" formControlName="calle" />
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="3">
+              <mat-form-field appearance="fill">
+                <mat-label>Número Exterior</mat-label>
+                <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
+                <input matInput type="text" formControlName="numeroExterior" />
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="3">
+              <mat-form-field appearance="fill">
+                <mat-label>Número Interior</mat-label>
+                <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
+                <input matInput #input_ni type="text" formControlName="numeroInterior" />
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="3">
+              <mat-form-field appearance="fill">
+                <mat-label>Código Postal</mat-label>
+                <mat-icon matPrefix class="no-public">markunread_mailbox</mat-icon>
+                <input matInput #input_cp maxlength="5" type="text" formControlName="codigoPostal" />
+                <mat-hint align="end">{{ input_cp.value?.length || 0 }}/5</mat-hint>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile colspan="5">
+              <mat-form-field appearance="fill">
+                <mat-label>Entidad Federativa</mat-label>
+                <mat-icon matPrefix class="no-public">public</mat-icon>
+                <mat-select formControlName="entidadFederativa">
+                  <mat-option *ngFor="let opt of estadosCatalogo" [value]="opt">
+                    {{ opt.valor }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="5">
+              <mat-form-field appearance="fill">
+                <mat-label>Municipio/Alcaldia</mat-label>
+                <mat-icon matPrefix class="no-public">beenhere</mat-icon>
+                <mat-select formControlName="municipioAlcaldia">
+                  <mat-option *ngFor="let opt of municipiosCatalogo[estado?.clave]" [value]="opt">
+                    {{ opt.valor }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="5">
+              <mat-form-field appearance="fill">
+                <mat-label>Colonia</mat-label>
+                <mat-icon matPrefix class="no-public">location_city</mat-icon>
+                <input matInput #input_localidad type="text" formControlName="coloniaLocalidad" />
+              </mat-form-field>
+            </mat-grid-tile>
+          </mat-grid-list>
+
+          <mat-grid-list
+            *ngIf="tipoDomicilio === 'EXTRANJERO'"
+            cols="15"
+            rowHeight="100px"
+            formGroupName="domicilioExtranjero"
+          >
+            <mat-grid-tile colspan="6">
+              <mat-form-field appearance="fill">
+                <mat-label>Calle</mat-label>
+                <mat-icon matPrefix class="no-public">streetview</mat-icon>
+                <input matInput type="text" formControlName="calle" />
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="3">
+              <mat-form-field appearance="fill">
+                <mat-label>Número Exterior</mat-label>
+                <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
+                <input matInput type="text" formControlName="numeroExterior" />
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="3">
+              <mat-form-field appearance="fill">
+                <mat-label>Número Interior</mat-label>
+                <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
+                <input matInput #input_ni type="text" formControlName="numeroInterior" />
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="3">
+              <mat-form-field appearance="fill">
+                <mat-label>Código Postal</mat-label>
+                <mat-icon matPrefix class="no-public">markunread_mailbox</mat-icon>
+                <input matInput #input_cp maxlength="5" type="text" formControlName="codigoPostal" />
+                <mat-hint align="end">{{ input_cp.value?.length || 0 }}/5</mat-hint>
+              </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile colspan="5">
+              <mat-form-field appearance="fill">
+                <mat-label>País</mat-label>
+                <mat-icon matPrefix class="no-public">location_city</mat-icon>
+                <mat-select formControlName="pais">
+                  <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
+                    {{ opt.valor }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="5">
+              <mat-form-field appearance="fill">
+                <mat-label>Estado/Provincia</mat-label>
+                <mat-icon matPrefix class="no-public">public</mat-icon>
+                <input matInput #input_ep type="text" formControlName="estadoProvincia" />
+              </mat-form-field>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="5">
+              <mat-form-field appearance="fill">
+                <mat-label>Ciudad/Localidad</mat-label>
+                <mat-icon matPrefix class="no-public">beenhere</mat-icon>
+                <input matInput #input_cl type="text" formControlName="ciudadLocalidad" />
+              </mat-form-field>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+        <div class="bloque">
+          <h2>Actividad Laboral</h2>
+          <div class="grid-3-col grid-margin">
+            <mat-form-field appearance="fill">
+              <mat-label>Ámbito/Sector al que pertenece</mat-label>
+              <mat-icon matPrefix class="no-public">star</mat-icon>
+              <mat-select formControlName="actividadLaboral" (selectionChange)="actividadLaboralChanged($event.value)">
+                <mat-option *ngFor="let actividad of actividadLaboralCatalogo" [value]="actividad">
+                  {{ actividad.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field
+              appearance="fill"
+              class="double-col"
+              *ngIf="datosDependientesEconomicosForm.value.dependienteEconomico.actividadLaboral?.clave === 'OTRO'"
+            >
+              <mat-label>Especifique</mat-label>
+              <mat-icon matPrefix class="no-public">star</mat-icon>
+              <input matInput type="text" />
+            </mat-form-field>
+          </div>
+          <!-- Publico -->
+          <div
+            class="grid-2-col grid-margin"
+            *ngIf="datosDependientesEconomicosForm.value.dependienteEconomico.actividadLaboral?.clave === 'PUB'"
+            formGroupName="actividadLaboralSectorPublico"
+          >
+            <mat-form-field appearance="fill">
+              <mat-label>Nivel/Orden de Gobierno </mat-label>
+              <mat-icon matPrefix class="no-public">aspect_ratio</mat-icon>
+              <mat-select formControlName="nivelOrdenGobierno">
+                <mat-option *ngFor="let orden of nivelOrdenGobiernoCatalogo" value="{{ orden }}">
+                  {{ orden | replace: '_':' ' }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Ámbito Público</mat-label>
+              <mat-icon matPrefix class="no-public">meeting_room</mat-icon>
+              <mat-select formControlName="ambitoPublico">
+                <mat-option *ngFor="let ambito of ambitoPublicoCatalogo" value="{{ ambito }}">
+                  {{ ambito | replace: '_':' ' }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Nombre del ente Público/Nombre de la empresa, sociedad o asociación</mat-label>
+              <mat-icon matPrefix class="no-public">dns</mat-icon>
+              <input matInput type="text" formControlName="nombreEntePublico" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Área de Adscripción/Área</mat-label>
+              <mat-icon matPrefix class="no-public">wb_iridescent</mat-icon>
+              <input matInput type="text" formControlName="areaAdscripcion" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Empleo, cargo o comisión</mat-label>
+              <mat-icon matPrefix class="no-public">work</mat-icon>
+              <input matInput type="text" formControlName="empleoCargoComision" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Especifique función principal</mat-label>
+              <mat-icon matPrefix class="no-public">speaker_notes</mat-icon>
+              <input matInput type="text" formControlName="funcionPrincipal" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" formGroupName="salarioMensualNeto">
+              <mat-label>Salario Mensual Neto</mat-label>
+              <mat-icon matPrefix class="no-public">account_balance_wallet</mat-icon>
+              <input matInput type="number" formControlName="valor" min="0" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Fecha de ingreso al empleo</mat-label>
+              <input matInput [matDatepicker]="pickerPublicIngreso" formControlName="fechaIngreso" />
+              <mat-hint>dd/mm/yyyy</mat-hint>
+              <mat-datepicker-toggle matPrefix class="no-public-picker" [for]="pickerPublicIngreso">
+              </mat-datepicker-toggle>
+              <mat-datepicker #pickerPublicIngreso></mat-datepicker>
+            </mat-form-field>
+            <!--<mat-form-field appearance="fill">
+              <mat-label>Sector al que pertenece</mat-label>
+              <mat-icon matPrefix class="no-public">assistant</mat-icon>
+              <mat-select formControlName="actividad_laboral">
+                <mat-option *ngFor="let sector of sectoresCatalogo" value="{{ sector.clave }}">
+                  {{ sector.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>-->
+          </div>
+          <!-- otro y privado -->
+          <div
+            class="grid-2-col grid-margin"
+            *ngIf="
+              datosDependientesEconomicosForm.value.dependienteEconomico.actividadLaboral?.clave === 'PRI' ||
+              datosDependientesEconomicosForm.value.dependienteEconomico.actividadLaboral?.clave === 'OTRO'
+            "
+            formGroupName="actividadLaboralSectorPrivadoOtro"
+          >
+            <mat-form-field appearance="fill">
+              <mat-label>Nombre de la empresa, sociedad o asociación</mat-label>
+              <mat-icon matPrefix>speaker_notes</mat-icon>
+              <input matInput type="text" formControlName="nombreEmpresaSociedadAsociacion" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>RFC</mat-label>
+              <mat-icon matPrefix>fingerprint</mat-icon>
+              <input matInput #input_rfc_sprivado type="text" minlength="10" maxlength="13" formControlName="rfc" />
+              <mat-hint align="end">{{ input_rfc_sprivado?.length || 0 }}/13</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Empleo, cargo o comisión</mat-label>
+              <mat-icon matPrefix class="no-public">work</mat-icon>
+              <input matInput type="text" formControlName="empleoCargoComision" />
+            </mat-form-field>
+            <!--<mat-form-field appearance="fill">
+              <mat-label>Especifique función principal</mat-label>
+              <mat-icon matPrefix class="no-public">speaker_notes</mat-icon>
+              <input matInput type="text" formControlName="actividad_laboral" />
+            </mat-form-field>-->
+            <mat-form-field appearance="fill" formGroupName="salarioMensualNeto">
+              <mat-label>Salario Mensual Neto</mat-label>
+              <mat-icon matPrefix class="no-public">account_balance_wallet</mat-icon>
+              <input matInput type="number" formControlName="valor" min="0" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Fecha de ingreso al empleo</mat-label>
+              <input matInput [matDatepicker]="pickerOtroIngreso" formControlName="fechaIngreso" />
+              <mat-hint>dd/mm/yyyy</mat-hint>
+              <mat-datepicker-toggle matPrefix class="no-public-picker" [for]="pickerOtroIngreso">
+              </mat-datepicker-toggle>
+              <mat-datepicker #pickerOtroIngreso></mat-datepicker>
+            </mat-form-field>
+            <mat-radio-group class="checkbox" formControlName="proveedorContratistaGobierno">
+              <p class="question">¿Es proveedor o contratista de gobierno?</p>
+              <mat-radio-button [value]="true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false">No</mat-radio-button>
+            </mat-radio-group>
+            <mat-form-field appearance="fill">
+              <mat-label>Sector al que pertenece</mat-label>
+              <mat-icon matPrefix class="no-public">assistant</mat-icon>
+              <mat-select formControlName="sector">
+                <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
+                  {{ sector.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field
+              appearance="fill"
+              class="double-col"
+              *ngIf="
+                datosDependientesEconomicosForm.value.dependienteEconomico.actividadLaboralSectorPrivadoOtro?.sector
+                  ?.clave === 'OTRO'
+              "
+            >
+              <mat-label>Especifique</mat-label>
+              <mat-icon matPrefix class="no-public">star</mat-icon>
+              <input matInput type="text" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton" *ngIf="!aclaraciones">
+        <button class="text-primary" mat-raised-button (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div *ngIf="aclaraciones">
+        <div class="flex grid-margin">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button mat-raised-button color="primary" type="button" *ngIf="editMode" (click)="cancelEditMode()">
+          CANCELAR
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="datosDependientesEconomicosForm.reset()">
+          LIMPIAR FORMULARIO
+        </button>
+        <button mat-raised-button color="primary" [disabled]="datosDependientesEconomicosForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+
+    <mat-divider></mat-divider>
+
+    <div class="boton center">
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/ingresos-netos'"
+      >
+        CONTINUAR 8 DE 15
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

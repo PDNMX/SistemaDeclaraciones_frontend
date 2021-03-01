@@ -1,0 +1,70 @@
+:host {
+  display: flex;
+  flex: 1;
+}
+
+.mat-sidenav {
+  width: var(--stepper-width);
+}
+
+.mat-sidenav-content {
+  background-color: #ffffff; /*section background color*/
+}
+
+.has-border {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.mat-list {
+  padding-top: 0;
+}
+
+.mat-list-item {
+  text-decoration: none;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.menu-button {
+  margin-right: 1rem;
+}
+
+.menu-button-container {
+  background-color: #ffffff;
+  height: 46px;
+}
+
+mat-expansion-panel,
+mat-vertical-stepper {
+  border-radius: 0;
+  background: #f2f2f2;
+}
+
+mat-expansion-panel-header {
+  background: #ffffff;
+  color: var(--dark-text);
+  font-size: 16px;
+  font-weight: bold;
+  height: auto !important;
+  padding: 30px 15px;
+
+  &.active {
+    background-color: var(--primary-color);
+    mat-panel-title {
+      color: var(--text-primary-color);
+    }
+  }
+}
+
+.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled="true"]),
+.mat-expansion-panel-header.mat-expanded:focus,
+.mat-expansion-panel-header.mat-expanded:hover {
+  background-color: var(--primary-darker-color);
+  color: var(--text-primary-color);
+}
+
+.mat-step-label {
+  white-space: normal;
+}

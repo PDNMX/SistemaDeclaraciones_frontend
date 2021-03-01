@@ -1,0 +1,61 @@
+.info-section {
+  background-color: var(--accent-darker-color);
+  color: #ffffff;
+  font-size: 14px;
+  height: 420px;
+
+  mat-grid-list {
+    width: 90%;
+
+    .section-container {
+      height: 80%;
+      position: relative;
+    }
+
+    img {
+      display: block;
+      position: relative;
+    }
+    .pdn-img {
+      max-width: 85px;
+    }
+    .pdn-text {
+      display: block;
+      font-weight: bold;
+      position: relative;
+    }
+    .ida-text {
+      font-size: 12px;
+    }
+    .libre-uso-img {
+      max-width: 140px;
+      position: absolute;
+      bottom: 0;
+    }
+  }
+}
+
+.links-section {
+  button {
+    display: block;
+  }
+}
+
+.sna {
+  background-color: #ffffff;
+  height: 160px;
+
+  img {
+    height: 80px;
+    display: block;
+    position: relative;
+    padding-left: 0;
+    padding-top: 0;
+    margin: auto;
+  }
+}
+
+.primary-text {
+  color: var(--primary-color);
+  font-weight: bold;
+}

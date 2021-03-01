@@ -1,0 +1,9 @@
+<div>
+  <h3 *ngIf="data.signDeclaration"><b>¿Deseas finalizar tu declaracion?</b></h3>
+  <iframe id="acuse" height="700" width="500"></iframe>
+
+  <mat-dialog-actions align="end" *ngIf="data.signDeclaration">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Finalizar</button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex: 1;
+  background-color: #ffffff;
+}
+
+.home-container {
+  height: calc(90vh - 280px);
+}
+
+.title-toolbar {
+  height: 145px;
+  padding: 0 min(20%, 180px);
+}
+
+.home-box {
+  box-shadow: none;
+  text-align: center;
+
+  button {
+    font-weight: bold;
+    margin: 0 5px;
+    width: 270px;
+  }
+}

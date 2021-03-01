@@ -1,0 +1,303 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header
+      section="II. Declaración de intereses"
+      progress="85.5"
+      type="{{ tipoDeclaracion }}"
+    ></section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 4. Representación (hasta los últimos dos años)</label>
+    </mat-toolbar>
+
+    <p>
+      Es cuando el declarante actúa a nombre de otra persona física o moral (representante) o cuando una persona actúa a
+      nombre del Declarante (representado). <br />
+      Deberá reportar hasta los últimos dos años.
+    </p>
+
+    <mat-divider></mat-divider>
+
+    <p class="grid-margin">
+      Todos los campos son obligatorios. Todos los datos de representación de la pareja o dependientes económicos no
+      serán públicos y los campos resaltados <span class="no-public-inline"></span> no serán públicos.
+    </p>
+
+    <!-- Botones iniciales -->
+    <div class="" *ngIf="!representacion?.length && !editMode && !representacionForm.value.ninguno">
+      <mat-grid-list cols="2" rowHeight="150px">
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="noRepresentation()">Ninguno</button>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="addItem()">Agregar representación</button>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+
+    <!-- card de información -->
+    <div>
+      <mat-card class="info" *ngIf="representacionForm.value.ninguno">
+        <p>Ninguna representación</p>
+      </mat-card>
+      <mat-card class="info" *ngFor="let r of representacion; let i = index">
+        <mat-card-content class="">
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex size-20">
+              <mat-icon matPrefix class="icon">work</mat-icon>
+              <p>
+                <span class="negritas">{{ r.tipoRelacion | replace: '_':' ' }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>
+                Tipo de representación: <span class="resaltar">{{ r.tipoRepresentacion }}</span>
+              </p>
+            </div>
+
+            <div class="paragraph-flex size-20">
+              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+              <p>{{ r.nombreRazonSocial }}</p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">dns</mat-icon>
+              <p>
+                <span *ngIf="r.recibeRemuneracion; else negative">Si</span>
+                <ng-template #negative>No</ng-template> recibe remuneración por su representación
+              </p>
+            </div>
+
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">fingerprint</mat-icon>
+              <p>{{ r.rfc }}</p>
+            </div>
+            <div class="paragraph-flex" *ngIf="r.montoMensual">
+              <mat-icon matPrefix class="icon">beenhere</mat-icon>
+              <p>{{ r.montoMensual.valor | currency }} {{ r.montoMensual.moneda }}</p>
+            </div>
+
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">star</mat-icon>
+              <p>{{ r.tipoPersona }}</p>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="card-grid-3-col">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">date_range</mat-icon>
+              <p>Fecha de inicio de representación</p>
+            </div>
+            <div class="paragraph-flex double-row">
+              <mat-icon matPrefix class="icon card-no-public">public</mat-icon>
+              <p>
+                {{ r.ubicacion.pais ? 'En el extranjero' : 'En México' }}
+              </p>
+            </div>
+            <div class="paragraph-flex double-row">
+              <mat-icon matPrefix class="icon card-no-public">image_aspect_ratio</mat-icon>
+              <p>
+                {{ r.ubicacion.pais ? r.ubicacion.pais : r.ubicacion.entidadFederativa.valor }}
+              </p>
+            </div>
+            <p>{{ r.fechaInicioRepresentacion | date: 'dd/MM/yyyy' }}</p>
+          </div>
+
+          <!-- <mat-divider></mat-divider>
+
+          <div class="padding-card-section">
+            <div class="paragraph-flex aclaraciones">
+              <span class="no-public-inline no-public-inline-margin"></span>
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Aclaraciones/Observaciones</p>
+            </div>
+            <p>
+              {{ r.aclaracionesObservaciones }}
+            </p>
+          </div> -->
+
+          <mat-divider></mat-divider>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
+          <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div class="boton-agregar" *ngIf="(representacion.length && !editMode) || representacionForm.value.ninguno">
+        <button mat-raised-button color="primary" (click)="addItem()">Agregar Representación</button>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="saveItem()" [formGroup]="representacionForm" *ngIf="editMode">
+      <!-- Agregar -->
+      <div class="padding-agregar" formGroupName="representacion">
+        <mat-divider></mat-divider>
+        <p>Agregar representación</p>
+        <!-- Datos -->
+
+        <div class="grid-2-col grid-margin">
+          <mat-form-field appearance="fill">
+            <mat-label>Representación</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-select formControlName="tipoRelacion">
+              <mat-option *ngFor="let relacion of relacionCatalogo" value="{{ relacion }}">
+                {{ relacion | replace: '_':' ' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de representación</mat-label>
+            <mat-icon matPrefix>beenhere</mat-icon>
+            <mat-select formControlName="tipoRepresentacion">
+              <mat-option *ngFor="let representacion of representacionCatalogo" value="{{ representacionCatalogo[0] }}">
+                {{ representacion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-3-col grid-margin">
+          <mat-radio-group class="checkbox checkbox-height" formControlName="tipoPersona">
+            <label class="question">Representante/representado</label>
+            <mat-radio-button value="Fisica"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
+            <mat-radio-button value="Moral">Persona Moral</mat-radio-button>
+          </mat-radio-group>
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre o razón social del representante/representado</mat-label>
+            <mat-icon matPrefix class="no-public">person</mat-icon>
+            <input matInput type="text" formControlName="nombreRazonSocial" />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>RFC</mat-label>
+            <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+            <input matInput #input_rfc_tercero type="text" maxlength="13" formControlName="rfc" />
+            <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
+          </mat-form-field>
+
+          <mat-radio-group class="checkbox checkbox-height" formControlName="recibeRemuneracion">
+            <label class="question">¿Recibe remuneración por su representación?</label>
+            <mat-radio-button [value]="true">Si</mat-radio-button>
+            <mat-radio-button [value]="false">No</mat-radio-button>
+          </mat-radio-group>
+          <mat-form-field appearance="fill" formGroupName="montoMensual">
+            <mat-label>Monto mensual neto de su representación</mat-label>
+            <mat-icon matPrefix>beenhere</mat-icon>
+            <input matInput type="number" formControlName="valor" min="0" />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Fecha de inicio de la representación</mat-label>
+            <input matInput [matDatepicker]="pickerRepresentacion" formControlName="fechaInicioRepresentacion" />
+            <mat-hint>dd/mm/yyyy</mat-hint>
+            <mat-datepicker-toggle matPrefix [for]="pickerRepresentacion"></mat-datepicker-toggle>
+            <mat-datepicker #pickerRepresentacion></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-2-col grid-margin" formGroupName="ubicacion">
+          <mat-form-field appearance="fill">
+            <mat-label>Lugar donde se ubica</mat-label>
+            <mat-icon matPrefix>public</mat-icon>
+            <mat-select (selectionChange)="locationChanged($event.value)">
+              <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
+              <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- México -->
+          <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'MEXICO'">
+            <mat-label>Entidad Federativa</mat-label>
+            <mat-icon matPrefix>beenhere</mat-icon>
+            <mat-select formControlName="entidadFederativa">
+              <mat-option *ngFor="let estados of estadosCatalogo" [value]="estados">
+                {{ estados.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- Extranjero -->
+          <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'EXTRANJERO'">
+            <mat-label>País </mat-label>
+            <mat-icon matPrefix>beenhere</mat-icon>
+            <mat-select formControlName="pais">
+              <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
+                {{ opt.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-2-col grid-margin">
+          <mat-form-field appearance="fill">
+            <mat-label>Sector productivo al que pertenece</mat-label>
+            <mat-icon matPrefix>credit_card</mat-icon>
+            <mat-select formControlName="sector">
+              <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
+                {{ sector.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" *ngIf="representacionForm.value.representacion.sector?.clave === 'OTRO'">
+            <mat-label>Especifique</mat-label>
+            <mat-icon matPrefix class="no-public">credit_card</mat-icon>
+            <input matInput type="text" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton" *ngIf="!aclaraciones">
+        <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div *ngIf="aclaraciones">
+        <div class="flex grid-margin">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button mat-raised-button color="primary" type="button" *ngIf="editMode" (click)="cancelEditMode()">
+          CANCELAR
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="representacionForm.reset()">
+          LIMPIAR FORMULARIO
+        </button>
+        <button mat-raised-button color="primary" [disabled]="representacionForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+
+    <div class="boton center">
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/intereses/clientes-principales'"
+      >
+        CONTINUAR 5 DE 7
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

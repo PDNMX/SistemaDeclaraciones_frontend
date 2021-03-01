@@ -1,0 +1,400 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header section="I. Declaración de situación patrimonial" progress="58.5" type="{{ tipoDeclaracion }}">
+    </section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 13. Inversiones, cuentas bancarias u otro tipo de valores (situación actual)</label>
+    </mat-toolbar>
+
+    <mat-divider></mat-divider>
+
+    <p>
+      Todos los campos son obligatorios. Todos los datos de inversiones, cuentas bancarias y otro tipo de
+      valores/activos a nombre de la
+      <span class="negritas">pareja, dependientes económicos y/o terceros</span> o que sean en copropiedad con el
+      declarante no seran públicos y los campos resaltados <span class="no-public-inline"></span> no serán públicos.
+    </p>
+
+    <!-- Botones iniciales -->
+    <div *ngIf="!inversion?.length && !editMode && !inversionesCuentasValoresForm.value.ninguno">
+      <mat-grid-list cols="2" rowHeight="150px">
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="noInvestments()">Ninguno</button>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="addItem()">Agregar Inversión</button>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+
+    <!-- card de información -->
+    <div>
+      <mat-card class="info" *ngIf="inversionesCuentasValoresForm.value.ninguno">
+        <p>Ninguna inversión, cuenta bancaria u otro tipo de valores</p>
+      </mat-card>
+
+      <mat-card class="info" *ngFor="let v of inversion; let i = index">
+        <mat-card-content class="">
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex size-20">
+              <mat-icon matPrefix class="icon">aspect_ratio</mat-icon>
+              <p>
+                <span class="negritas">{{ v.tipoInversion.valor }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">image_aspect_ratio</mat-icon>
+              <p>
+                cuenta: <span class="resaltar">{{ v.numeroCuentaContrato }}</span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">aspect_ratio</mat-icon>
+              <p>sub tipo: {{ v.subTipoInversion.valor }}</p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">credit_card</mat-icon>
+              <p>{{ v.saldoSituacionActual.valor | currency }} {{ v.saldoSituacionActual.moneda }}</p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+              <p>
+                Titular: <span class="resaltar" *ngFor="let dato of v.titular">{{ dato.valor }} </span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Terceros -->
+          <mat-divider></mat-divider>
+
+          <p>Nombre del Tercero o Terceros</p>
+          <div class="card-grid-3-col" *ngFor="let dato of v.tercero">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">person</mat-icon>
+              <p>
+                {{ dato.nombreRazonSocial }}
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">fingerprint</mat-icon>
+              <p>
+                {{ dato.rfc }}
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+              <p>
+                {{ dato.tipoPersona }}
+              </p>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <p>Ubicación dónde se localiza la inversión</p>
+          <div class="card-grid-3-col">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">public</mat-icon>
+              <p *ngIf="v.localizacionInversion.pais">En el Extranjero</p>
+              <p *ngIf="!v.localizacionInversion.pais">En México</p>
+            </div>
+            <div class="paragraph-flex" *ngIf="v.localizacionInversion.pais">
+              <mat-icon matPrefix class="icon card-no-public">public</mat-icon>
+              <p>
+                {{ v.localizacionInversion.pais }}
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">dns</mat-icon>
+              <p>
+                {{ v.localizacionInversion.institucionRazonSocial }}
+              </p>
+            </div>
+            <div class="paragraph-flex" *ngIf="!v.localizacionInversion.pais">
+              <mat-icon matPrefix class="icon card-no-public">fingerprint</mat-icon>
+              <p>
+                {{ v.localizacionInversion.rfc }}
+              </p>
+            </div>
+          </div>
+
+          <!--           <mat-divider></mat-divider>
+          <div class="padding-card-section">
+            <div class="paragraph-flex aclaraciones">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Aclaraciones/Observaciones</p>
+            </div>
+            <p>
+              {{ v.aclaracionesObservaciones }}
+            </p>
+          </div> -->
+
+          <mat-divider></mat-divider>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
+          <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
+        </mat-card-actions>
+      </mat-card>
+      <div class="boton-agregar" *ngIf="(inversion.length && !editMode) || inversionesCuentasValoresForm.value.ninguno">
+        <button mat-raised-button color="primary" (click)="addItem()">Agregar Valor</button>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="saveItem()" [formGroup]="inversionesCuentasValoresForm" *ngIf="editMode">
+      <!-- Agregar  -->
+      <div class="padding-agregar" formGroupName="inversion">
+        <mat-divider></mat-divider>
+        <h2>Agregar inversión</h2>
+        <!-- Agregar -->
+        <div class="">
+          <div class="grid-4-col grid-margin">
+            <mat-form-field appearance="fill">
+              <mat-label>Tipo de Inversión/Activo</mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <mat-select formControlName="tipoInversion">
+                <mat-option *ngFor="let tipoInversion of tipoInversionCatalogo" [value]="tipoInversion">
+                  {{ tipoInversion.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- Bancaria -->
+            <mat-form-field
+              appearance="fill"
+              *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'BANC'"
+            >
+              <mat-label>Bancaria</mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
+                  {{ sub.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- Fondos de Inversión -->
+            <mat-form-field
+              appearance="fill"
+              *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'FINV'"
+            >
+              <mat-label>Fondos de Inversión</mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
+                  {{ sub.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- Organizaciones Privadas y/o Mercantiles -->
+            <mat-form-field
+              appearance="fill"
+              *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'ORPM'"
+            >
+              <mat-label>Organizaciones Privadas y/o Mercantiles</mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
+                  {{ sub.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- Posesión de Monedas y/o metales -->
+            <mat-form-field
+              appearance="fill"
+              *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'POMM'"
+            >
+              <mat-label>Posesión de Monedas y/o Metales</mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
+                  {{ sub.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- Seguros -->
+            <mat-form-field
+              appearance="fill"
+              *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'SEGR'"
+            >
+              <mat-label>Seguros</mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
+                  {{ sub.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- Valores Bursátiles -->
+            <mat-form-field
+              appearance="fill"
+              *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'VBUR'"
+            >
+              <mat-label>Valores Bursátiles</mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
+                  {{ sub.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- Afores y otros -->
+            <mat-form-field
+              appearance="fill"
+              *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'AFOT'"
+            >
+              <mat-label>Afores y otros</mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
+                  {{ sub.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="double-col">
+              <mat-label>Titular de la inversión, cuenta bancaria y otro tipo de valores</mat-label>
+              <mat-icon matPrefix class="no-public">person</mat-icon>
+              <mat-select formControlName="titular">
+                <mat-option *ngFor="let titularBien of titularBienCatalogo" [value]="titularBien">
+                  {{ titularBien.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Tercero -->
+          <div class="grid-4-col grid-margin" formGroupName="tercero">
+            <mat-form-field appearance="fill" class="double-col">
+              <mat-label>Nombre del Tercero o Terceros</mat-label>
+              <mat-icon matPrefix>person</mat-icon>
+              <input matInput type="text" formControlName="nombreRazonSocial" />
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>RFC</mat-label>
+              <mat-icon matPrefix>fingerprint</mat-icon>
+              <input matInput #input_rfc_tercero formControlName="rfc" type="text" maxlength="13" />
+              <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Persona Física o Moral</mat-label>
+              <mat-icon matPrefix>person</mat-icon>
+              <mat-select formControlName="tipoPersona">
+                <mat-option value="Fisica"> Física </mat-option>
+                <mat-option value="Moral"> Moral </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="grid-2-col grid-margin">
+            <mat-form-field appearance="fill" formGroupName="localizacionInversion">
+              <mat-label>¿Dónde se localiza la inversión, cuenta bancaria y otro tipo de valores/activos? </mat-label>
+              <mat-icon matPrefix>public</mat-icon>
+              <mat-select #mexicoExtranjero (selectionChange)="localizacionChanged($event.value)">
+                <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
+                <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="grid-2-col grid-margin">
+            <mat-form-field appearance="fill" formGroupName="localizacionInversion">
+              <mat-label>Institución o razón social</mat-label>
+              <mat-icon matPrefix>dns</mat-icon>
+              <input matInput type="text" formControlName="institucionRazonSocial" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" formGroupName="localizacionInversion" *ngIf="tipoDomicilio === 'MEXICO'">
+              <mat-label>RFC</mat-label>
+              <mat-icon matPrefix>fingerprint</mat-icon>
+              <input matInput #input_rfc_institucion type="text" formControlName="rfc" maxlength="13" />
+              <mat-hint align="end">{{ input_rfc_institucion.value?.length || 0 }}/13</mat-hint>
+            </mat-form-field>
+            <mat-form-field
+              appearance="fill"
+              formGroupName="localizacionInversion"
+              *ngIf="tipoDomicilio === 'EXTRANJERO'"
+            >
+              <mat-label>País donde se localiza</mat-label>
+              <mat-icon matPrefix>public</mat-icon>
+              <mat-select formControlName="pais">
+                <mat-option *ngFor="let pais of paisesCatalogo" [value]="pais.clave">
+                  {{ pais.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="grid-3-col grid-margin">
+            <mat-form-field appearance="fill" formGroupName="saldoSituacionActual">
+              <mat-label>Saldo a la fecha (situación actual)</mat-label>
+              <mat-icon matPrefix class="no-public">credit_card</mat-icon>
+              <input matInput type="number" formControlName="valor" min="0" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" formGroupName="saldoSituacionActual">
+              <mat-label>Tipo de Moneda</mat-label>
+              <mat-icon matPrefix>credit_card</mat-icon>
+              <mat-select formControlName="moneda">
+                <mat-option *ngFor="let m of monedasCatalogo" [value]="m.clave">
+                  {{ m.clave }} - {{ m.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Número de cuenta, contrato o póliza</mat-label>
+              <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
+              <input matInput type="text" formControlName="numeroCuentaContrato" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton" *ngIf="!aclaraciones">
+        <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div class="" *ngIf="aclaraciones">
+        <div class="flex grid-margin">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button mat-raised-button color="primary" type="button" *ngIf="editMode" (click)="cancelEditMode()">
+          CANCELAR
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="inversionesCuentasValoresForm.reset()">
+          LIMPIAR FORMULARIO
+        </button>
+        <button mat-raised-button color="primary" [disabled]="inversionesCuentasValoresForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+
+    <mat-divider></mat-divider>
+
+    <div class="boton center">
+      <button mat-raised-button color="primary" [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/adeudos'">
+        CONTINUAR 14 DE 15
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

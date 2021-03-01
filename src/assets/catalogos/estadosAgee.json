@@ -1,0 +1,130 @@
+[
+  {
+    "clave": "01",
+    "valor": "Aguascalientes"
+  },
+  {
+    "clave": "02",
+    "valor": "Baja California"
+  },
+  {
+    "clave": "03",
+    "valor": "Baja California Sur"
+  },
+  {
+    "clave": "04",
+    "valor": "Campeche"
+  },
+  {
+    "clave": "05",
+    "valor": "Coahuila de Zaragoza"
+  },
+  {
+    "clave": "06",
+    "valor": "Colima"
+  },
+  {
+    "clave": "07",
+    "valor": "Chiapas"
+  },
+  {
+    "clave": "08",
+    "valor": "Chihuahua"
+  },
+  {
+    "clave": "09",
+    "valor": "Ciudad de México"
+  },
+  {
+    "clave": "10",
+    "valor": "Durango"
+  },
+  {
+    "clave": "11",
+    "valor": "Guanajuato"
+  },
+  {
+    "clave": "12",
+    "valor": "Guerrero"
+  },
+  {
+    "clave": "13",
+    "valor": "Hidalgo"
+  },
+  {
+    "clave": "14",
+    "valor": "Jalisco"
+  },
+  {
+    "clave": "15",
+    "valor": "México"
+  },
+  {
+    "clave": "16",
+    "valor": "Michoacán de Ocampo"
+  },
+  {
+    "clave": "17",
+    "valor": "Morelos"
+  },
+  {
+    "clave": "18",
+    "valor": "Nayarit"
+  },
+  {
+    "clave": "19",
+    "valor": "Nuevo León"
+  },
+  {
+    "clave": "20",
+    "valor": "Oaxaca"
+  },
+  {
+    "clave": "21",
+    "valor": "Puebla"
+  },
+  {
+    "clave": "22",
+    "valor": "Querétaro"
+  },
+  {
+    "clave": "23",
+    "valor": "Quintana Roo"
+  },
+  {
+    "clave": "24",
+    "valor": "San Luis Potosí"
+  },
+  {
+    "clave": "25",
+    "valor": "Sinaloa"
+  },
+  {
+    "clave": "26",
+    "valor": "Sonora"
+  },
+  {
+    "clave": "27",
+    "valor": "Tabasco"
+  },
+  {
+    "clave": "28",
+    "valor": "Tamaulipas"
+  },
+  {
+    "clave": "29",
+    "valor": "Tlaxcala"
+  },
+  {
+    "clave": "30",
+    "valor": "Veracruz de Ignacio de la Llave"
+  },
+  {
+    "clave": "31",
+    "valor": "Yucatán"
+  },
+  {
+    "clave": "32",
+    "valor": "Zacatecas"
+  }
+]

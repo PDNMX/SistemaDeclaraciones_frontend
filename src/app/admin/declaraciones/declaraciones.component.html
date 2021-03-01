@@ -1,0 +1,217 @@
+<div fxFill fxLayout="column">
+  <app-header class="mg-btm-80px"></app-header>
+  <div class="contenedor">
+    <mat-toolbar class="background-white title-toolbar flex mg-top-100px">
+      <label class="step-title">Lista de declaraciones {{ userID ? 'usuario' : '' }}</label>
+    </mat-toolbar>
+    <mat-divider class="mg-height-50px-30px"></mat-divider>
+
+    <div class="pd-lateral">
+      <mat-tab-group mat-align-tabs="center">
+        <mat-tab label="Todas">
+          <ng-template matTabContent>
+            <div class="main-table-container mat-elevation-z8">
+              <div class="table-container">
+                <table mat-table [dataSource]="data" matSort matSortDisableClear>
+                  <ng-container matColumnDef="tipoDeclaracion">
+                    <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                    <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="simplificada">
+                    <th mat-header-cell *matHeaderCellDef>Simplificada</th>
+                    <td mat-cell *matCellDef="let row">{{ row.simplificada ? 'SÍ' : 'NO' }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="owner">
+                    <th mat-header-cell *matHeaderCellDef>Declarante</th>
+                    <td mat-cell *matCellDef="let row">{{ row.owner?.curp }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="completa">
+                    <th mat-header-cell *matHeaderCellDef>Estatus</th>
+                    <td mat-cell *matCellDef="let row">{{ row.completa ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="updatedAt">
+                    <th mat-header-cell *matHeaderCellDef>Última actualización</th>
+                    <td mat-cell *matCellDef="let row">{{ row.updatedAt | date: 'dd/MM/yyyy' }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                      <button *ngIf="isSuperAdmin" mat-icon-button (click)="previewDeclaration(row._id)">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+              </div>
+              <mat-paginator [length]="total" [pageSize]="10" #totalPaginator></mat-paginator>
+            </div>
+          </ng-template>
+        </mat-tab>
+
+        <mat-tab label="Inicial">
+          <div class="main-table-container mat-elevation-z8">
+            <div class="table-container">
+              <table mat-table [dataSource]="dataInicial" matSort matSortDisableClear>
+                <ng-container matColumnDef="tipoDeclaracion">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="simplificada">
+                  <th mat-header-cell *matHeaderCellDef>Simplificada</th>
+                  <td mat-cell *matCellDef="let row">{{ row.simplificada ? 'SÍ' : 'NO' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="owner">
+                  <th mat-header-cell *matHeaderCellDef>Declarante</th>
+                  <td mat-cell *matCellDef="let row">{{ row.owner?.curp }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="completa">
+                  <th mat-header-cell *matHeaderCellDef>Estatus</th>
+                  <td mat-cell *matCellDef="let row">{{ row.completa ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedAt">
+                  <th mat-header-cell *matHeaderCellDef>Última actualización</th>
+                  <td mat-cell *matCellDef="let row">{{ row.updatedAt | date: 'dd/MM/yyyy' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
+                  <td mat-cell *matCellDef="let row" class="text-center">
+                    <button
+                      *ngIf="isSuperAdmin"
+                      mat-icon-button
+                      (click)="previewDeclaration(row._id)"
+                      disabled="!row.completa"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+            </div>
+            <mat-paginator [length]="totalInicial" [pageSize]="10" #inicialPaginator></mat-paginator>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Modificación">
+          <div class="main-table-container mat-elevation-z8">
+            <div class="table-container">
+              <table mat-table [dataSource]="dataModificacion" matSort matSortDisableClear>
+                <ng-container matColumnDef="tipoDeclaracion">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="simplificada">
+                  <th mat-header-cell *matHeaderCellDef>Simplificada</th>
+                  <td mat-cell *matCellDef="let row">{{ row.simplificada ? 'SÍ' : 'NO' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="owner">
+                  <th mat-header-cell *matHeaderCellDef>Declarante</th>
+                  <td mat-cell *matCellDef="let row">{{ row.owner?.curp }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="completa">
+                  <th mat-header-cell *matHeaderCellDef>Estatus</th>
+                  <td mat-cell *matCellDef="let row">{{ row.completa ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedAt">
+                  <th mat-header-cell *matHeaderCellDef>Última actualización</th>
+                  <td mat-cell *matCellDef="let row">{{ row.updatedAt | date: 'dd/MM/yyyy' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
+                  <td mat-cell *matCellDef="let row" class="text-center">
+                    <button
+                      *ngIf="isSuperAdmin"
+                      mat-icon-button
+                      (click)="previewDeclaration(row._id)"
+                      disabled="!row.completa"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+            </div>
+            <mat-paginator [length]="totalModificacion" [pageSize]="10" #modificacionPaginator></mat-paginator>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Final">
+          <div class="main-table-container mat-elevation-z8">
+            <div class="table-container">
+              <table mat-table [dataSource]="dataConclusion" matSort matSortDisableClear>
+                <ng-container matColumnDef="tipoDeclaracion">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="simplificada">
+                  <th mat-header-cell *matHeaderCellDef>Simplificada</th>
+                  <td mat-cell *matCellDef="let row">{{ row.simplificada ? 'SÍ' : 'NO' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="owner">
+                  <th mat-header-cell *matHeaderCellDef>Declarante</th>
+                  <td mat-cell *matCellDef="let row">{{ row.owner?.curp }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="completa">
+                  <th mat-header-cell *matHeaderCellDef>Estatus</th>
+                  <td mat-cell *matCellDef="let row">{{ row.completa ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="updatedAt">
+                  <th mat-header-cell *matHeaderCellDef>Última actualización</th>
+                  <td mat-cell *matCellDef="let row">{{ row.updatedAt | date: 'dd/MM/yyyy' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
+                  <td mat-cell *matCellDef="let row" class="text-center">
+                    <button
+                      *ngIf="isSuperAdmin"
+                      mat-icon-button
+                      (click)="previewDeclaration(row._id)"
+                      [disabled]="!row.completa"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+            </div>
+            <mat-paginator [length]="totalConclusion" [pageSize]="10" #conclusionPaginator></mat-paginator>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <mat-divider class="mg-top-100px"></mat-divider>
+  </div>
+
+  <app-footer></app-footer>
+</div>

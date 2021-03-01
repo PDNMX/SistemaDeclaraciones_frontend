@@ -1,0 +1,273 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header
+      section="II. Declaración de intereses"
+      progress="94.5"
+      type="{{ tipoDeclaracion }}"
+    ></section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 6. Beneficios privados (hasta los últimos dos años)</label>
+    </mat-toolbar>
+
+    <p>
+      En la contribución monetaria o en especie que otorga una persona física o moral con recursos privados al
+      Declarante o alguna de las personas señaladas en el catálogo. El apoyo en especie refiere a cualquier
+      contribución, utilizando bienes o beneficios de naturaleza diferente al dinero. Deberá reportar hasta los últimos
+      dos años.
+    </p>
+
+    <mat-divider></mat-divider>
+
+    <p class="grid-margin">
+      Todos los campos son obligatorios. Los campos resaltados <span class="no-public-inline"></span> no serán públicos.
+    </p>
+
+    <!-- Botones iniciales -->
+    <div class="" *ngIf="!beneficio?.length && !editMode && !beneficiosPrivadosForm.value.ninguno">
+      <mat-grid-list cols="2" rowHeight="150px">
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="noBenefits()">Ninguno</button>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1">
+          <div class="boton-agregar">
+            <button mat-raised-button color="primary" (click)="addItem()">Agregar beneficio</button>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+
+    <!-- card de información -->
+    <div class="">
+      <mat-card class="info" *ngIf="beneficiosPrivadosForm.value.ninguno">
+        <p>Ningún Beneficio Privado</p>
+      </mat-card>
+
+      <mat-card class="info" *ngFor="let b of beneficio; let i = index">
+        <mat-card-content class="">
+          <div class="paragraph-flex size-20">
+            <mat-icon matPrefix class="icon">work</mat-icon>
+            <p>
+              <span class="negritas">{{ b?.tipoBeneficio.valor }}</span>
+            </p>
+          </div>
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+              <p>Beneficiario: {{ b?.beneficiario.valor }}</p>
+            </div>
+            <div class="paragraph-flex size-20">
+              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+              <p>{{ b?.otorgante.nombreRazonSocial }}</p>
+            </div>
+
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">speaker_notes</mat-icon>
+              <p>Forma de recepción: {{ b?.formaRecepcion }}</p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">fingerprint</mat-icon>
+              <p>{{ b?.otorgante.rfc }}</p>
+            </div>
+
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">speaker_notes</mat-icon>
+              <p>Recepción: {{ b?.especifiqueBeneficio }}</p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">star</mat-icon>
+              <p>{{ b?.otorgante.tipoPersona }}</p>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Sector</p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Monto mensual aproximado</p>
+            </div>
+            <p>{{ b?.sector.valor }}</p>
+            <p>{{ b?.montoMensualAproximado.valor | currency }} {{ b?.montoMensualAproximado.moneda }}</p>
+          </div>
+
+          <mat-divider></mat-divider>
+          <!-- <div class="padding-card-section">
+            <div class="paragraph-flex aclaraciones">
+              <span class="no-public-inline no-public-inline-margin"></span>
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Aclaraciones/Observaciones</p>
+            </div>
+            <p>
+              {{ b.aclaracionesObservaciones }}
+            </p>
+          </div>
+          <mat-divider></mat-divider> -->
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
+          <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div class="boton-agregar" *ngIf="(beneficio.length && !editMode) || beneficiosPrivadosForm.value.ninguno">
+        <button mat-raised-button color="primary" (click)="addItem()">AGREGAR BENEFICIO</button>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="saveItem()" [formGroup]="beneficiosPrivadosForm" *ngIf="editMode">
+      <!-- Agregar -->
+      <div class="padding-agregar" formGroupName="beneficio">
+        <mat-divider></mat-divider>
+        <p>Agregar beneficio privado</p>
+        <!-- Datos -->
+
+        <div class="grid-2-col grid-margin">
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de Beneficio</mat-label>
+            <mat-icon matPrefix>beenhere</mat-icon>
+            <mat-select formControlName="tipoBeneficio">
+              <mat-option *ngFor="let tipoBeneficio of tipoBeneficioCatalogo" [value]="tipoBeneficio">
+                {{ tipoBeneficio.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" *ngIf="beneficiosPrivadosForm.value.beneficio.tipoBeneficio?.clave === 'O'">
+            <mat-label>Especifique</mat-label>
+            <mat-icon matPrefix class="no-public">beenhere</mat-icon>
+            <input matInput type="text" />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Beneficiario</mat-label>
+            <mat-icon matPrefix class="no-public">person</mat-icon>
+            <mat-select formControlName="beneficiario">
+              <mat-option *ngFor="let beneficiario of beneficiarioCatalogo" [value]="beneficiario">
+                {{ beneficiario.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-3-col grid-margin" formGroupName="otorgante">
+          <mat-radio-group class="checkbox checkbox-height" formControlName="tipoPersona">
+            <label class="question">Otorgante</label>
+            <mat-radio-button value="Fisica"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
+            <mat-radio-button value="Moral">Persona Moral</mat-radio-button>
+          </mat-radio-group>
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre o razón social del otorgante</mat-label>
+            <mat-icon matPrefix class="no-public">person</mat-icon>
+            <input matInput type="text" formControlName="nombreRazonSocial" />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>RFC</mat-label>
+            <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+            <input matInput #input_rfc type="text" maxlength="13" formControlName="rfc" />
+            <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/13</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-2-col grid-margin">
+          <mat-form-field appearance="fill">
+            <mat-label>Forma de recepción del beneficio</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-select formControlName="formaRecepcion">
+              <mat-option *ngFor="let recepcion of recepcionCatalogo" value="{{ recepcion }}">
+                {{ recepcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Especifique el beneficio</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput type="text" formControlName="especifiqueBeneficio" />
+          </mat-form-field>
+        </div>
+
+        <div class="grid-2-col grid-margin" formGroupName="montoMensualAproximado">
+          <mat-form-field appearance="fill">
+            <mat-label>Monto Mensual aproximado del beneficio</mat-label>
+            <mat-icon matPrefix>account_balance_wallet</mat-icon>
+            <input matInput type="number" formControlName="valor" min="0" />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de moneda</mat-label>
+            <mat-icon matPrefix>beenhere</mat-icon>
+            <input matInput type="text" formControlName="moneda" />
+          </mat-form-field>
+        </div>
+
+        <div class="grid-2-col grid-margin">
+          <mat-form-field appearance="fill">
+            <mat-label>Sector productivo al que pertenece</mat-label>
+            <mat-icon matPrefix>public</mat-icon>
+            <mat-select formControlName="sector">
+              <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
+                {{ sector.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" *ngIf="beneficiosPrivadosForm.value.beneficio.sector?.clave === 'OTRO'">
+            <mat-label>Especifique</mat-label>
+            <mat-icon matPrefix class="no-public">public</mat-icon>
+            <input matInput type="text" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton" *ngIf="!aclaraciones">
+        <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div *ngIf="aclaraciones">
+        <div class="flex grid-margin">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button mat-raised-button color="primary" type="button" *ngIf="editMode" (click)="cancelEditMode()">
+          CANCELAR
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="beneficiosPrivadosForm.reset()">
+          LIMPIAR FORMULARIO
+        </button>
+        <button mat-raised-button color="primary" [disabled]="beneficiosPrivadosForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+
+    <mat-divider></mat-divider>
+
+    <div class="boton center">
+      <button mat-raised-button color="primary" [routerLink]="'/' + tipoDeclaracion + '/intereses/fideicomisos'">
+        CONTINUAR 7 DE 7
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

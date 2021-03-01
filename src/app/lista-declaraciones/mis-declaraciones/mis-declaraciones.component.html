@@ -1,0 +1,83 @@
+<div fxFill fxLayout="column">
+  <app-header class="mg-btm-80px"></app-header>
+  <div class="contenedor">
+    <mat-toolbar class="background-white title-toolbar flex mg-top-100px">
+      <label class="step-title">Mis declaraciones</label>
+      <button mat-raised-button color="primary" class="big-button" [routerLink]="['/comienza-tu-declaracion']">
+        AGREGAR DECLARACIÓN
+      </button>
+    </mat-toolbar>
+    <mat-divider class="mg-height-50px-30px"></mat-divider>
+
+    <div class="pd-lateral">
+      <mat-tab-group mat-align-tabs="center">
+        <mat-tab label="Inicial"> </mat-tab>
+        <mat-tab label="Modificación"></mat-tab>
+        <mat-tab label="Final"></mat-tab>
+      </mat-tab-group>
+      <mat-list>
+        <mat-list-item *ngFor="let declaracion of listaDeclaraciones">
+          <mat-card class="shadow">
+            <div class="flex" fxLayoutAlign="end center">
+              <div class="paragraph-flex">
+                <mat-label class="declaration-type">{{
+                  declaracion.completa ? 'Finalizada' : 'En progreso'
+                }}</mat-label>
+
+                <mat-label class="declaration-type">{{
+                  declaracion.simplificada ? 'Simplificada' : 'Completa'
+                }}</mat-label>
+              </div>
+            </div>
+            <div class="flex">
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
+                <p>
+                  TIPO DECLARACIÓN: <span class="negritas">{{ declaracion.tipoDeclaracion }}</span>
+                </p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">date_range</mat-icon>
+                <p>
+                  ÚLTIMA ACTUALIZACIÓN: <span class="negritas">{{ declaracion.updatedAt | date: 'dd/MM/yyyy' }}</span>
+                </p>
+              </div>
+            </div>
+            <div class="flex">
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
+                <p>
+                  DECLARANTE: <span class="negritas">{{ declaracion.owner?.username }}</span>
+                </p>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="boton-agregar">
+              <button
+                mat-button
+                color="primary"
+                *ngIf="!declaracion.completa"
+                (click)="deleteDeclaration(declaracion._id)"
+              >
+                Eliminar
+              </button>
+              <button mat-button color="primary" *ngIf="!declaracion.completa">Editar</button>
+              <button mat-button color="primary">Ver</button>
+            </div>
+          </mat-card>
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <mat-divider class="mg-top-100px"></mat-divider>
+    <!--<div class="center">
+      <button mat-raised-button color="primary">1</button>
+      <button mat-raised-button color="primary">2</button>
+      <button mat-raised-button color="primary">3</button>
+      <button mat-raised-button color="primary">
+        <mat-icon>arrow_right_alt</mat-icon>
+      </button>
+    </div>
+  --></div>
+
+  <app-footer></app-footer>
+</div>

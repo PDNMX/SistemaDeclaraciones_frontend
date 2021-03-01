@@ -1,0 +1,169 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header
+      section="I. Declaración de situación patrimonial"
+      [simplificada]="declaracionSimplificada"
+      progress="4.5"
+      type="{{ tipoDeclaracion }}"
+    ></section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 1. Datos Generales</label>
+    </mat-toolbar>
+
+    <mat-divider></mat-divider>
+
+    <p>
+      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      resaltados <span class="no-public-inline"></span> no serán públicos.
+    </p>
+    <form (ngSubmit)="confirmSaveInfo()" [formGroup]="datosGeneralesForm">
+      <div class="grid-3-col">
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput type="text" formControlName="nombre" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Primer Apellido</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput type="text" formControlName="primerApellido" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Segundo Apellido</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput type="text" formControlName="segundoApellido" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>CURP</mat-label>
+          <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+          <input matInput #input_curp maxlength="18" type="text" formControlName="curp" />
+          <mat-hint align="end">{{ input_curp.value?.length || 0 }}/18</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" formGroupName="rfc">
+          <mat-label>RFC</mat-label>
+          <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+          <input matInput #input_rfc maxlength="10" type="text" formControlName="rfc" />
+          <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/10</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="fill" formGroupName="rfc">
+          <mat-label>Homoclave</mat-label>
+          <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+          <input matInput #input_homoclave maxlength="3" type="text" formControlName="homoClave" />
+          <mat-hint align="end">{{ input_homoclave.value?.length || 0 }}/3</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="grid-2-col grid-margin">
+        <mat-form-field appearance="fill" formGroupName="correoElectronico">
+          <mat-label>Correo Electrónico Institucional</mat-label>
+          <mat-icon matPrefix>mail</mat-icon>
+          <input matInput type="email" formControlName="institucional" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" formGroupName="correoElectronico">
+          <mat-label>Correo Electrónico Personal / Alterno</mat-label>
+          <mat-icon matPrefix class="no-public">mail</mat-icon>
+          <input matInput type="email" formControlName="personal" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" formGroupName="telefono">
+          <mat-label>Número Telefónico de Casa</mat-label>
+          <mat-icon matPrefix class="no-public">local_phone</mat-icon>
+          <input matInput #input_tel_casa maxlength="10" type="tel" formControlName="casa" />
+          <mat-hint align="end">{{ input_tel_casa.value?.length || 0 }}/10</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="fill" formGroupName="telefono">
+          <mat-label>Número Celular Personal</mat-label>
+          <mat-icon matPrefix class="no-public">stay_primary_portrait</mat-icon>
+          <input matInput #input_tel_celular maxlength="10" type="tel" formControlName="celularPersonal" />
+          <mat-hint align="end">{{ input_tel_celular.value?.length || 0 }}/10</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Situación Personal / Estado Civil</mat-label>
+          <mat-icon matPrefix class="no-public">people</mat-icon>
+          <mat-select formControlName="situacionPersonalEstadoCivil">
+            <mat-option *ngFor="let opt of situacionPersonalEstadoCivilCatalogo" [value]="opt">
+              {{ opt.valor }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Régimen Matrimonial</mat-label>
+          <mat-icon matPrefix class="no-public">people</mat-icon>
+          <mat-select formControlName="regimenMatrimonial">
+            <mat-option *ngFor="let opt of regimenMatrimonialCatalogo" [value]="opt">
+              {{ opt.valor }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>País de Nacimiento</mat-label>
+          <mat-icon matPrefix class="no-public">public</mat-icon>
+          <mat-select formControlName="paisNacimiento">
+            <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
+              {{ opt.valor }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Nacionalidad</mat-label>
+          <mat-icon matPrefix class="no-public">public</mat-icon>
+          <mat-select formControlName="nacionalidad">
+            <mat-option *ngFor="let opt of nacionalidadesCatalogo" [value]="opt.clave">
+              {{ opt.valor }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="boton" *ngIf="!aclaraciones">
+        <button class="text-primary" mat-raised-button (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div *ngIf="aclaraciones">
+        <div class="flex">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button mat-raised-button color="primary" type="button" (click)="datosGeneralesForm.reset()">
+          LIMPIAR FORMULARIO
+        </button>
+        <button mat-raised-button color="primary" [disabled]="datosGeneralesForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+
+    <mat-divider></mat-divider>
+
+    <div class="boton center">
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/domicilio-declarante'"
+      >
+        CONTINUAR 2 DE 15
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

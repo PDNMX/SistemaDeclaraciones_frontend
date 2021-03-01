@@ -1,0 +1,407 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header
+      section="I. Declaración de situación patrimonial"
+      [simplificada]="declaracionSimplificada"
+      progress="18"
+      type="{{ tipoDeclaracion }}"
+    ></section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 4. Datos empleo, cargo o comisión que inicia</label>
+    </mat-toolbar>
+
+    <mat-divider></mat-divider>
+
+    <p>
+      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      resaltados <span class="no-public-inline"></span> no serán públicos.<br />
+    </p>
+
+    <!-- card de información -->
+    <div class="hidden">
+      <!--<mat-card class="info" *ngFor="let c of cargos; let i = index">
+        <mat-card-content>
+          <div class="flex">
+            <div class="left paragraph-flex">
+              <mat-icon matPrefix class="icon">star</mat-icon>
+              <p>
+                Nivel/Orden de Gobierno: <span class="resaltar">{{ c.orden_gobierno }}</span>
+              </p>
+            </div>
+            <div class="right paragraph-flex">
+              <mat-icon matPrefix class="icon">aspect_ratio</mat-icon>
+              <p>
+                Ámbito Público: <span class="resaltar">{{ c.ambito_publico }}</span>
+              </p>
+            </div>
+            <div class="left resaltar paragraph-flex">
+              <mat-icon matPrefix class="icon">dns</mat-icon>
+              <p>Nombre del Ente Público: {{ c.ente_publico }}</p>
+            </div>
+            <div class="right paragraph-flex">
+              <mat-icon matPrefix class="icon">wb_iridescent</mat-icon>
+              <p><span *ngIf="!c.honorarios">NO</span> Contratado por honorarios</p>
+            </div>
+            <div class="left paragraph-flex">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Área de Adscripción: {{ c.area_adscripcion }}</p>
+            </div>
+            <div class="right paragraph-flex">
+              <mat-icon matPrefix class="icon">wb_iridescent</mat-icon>
+              <p>
+                Nivel del empleo, cargo o comisión <span class="resaltar">{{ c.nivel_cargo }}</span>
+              </p>
+            </div>
+            <div class="left paragraph-flex">
+              <mat-icon matPrefix class="icon">work</mat-icon>
+              <p>
+                <span class="resaltar negritas">{{ c.cargo }}</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Funcion principal -- >
+          <mat-divider></mat-divider>
+          <div class="padding-card-section">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Especifique función principal</p>
+            </div>
+            <p>
+              {{ c.funcion_principal }}
+            </p>
+          </div>
+
+          <!-- Direccion empresa -- >
+          <mat-divider></mat-divider>
+
+          <div class="grid-container">
+            <div class="grid-item paragraph-flex">
+              <mat-icon matPrefix class="icon">date_range</mat-icon>
+              <p>
+                Fecha de toma de posición del empleo, cargo o comisión
+              </p>
+            </div>
+            <div class="grid-item paragraph-flex">
+              <mat-icon matPrefix class="icon">call</mat-icon>
+              <p>
+                Teléfono de oficina
+              </p>
+            </div>
+            <div class="grid-item">Domicilio del empleo, cargo o comisión</div>
+            <div class="grid-item">
+              <p>{{ c.fecha_ingreso | date: 'dd/MM/yyyy' }}</p>
+            </div>
+            <div class="grid-item">
+              {{ c.telefono_oficina }} <span *ngIf="c.extension"></span>extensión {{ c.extension }}
+            </div>
+            <div class="grid-item paragraph-flex">
+              <mat-icon matPrefix class="icon">public</mat-icon>
+              <p>En {{ c.domicilio_cargo?.pais }}</p>
+            </div>
+            <div class="grid-item grid-item-last paragraph-flex">
+              <mat-icon matPrefix class="icon">location_city</mat-icon>
+              <div class="domicilio-empleo">
+                <p>
+                  Calle {{ c.domicilio_cargo?.calle }} #{{ c.domicilio_cargo?.numero_exterior }}
+                  <span *ngIf="c.numero_interior">Int. {{ c.domicilio_cargo?.numero_interior }}</span
+                  >.
+                </p>
+                <p>{{ c.domicilio_cargo?.localidad }}.</p>
+                <p>{{ c.domicilio_cargo?.municipio }}, {{ c.domicilio_cargo?.estado }}.</p>
+                <p>C.P. {{ c.domicilio_cargo?.codigo_postal }}</p>
+              </div>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="padding-card-section">
+            <div class="paragraph-flex aclaraciones">
+              <span class="no-public-inline no-public-inline-margin"></span>
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Aclaraciones/Observaciones</p>
+            </div>
+            <p>
+              {{ c.aclaraciones }}
+            </p>
+          </div>
+
+          <mat-divider></mat-divider>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
+          <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div class="boton-agrgar-empleo">
+        <button mat-button color="primary">Agregar otro empleo</button>
+      </div>-->
+    </div>
+
+    <form (ngSubmit)="confirmSaveInfo()" [formGroup]="datosEmpleoCargoComisionForm">
+      <!-- Primer bloque -->
+      <div>
+        <div class="grid-2-col">
+          <mat-form-field appearance="fill">
+            <mat-label>Nivel/Orden de Gobierno </mat-label>
+            <mat-icon matPrefix>star</mat-icon>
+            <mat-select formControlName="nivelOrdenGobierno" required>
+              <mat-option *ngFor="let orden of nivelOrdenGobiernoCatalogo" [value]="orden">
+                {{ orden | replace: '_':' ' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Ámbito Público</mat-label>
+            <mat-icon matPrefix>aspect_ratio</mat-icon>
+            <mat-select formControlName="ambitoPublico">
+              <mat-option *ngFor="let ambito of ambitoPublicoCatalogo" [value]="ambito">
+                {{ ambito | replace: '_':' ' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre del Ente Público</mat-label>
+            <mat-icon matPrefix>dns</mat-icon>
+            <input matInput type="text" formControlName="nombreEntePublico" />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Área de Adscripción</mat-label>
+            <mat-icon matPrefix>wb_iridescent</mat-icon>
+            <input matInput type="text" formControlName="areaAdscripcion" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Empleo, cargo o comisión</mat-label>
+            <mat-icon matPrefix>wb_iridescent</mat-icon>
+            <input matInput type="text" formControlName="empleoCargoComision" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Especifique función principal</mat-label>
+            <mat-icon matPrefix>speaker_notes</mat-icon>
+            <input matInput type="text" formControlName="funcionPrincipal" />
+          </mat-form-field>
+          <!--<div class="grid-2-col">-->
+          <mat-radio-group class="checkbox" appearance="fill" formControlName="contratadoPorHonorarios">
+            <label class="question">¿Está contratado por honorarios?</label>
+            <mat-radio-button [value]="true">Sí</mat-radio-button>
+            <mat-radio-button [value]="false">No</mat-radio-button>
+          </mat-radio-group>
+          <mat-form-field appearance="fill">
+            <mat-label>Nivel del empleo, cargo o comisión</mat-label>
+            <mat-icon matPrefix>work</mat-icon>
+            <input matInput #input_nivel_cargo type="text" formControlName="nivelEmpleoCargoComision" />
+          </mat-form-field>
+          <!--</div>-->
+          <mat-form-field appearance="fill">
+            <mat-label>Fecha de toma de posesión del empleo, cargo o comisión</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fechaTomaPosesion" />
+            <mat-hint>dd/mm/yyyy</mat-hint>
+            <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <div class="grid-3-col">
+            <mat-form-field appearance="fill" class="double-col" formGroupName="telefonoOficina">
+              <mat-label>Teléfono de oficina</mat-label>
+              <mat-icon matPrefix>call</mat-icon>
+              <input matInput type="text" #input_telefono_oficina formControlName="telefono" maxlength="10" />
+              <mat-hint align="end">{{ input_telefono_oficina.value?.length || 0 }}/10</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="extension" formGroupName="telefonoOficina">
+              <mat-label>Extensión</mat-label>
+              <mat-icon matPrefix>call</mat-icon>
+              <input matInput type="text" formControlName="extension" maxlength="10" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Segundo Bloque -->
+        <p>Domicilio del empleo, cargo o comisión</p>
+        <mat-grid-list cols="2" rowHeight="100px">
+          <mat-grid-tile colspan="1">
+            <mat-form-field appearance="fill">
+              <mat-label>País</mat-label>
+              <mat-icon matPrefix>public</mat-icon>
+              <mat-select value="MEXICO" (selectionChange)="tipoDomicilioChanged($event.value)">
+                <mat-option value="MEXICO"> MÉXICO </mat-option>
+                <mat-option value="EXTRANJERO"> EN EL EXTRANJERO </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+        </mat-grid-list>
+        <mat-grid-list *ngIf="tipoDomicilio === 'MEXICO'" cols="15" rowHeight="100px" formGroupName="domicilioMexico">
+          <mat-grid-tile colspan="6">
+            <mat-form-field appearance="fill">
+              <mat-label>Calle</mat-label>
+              <mat-icon matPrefix>streetview</mat-icon>
+              <input matInput type="text" formControlName="calle" required />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="3">
+            <mat-form-field appearance="fill">
+              <mat-label>Número Exterior</mat-label>
+              <mat-icon matPrefix>image_aspect_ratio</mat-icon>
+              <input matInput type="text" formControlName="numeroExterior" maxlength="5" />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="3">
+            <mat-form-field appearance="fill">
+              <mat-label>Número Interior</mat-label>
+              <mat-icon matPrefix>image_aspect_ratio</mat-icon>
+              <input matInput #input_ni type="text" formControlName="numeroInterior" maxlength="10" />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="3">
+            <mat-form-field appearance="fill">
+              <mat-label>Código Postal</mat-label>
+              <mat-icon matPrefix>markunread_mailbox</mat-icon>
+              <input matInput #input_cp maxlength="5" type="text" formControlName="codigoPostal" required />
+              <mat-hint align="end">{{ input_cp.value?.length || 0 }}/5</mat-hint>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile colspan="5">
+            <mat-form-field appearance="fill">
+              <mat-label>Entidad Federativa</mat-label>
+              <mat-icon matPrefix>public</mat-icon>
+              <mat-select formControlName="entidadFederativa">
+                <mat-option *ngFor="let opt of estadosCatalogo" [value]="opt">
+                  {{ opt.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="5">
+            <mat-form-field appearance="fill">
+              <mat-label>Municipio/Alcaldía</mat-label>
+              <mat-icon matPrefix>beenhere</mat-icon>
+              <mat-select formControlName="municipioAlcaldia">
+                <mat-option *ngFor="let opt of municipiosCatalogo[estado?.clave]" [value]="opt">
+                  {{ opt.valor }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="5">
+            <mat-form-field appearance="fill">
+              <mat-label>Colonia</mat-label>
+              <mat-icon matPrefix>location_city</mat-icon>
+              <input matInput #input_localidad type="text" formControlName="coloniaLocalidad" />
+            </mat-form-field>
+          </mat-grid-tile>
+        </mat-grid-list>
+
+        <mat-grid-list
+          *ngIf="tipoDomicilio === 'EXTRANJERO'"
+          cols="15"
+          rowHeight="100px"
+          formGroupName="domicilioExtranjero"
+        >
+          <mat-grid-tile colspan="6">
+            <mat-form-field appearance="fill">
+              <mat-label>Calle</mat-label>
+              <mat-icon matPrefix>streetview</mat-icon>
+              <input matInput type="text" formControlName="calle" />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="3">
+            <mat-form-field appearance="fill">
+              <mat-label>Número Exterior</mat-label>
+              <mat-icon matPrefix>image_aspect_ratio</mat-icon>
+              <input matInput type="text" formControlName="numeroExterior" />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="3">
+            <mat-form-field appearance="fill">
+              <mat-label>Número Interior</mat-label>
+              <mat-icon matPrefix>image_aspect_ratio</mat-icon>
+              <input matInput #input_ni type="text" formControlName="numeroInterior" />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="3">
+            <mat-form-field appearance="fill">
+              <mat-label>Código Postal</mat-label>
+              <mat-icon matPrefix>markunread_mailbox</mat-icon>
+              <input matInput #input_cp maxlength="5" type="text" formControlName="codigoPostal" />
+              <mat-hint align="end">{{ input_cp.value?.length || 0 }}/5</mat-hint>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile colspan="5">
+            <mat-form-field appearance="fill">
+              <mat-label>País</mat-label>
+              <mat-icon matPrefix>location_city</mat-icon>
+              <mat-select formControlName="pais">
+                <mat-option *ngFor="let opt of paisesCatalogo" value="{{ opt.alpha2 }}">
+                  {{ opt.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="5">
+            <mat-form-field appearance="fill">
+              <mat-label>Estado/Provincia</mat-label>
+              <mat-icon matPrefix>public</mat-icon>
+              <input matInput #input_ep type="text" formControlName="estadoProvincia" />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="5">
+            <mat-form-field appearance="fill">
+              <mat-label>Ciudad/Localidad</mat-label>
+              <mat-icon matPrefix>beenhere</mat-icon>
+              <input matInput #input_cl type="text" formControlName="ciudadLocalidad" />
+            </mat-form-field>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+
+      <div class="boton" *ngIf="!aclaraciones">
+        <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div class="" *ngIf="aclaraciones">
+        <div class="flex grid-margin">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button mat-raised-button color="primary" type="button" (click)="datosEmpleoCargoComisionForm.reset()">
+          LIMPIAR FORMULARIO
+        </button>
+        <button mat-raised-button color="primary" [disabled]="datosEmpleoCargoComisionForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+
+    <div class="boton center">
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/experiencia-laboral'"
+      >
+        CONTINUAR 5 DE 15
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

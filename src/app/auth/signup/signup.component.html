@@ -1,0 +1,167 @@
+<div fxFill fxLayout="column" fxLayoutAlign="center">
+  <app-header></app-header>
+  <mat-toolbar class="background-white title-toolbar">
+    <label class="step-title">Registro</label>
+  </mat-toolbar>
+  <mat-divider></mat-divider>
+  <div class="signup-container" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex="90%" fxFlex.sm="70%" fxFlex.md="60%" fxFlex.gt-md="55%" class="signup-box">
+      <form (ngSubmit)="signup()" [formGroup]="signupForm" novalidate>
+        <div class="signup-error" [hidden]="!error || isLoading" translate>Usuario o contraseña incorrecto</div>
+        <br />
+        <!--<div class="signup-fields" fxLayout="column">-->
+        <div class="signup-fields">
+          <mat-form-field [hideRequiredMarker]="true" appearance="fill">
+            <mat-label>Nombre(s)</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input
+              type="text"
+              matInput
+              formControlName="nombre"
+              autocomplete="nombre"
+              [placeholder]="'Nombre' | translate"
+              required
+            />
+            <mat-error *ngIf="signupForm.controls.nombre.invalid && signupForm.controls.nombre.touched">
+              <span translate>Nombre requerido</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field [hideRequiredMarker]="true" appearance="fill">
+            <mat-label>Apellido paterno</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input
+              type="text"
+              matInput
+              formControlName="primerApellido"
+              autocomplete="apellido"
+              [placeholder]="'Apellido paterno' | translate"
+              required
+            />
+            <mat-error *ngIf="signupForm.controls.primerApellido.invalid && signupForm.controls.primerApellido.touched">
+              <span translate>Apellido paterno requerido</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field [hideRequiredMarker]="true" appearance="fill">
+            <mat-label>Apellido materno</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input
+              type="text"
+              matInput
+              formControlName="segundoApellido"
+              autocomplete="apellido"
+              [placeholder]="'Apellido materno' | translate"
+            />
+            <mat-error
+              *ngIf="signupForm.controls.segundoApellido.invalid && signupForm.controls.segundoApellido.touched"
+            >
+              <span translate>Apellido materno requerido</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field [hideRequiredMarker]="true" appearance="fill">
+            <mat-label>Correo electrónico</mat-label>
+            <mat-icon matPrefix>mail</mat-icon>
+            <input
+              type="text"
+              matInput
+              formControlName="username"
+              autocomplete="correo"
+              [placeholder]="'Correo electrónico' | translate"
+              required
+            />
+            <mat-error *ngIf="signupForm.controls.username.invalid && signupForm.controls.username.touched">
+              <span translate>Correo electrónico requerido</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field [hideRequiredMarker]="true" appearance="fill">
+            <mat-label>Contraseña</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input
+              type="password"
+              matInput
+              formControlName="contrasena"
+              [placeholder]="'Contraseña' | translate"
+              maxlength="20"
+              required
+            />
+            <mat-error *ngIf="signupForm.controls.contrasena.invalid && signupForm.controls.contrasena.touched">
+              <span translate>Contraseña requerida</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field [hideRequiredMarker]="true" appearance="fill">
+            <mat-label>Confirmar contraseña</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input
+              type="password"
+              matInput
+              formControlName="confirmarContrasena"
+              [placeholder]="'Confirmar contraseña' | translate"
+              maxlength="20"
+              required
+            />
+            <mat-error *ngIf="signupForm.value.contrasena !== signupForm.value.confirmarContrasena">
+              <span translate>Las contraseñas no coinciden</span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field [hideRequiredMarker]="true" appearance="fill">
+            <mat-label>CURP</mat-label>
+            <mat-icon matPrefix>fingerprint</mat-icon>
+            <input
+              type="text"
+              matInput
+              formControlName="curp"
+              autocomplete="curp"
+              [placeholder]="'CURP' | translate"
+              required
+              #input_curp
+              maxlength="18"
+            />
+            <mat-hint align="end">{{ input_curp.value?.length || 0 }}/18</mat-hint>
+            <mat-error *ngIf="signupForm.controls.curp.invalid && signupForm.controls.curp.touched">
+              <span translate>CURP requerido</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field [hideRequiredMarker]="true" appearance="fill">
+            <mat-label>RFC</mat-label>
+            <mat-icon matPrefix>fingerprint</mat-icon>
+            <input
+              type="text"
+              matInput
+              formControlName="rfc"
+              autocomplete="rfc"
+              [placeholder]="'RFC' | translate"
+              required
+              #input_rfc
+              maxlength="13"
+            />
+            <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/13</mat-hint>
+            <mat-error *ngIf="signupForm.controls.rfc.invalid && signupForm.controls.rfc.touched">
+              <span translate>RFC requerido</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <button
+          mat-raised-button
+          class="signup-btn"
+          color="primary"
+          type="submit"
+          [disabled]="
+            signupForm.invalid || isLoading || signupForm.value.confirmarContrasena !== signupForm.value.contrasena
+          "
+        >
+          <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+          <span translate>REGISTRAR</span>
+        </button>
+      </form>
+      <button class="login-button" mat-button color="primary" type="button" routerLink="/login">
+        ¿YA TIENES CUENTA? INICIA SESIÓN
+      </button>
+    </mat-card>
+  </div>
+  <app-footer></app-footer>
+</div>

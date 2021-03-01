@@ -1,0 +1,13 @@
+.flex {
+  justify-content: center;
+  margin: 35px 0 10px 0;
+}
+.flex > button {
+  margin-right: 5px;
+}
+.flex > button:last-child {
+  margin-right: 0;
+}
+.pag-arrow {
+  flex: 0 0 calc(80px);
+}

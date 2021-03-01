@@ -1,0 +1,289 @@
+<div class="section-main-container">
+  <mat-card class="form-card">
+    <section-header section="II. Declaración de intereses" progress="98" type="{{ tipoDeclaracion }}"></section-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-toolbar class="background-white">
+      <label class="step-title"> 7. Fideicomisos (hasta los últimos dos años)</label>
+    </mat-toolbar>
+
+    <p>
+      Este apartado solo lo llenaran las personas servidoras públicas que tengan participación en un fideicomiso, ya sea
+      en el carácter de fideicomitente, fiduciario, fideicomisario o dentro del consejo técnico. Deberá reportar hasta
+      los últimos dos años.
+    </p>
+
+    <mat-divider></mat-divider>
+
+    <p class="grid-margin">
+      Todos los campos son obligatorios. Todos los datos de participación en fideicomisos de la pareja o dependientes
+      económicos no serán públicos, y los campos resaltados <span class="no-public-inline"></span> no serán públicos.
+    </p>
+
+    <!-- Botones -->
+    <div *ngIf="!fideicomiso?.length && !editMode && !fideicomisosForm.value.ninguno">
+      <mat-grid-list cols="2" rowHeight="150px">
+        <mat-grid-tile colspan="1">
+          <div class="">
+            <button mat-raised-button color="primary" (click)="noExperience()">Ninguno</button>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1">
+          <div class="">
+            <button mat-raised-button color="primary" (click)="addItem()">Agregar fideicomiso</button>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+
+    <!-- card de información -->
+    <div>
+      <mat-card class="info" *ngIf="fideicomisosForm.value.ninguno">
+        <p>Ningún fideicomiso</p>
+      </mat-card>
+
+      <mat-card class="info" *ngFor="let f of fideicomiso; let i = index">
+        <mat-card-content class="">
+          <div class="paragraph-flex size-20">
+            <mat-icon matPrefix class="icon">work</mat-icon>
+            <p>
+              <span class="negritas">{{ f.rfcFideicomiso }}</span>
+            </p>
+          </div>
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+              <p>{{ f.tipoRelacion }}</p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">speaker_notes</mat-icon>
+              <p>Tipo de participación: {{ f.tipoParticipacion }}</p>
+            </div>
+
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon card-no-public">speaker_notes</mat-icon>
+              <p>Tipo de fideicomiso: {{ f.rfcFideicomiso }}</p>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="grid-3fr-1fr">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Sector</p>
+            </div>
+            <div class="paragraph-flex double-row">
+              <mat-icon matPrefix class="icon">public</mat-icon>
+              <p>{{ f.extranjero == 'MX' ? 'En México' : 'En el extranjero' }}</p>
+            </div>
+            <p>{{ f.sector.valor }}</p>
+          </div>
+
+          <!-- <mat-divider></mat-divider>
+
+          <div class="padding-card-section">
+            <div class="paragraph-flex aclaraciones">
+              <span class="no-public-inline no-public-inline-margin"></span>
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Aclaraciones/Observaciones</p>
+            </div>
+            <p>
+              {{ f.aclaracionesObservaciones }}
+            </p>
+          </div> -->
+
+          <mat-divider></mat-divider>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
+          <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div
+        class="boton-agregar grid-margin"
+        *ngIf="(fideicomiso.length && !editMode) || fideicomisosForm.value.ninguno"
+      >
+        <button mat-raised-button color="primary" (click)="addItem()">AGREGAR FIDEICOMISO</button>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="saveItem()" [formGroup]="fideicomisosForm" *ngIf="editMode">
+      <!-- Agregar -->
+      <div class="padding-agregar" formGroupName="fideicomiso">
+        <mat-divider></mat-divider>
+        <p>Agregar fideicomisos</p>
+        <!-- Datos -->
+        <div class="grid-2-col grid-margin">
+          <mat-form-field appearance="fill">
+            <mat-label>Participación en Fideicomisos</mat-label>
+            <mat-icon matPrefix>beenhere</mat-icon>
+            <mat-select formControlName="tipoRelacion">
+              <mat-option value="{{ relacionCatalogo[0] }}"> Declarante </mat-option>
+              <mat-option value="{{ relacionCatalogo[1] }}"> Pareja </mat-option>
+              <mat-option value="{{ relacionCatalogo[2] }}"> Dependiente Económico </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de Fideicomisos</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-select formControlName="tipoFideicomiso">
+              <mat-option *ngFor="let tipoFideicomiso of tipoFideicomisoCatalogo" value="{{ tipoFideicomiso }}">
+                {{ tipoFideicomiso }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de Participación</mat-label>
+            <mat-icon matPrefix>account_balance_wallet</mat-icon>
+            <mat-select formControlName="tipoParticipacion" (selectionChange)="tipoParticipacionChanged($event.value)">
+              <mat-option value="{{ tipoParticipacionCatalogo[0] }}"> Fideicomitente </mat-option>
+              <mat-option value="{{ tipoParticipacionCatalogo[1] }}"> Fiduciario </mat-option>
+              <mat-option value="{{ tipoParticipacionCatalogo[2] }}"> Fideicomisario </mat-option>
+              <mat-option value="{{ tipoParticipacionCatalogo[3] }}"> Comité Técnico </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>RFC del Fideicomiso</mat-label>
+            <mat-icon matPrefix>fingerprint</mat-icon>
+            <input matInput #input_rfc_fideicomiso type="text" formControlName="rfcFideicomiso" maxlength="13" />
+            <mat-hint align="end">{{ input_rfc_fideicomiso.value?.length || 0 }}/13</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="grid-3-col grid-margin"
+          formGroupName="fideicomitente"
+          *ngIf="fideicomisosForm.value.fideicomiso.tipoParticipacion === 'FIDEICOMITENTE'"
+        >
+          <mat-radio-group class="checkbox" formControlName="tipoPersona">
+            <p class="question double-col">Fideicomitente</p>
+            <mat-radio-button value="Fisica"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
+            <mat-radio-button value="Moral">Persona Moral</mat-radio-button>
+          </mat-radio-group>
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre o razón social del Fideicomitente</mat-label>
+            <mat-icon matPrefix class="no-public">person</mat-icon>
+            <input matInput type="text" formControlName="nombreRazonSocial" />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>RFC del Fideicomitente</mat-label>
+            <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+            <input matInput #input_rfc type="text" maxlength="13" formControlName="rfc" />
+            <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/13</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="grid-2-col grid-margin"
+          formGroupName="fiduciario"
+          *ngIf="fideicomisosForm.value.fideicomiso.tipoParticipacion === 'FIDUCIARIO'"
+        >
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre del Fiduciario</mat-label>
+            <mat-icon matPrefix class="no-public">person</mat-icon>
+            <input matInput type="text" formControlName="nombreRazonSocial" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>RFC del Fiduciario</mat-label>
+            <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+            <input matInput #input_rfc_fiduciario type="text" formControlName="rfc" />
+            <mat-hint align="end">{{ input_rfc_fiduciario.value?.length || 0 }}/13</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="grid-3-col grid-margin"
+          formGroupName="fideicomisario"
+          *ngIf="fideicomisosForm.value.fideicomiso.tipoParticipacion === 'FIDEICOMISARIO'"
+        >
+          <mat-radio-group class="checkbox" formControlName="tipoPersona">
+            <p class="question double-col">Fideicomisario</p>
+            <mat-radio-button value="Fisica"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
+            <mat-radio-button value="Moral">Persona Moral</mat-radio-button>
+          </mat-radio-group>
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre o razón social del Fideicomisario</mat-label>
+            <mat-icon matPrefix class="no-public">person</mat-icon>
+            <input matInput type="text" formControlName="nombreRazonSocial" />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>RFC del Fideicomisario</mat-label>
+            <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
+            <input matInput #input_rfc_fideicomisario type="text" maxlength="13" formControlName="rfc" />
+            <mat-hint align="end">{{ input_rfc_fideicomisario.value?.length || 0 }}/13</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="grid-2-col grid-margin">
+          <mat-form-field appearance="fill">
+            <mat-label>Sector productivo al que pertenece</mat-label>
+            <mat-icon matPrefix>public</mat-icon>
+            <mat-select formControlName="sector">
+              <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
+                {{ sector.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" *ngIf="fideicomisosForm.value.fideicomiso.sector?.clave === 'OTRO'">
+            <mat-label>Especifique</mat-label>
+            <mat-icon matPrefix class="no-public">public</mat-icon>
+            <input matInput type="text" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>¿Dónde se localiza el fideicomiso?</mat-label>
+            <mat-icon matPrefix>public</mat-icon>
+            <mat-select formControlName="extranjero">
+              <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
+              <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton" *ngIf="!aclaraciones">
+        <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
+          AGREGAR ACLARACIONES / OBSERVACIONES
+        </button>
+      </div>
+      <div *ngIf="aclaraciones">
+        <div class="flex grid-margin">
+          <p>Aclaraciones / Observaciones</p>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+        </div>
+
+        <mat-form-field appearance="fill" class="grid-margin">
+          <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="boton text-right">
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
+        <button mat-raised-button color="primary" type="button" *ngIf="editMode" (click)="cancelEditMode()">
+          CANCELAR
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="fideicomisosForm.reset()">
+          LIMPIAR FORMULARIO
+        </button>
+        <button mat-raised-button color="primary" [disabled]="fideicomisosForm.invalid || isLoading">
+          GUARDAR CAMBIOS
+        </button>
+      </div>
+    </form>
+
+    <mat-divider></mat-divider>
+
+    <section-footer [declaracionId]="declaracionId"></section-footer>
+  </mat-card>
+</div>

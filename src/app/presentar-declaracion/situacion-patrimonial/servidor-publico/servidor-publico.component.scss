@@ -1,0 +1,31 @@
+:host {
+  display: flex;
+  flex: 1;
+  background-color: #ffffff;
+}
+
+.background-white {
+  height: 120px;
+}
+
+.fecha-publico {
+  margin-top: 50px;
+}
+.total {
+  margin: 0 20px;
+  font-size: 25px;
+  color: black;
+  font-weight: bold;
+}
+
+.row-2 {
+  grid-row-start: 2;
+}
+.boton {
+  display: block;
+  padding: 50px 0;
+}
+
+.delete-button {
+  transform: translateY(-20px);
+}
