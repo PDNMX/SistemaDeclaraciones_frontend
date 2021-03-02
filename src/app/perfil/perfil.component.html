@@ -12,14 +12,24 @@
           <span class="negritas">{{ user?.nombre }} {{ user?.primerApellido }} {{ user?.segundoApellido }}</span>
         </p>
       </div>
-      <!--<div class="paragraph-flex">
-        <mat-icon matPrefix class="icon">work</mat-icon>
-        <p>Cargo Actual: <span class="resaltar">Director General</span></p>
+      <div class="paragraph-flex">
+        <mat-icon matPrefix class="icon">fingerprint</mat-icon>
+        <p>
+          CURP: <span class="resaltar">{{ user?.curp }}</span>
+        </p>
       </div>
       <div class="paragraph-flex">
-        <mat-icon matPrefix class="icon">aspect_ratio</mat-icon>
-        <p>Ente Público: <span class="resaltar">Banco Nacional</span></p>
-      </div>-->
+        <mat-icon matPrefix class="icon">work</mat-icon>
+        <p>
+          RFC: <span class="resaltar">{{ user?.rfc }}</span>
+        </p>
+      </div>
+      <div class="paragraph-flex">
+        <mat-icon matPrefix class="icon">email</mat-icon>
+        <p>
+          Correo Electrónico: <span class="resaltar">{{ user?.username }}</span>
+        </p>
+      </div>
       <div class="paragraph-flex">
         <mat-icon matPrefix class="icon">date_range</mat-icon>
         <p>
@@ -27,9 +37,9 @@
         </p>
       </div>
       <div class="paragraph-flex">
-        <mat-icon matPrefix class="icon">email</mat-icon>
+        <mat-icon matPrefix class="icon">supervisor_account</mat-icon>
         <p>
-          Correo Electrónico <span class="resaltar">{{ user?.username }}</span>
+          Rol: <span class="resaltar">{{ user?.roles }}</span>
         </p>
       </div>
     </mat-card-content>
@@ -109,6 +119,9 @@
       </mat-form-field>
     </div>
     <div class="center">
+      <button mat-raised-button color="primary" class="btn-guardar" type="button" (click)="editMode = false">
+        CANCELAR
+      </button>
       <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
       <button mat-raised-button color="primary" class="btn-guardar" [disabled]="profileForm.invalid || isLoading">
         GUARDAR

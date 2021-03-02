@@ -43,6 +43,8 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
 
   userID: string = null;
 
+  PAGE_SIZE = 10;
+
   constructor(
     private route: ActivatedRoute,
     private apollo: Apollo,
@@ -111,7 +113,10 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
               filter: {
                 tipoDeclaracion: 'INICIAL',
               },
-              pageNumber: this.inicialPaginator.pageIndex,
+              pagination: {
+                page: this.inicialPaginator.pageIndex,
+                size: this.PAGE_SIZE,
+              },
             },
           });
         }),
@@ -142,7 +147,10 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
               filter: {
                 tipoDeclaracion: 'MODIFICACION',
               },
-              pageNumber: this.modificacionPaginator.pageIndex,
+              pagination: {
+                page: this.modificacionPaginator.pageIndex,
+                size: this.PAGE_SIZE,
+              },
             },
           });
         }),
@@ -173,7 +181,10 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
               filter: {
                 tipoDeclaracion: 'CONCLUSION',
               },
-              pageNumber: this.conclusionPaginator.pageIndex,
+              pagination: {
+                page: this.conclusionPaginator.pageIndex,
+                size: this.PAGE_SIZE,
+              },
             },
           });
         }),
@@ -201,7 +212,10 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
             query: declaracionesMetadata,
             variables: {
               userID: this.userID,
-              pageNumber: this.totalPaginator.pageIndex,
+              pagination: {
+                page: this.totalPaginator.pageIndex,
+                size: this.PAGE_SIZE,
+              },
             },
           });
         }),

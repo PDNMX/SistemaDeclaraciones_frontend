@@ -10,10 +10,10 @@
     <mat-divider class="mg-height-50px-30px"></mat-divider>
 
     <div class="pd-lateral">
-      <mat-tab-group mat-align-tabs="center">
+      <mat-tab-group mat-align-tabs="center" (selectedTabChange)="onTabChanged($event)">
         <mat-tab label="Inicial"> </mat-tab>
         <mat-tab label="Modificación"></mat-tab>
-        <mat-tab label="Final"></mat-tab>
+        <mat-tab label="Conclusión"></mat-tab>
       </mat-tab-group>
       <mat-list>
         <mat-list-item *ngFor="let declaracion of listaDeclaraciones">
@@ -23,17 +23,27 @@
                 <mat-label class="declaration-type">{{
                   declaracion.completa ? 'Finalizada' : 'En progreso'
                 }}</mat-label>
-
-                <mat-label class="declaration-type">{{
-                  declaracion.simplificada ? 'Simplificada' : 'Completa'
-                }}</mat-label>
               </div>
             </div>
             <div class="flex">
               <div class="paragraph-flex">
-                <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
+                <mat-icon matPrefix class="icon">description</mat-icon>
                 <p>
                   TIPO DECLARACIÓN: <span class="negritas">{{ declaracion.tipoDeclaracion }}</span>
+                </p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">segment</mat-icon>
+                <p>
+                  VERSIÓN: <span class="negritas">{{ declaracion.simplificada ? 'SIMPLIFICADA' : 'COMPLETA' }}</span>
+                </p>
+              </div>
+            </div>
+            <div class="flex">
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">record_voice_over</mat-icon>
+                <p>
+                  DECLARANTE: <span class="negritas">{{ declaracion.owner?.username }}</span>
                 </p>
               </div>
               <div class="paragraph-flex">
@@ -43,41 +53,30 @@
                 </p>
               </div>
             </div>
-            <div class="flex">
-              <div class="paragraph-flex">
-                <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
-                <p>
-                  DECLARANTE: <span class="negritas">{{ declaracion.owner?.username }}</span>
-                </p>
-              </div>
-            </div>
             <mat-divider></mat-divider>
             <div class="boton-agregar">
               <button
                 mat-button
                 color="primary"
                 *ngIf="!declaracion.completa"
-                (click)="deleteDeclaration(declaracion._id)"
+                (click)="confirmDeleteDeclaration(declaracion._id)"
               >
                 Eliminar
               </button>
-              <button mat-button color="primary" *ngIf="!declaracion.completa">Editar</button>
-              <button mat-button color="primary">Ver</button>
+              <button mat-button color="primary" *ngIf="!declaracion.completa" (click)="editDeclaration(declaracion)">
+                Editar
+              </button>
+              <button mat-button color="primary" (click)="previewDeclaration(declaracion._id)">Ver</button>
             </div>
           </mat-card>
         </mat-list-item>
       </mat-list>
     </div>
     <mat-divider class="mg-top-100px"></mat-divider>
-    <!--<div class="center">
-      <button mat-raised-button color="primary">1</button>
-      <button mat-raised-button color="primary">2</button>
-      <button mat-raised-button color="primary">3</button>
-      <button mat-raised-button color="primary">
-        <mat-icon>arrow_right_alt</mat-icon>
-      </button>
+    <div class="center">
+      <app-paginator></app-paginator>
     </div>
-  --></div>
+  </div>
 
   <app-footer></app-footer>
 </div>

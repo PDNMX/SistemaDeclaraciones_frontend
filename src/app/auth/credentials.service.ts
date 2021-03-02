@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-type Roles = 'USER' | 'ADMIN' | 'SUPER_ADMIN';
+type Roles = 'USER' | 'ADMIN' | 'SUPER_ADMIN' | 'ROOT';
 
 export interface User {
   _id: string;
@@ -45,7 +45,7 @@ export class CredentialsService {
    */
   isAdmin(): boolean {
     const userRoles = this.credentials?.user?.roles || [];
-    return userRoles.includes('ADMIN') || userRoles.includes('SUPER_ADMIN');
+    return userRoles.includes('ADMIN') || userRoles.includes('SUPER_ADMIN') || userRoles.includes('ROOT');
   }
 
   /**
@@ -68,6 +68,15 @@ export class CredentialsService {
   isSuperAdmin(): boolean {
     const userRoles = this.credentials?.user?.roles || [];
     return userRoles.includes('SUPER_ADMIN');
+  }
+
+  /**
+   * Checks is the user is root admin.
+   * @return True if the user is root admin.
+   */
+  isRoot(): boolean {
+    const userRoles = this.credentials?.user?.roles || [];
+    return userRoles.includes('ROOT');
   }
 
   /**

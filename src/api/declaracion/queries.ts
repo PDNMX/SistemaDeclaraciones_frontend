@@ -1,8 +1,22 @@
 import gql from 'graphql-tag';
 
 export const declaracionesMetadata = gql`
-  query declaracionesMetadata($userID: LimitedString, $filter: DeclaracionesFilterInput, $pageNumber: Int) {
-    declaracionesMetadata(userID: $userID, filter: $filter, pageNumber: $pageNumber) {
+  query declaracionesMetadata(
+    $userID: LimitedString
+    $filter: DeclaracionesFilterInput
+    $pagination: PaginationOptionsInput
+  ) {
+    declaracionesMetadata(userID: $userID, filter: $filter, pagination: $pagination) {
+      totalDocs
+      limit
+      totalPages
+      page
+      pagingCounter
+      hasPrevPage
+      hasNextPage
+      prevPage
+      nextPage
+      hasMore
       docs {
         _id
         completa
@@ -23,7 +37,6 @@ export const declaracionesMetadata = gql`
           updatedAt
         }
       }
-      pageNumber
     }
   }
 `;

@@ -43,8 +43,18 @@ export const userProfileQuery = gql`
 `;
 
 export const search = gql`
-  query search($keyword: LimitedString!, $pageNumber: Int) {
-    search(keyword: $keyword, pageNumber: $pageNumber) {
+  query search($keyword: LimitedString!, $pagination: PaginationOptionsInput) {
+    search(keyword: $keyword, pagination: $pagination) {
+      totalDocs
+      limit
+      totalPages
+      page
+      pagingCounter
+      hasPrevPage
+      hasNextPage
+      prevPage
+      nextPage
+      hasMore
       docs {
         _id
         username
@@ -56,14 +66,23 @@ export const search = gql`
         roles
         createdAt
       }
-      pageNumber
     }
   }
 `;
 
 export const users = gql`
-  query users($pageNumber: Int) {
-    users(pageNumber: $pageNumber) {
+  query users($pagination: PaginationOptionsInput) {
+    users(pagination: $pagination) {
+      totalDocs
+      limit
+      totalPages
+      page
+      pagingCounter
+      hasPrevPage
+      hasNextPage
+      prevPage
+      nextPage
+      hasMore
       docs {
         _id
         username
@@ -75,7 +94,6 @@ export const users = gql`
         roles
         createdAt
       }
-      pageNumber
     }
   }
 `;

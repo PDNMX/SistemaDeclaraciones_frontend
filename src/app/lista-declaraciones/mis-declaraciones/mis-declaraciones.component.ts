@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '@shared/dialog/dialog.component';
+import { PreviewDeclarationComponent } from '@shared/preview-declaration/preview-declaration.component';
+
+import { declaracionesMetadata, deleteDeclaracion } from '@api/declaracion';
+import { DeclaracionMetadata, TipoDeclaracion } from '@models/declaracion';
 
 import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
-
-interface ListaDeclaraciones {
-  _id: string;
-  tipoDeclaracion: string;
-  completa: boolean;
-  updatedAt: string;
-}
 
 @Component({
   selector: 'app-mis-declaraciones',
@@ -16,49 +16,67 @@ interface ListaDeclaraciones {
   styleUrls: ['./mis-declaraciones.component.scss'],
 })
 export class MisDeclaracionesComponent implements OnInit {
-  listaDeclaraciones: Array<ListaDeclaraciones> = [];
+  currentTab: TipoDeclaracion = 'INICIAL';
+  listaDeclaraciones: DeclaracionMetadata[] = [];
 
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo, private dialog: MatDialog, private router: Router) {}
+
+  confirmDeleteDeclaration(id: string) {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        title: '¿Eliminar declaración?',
+        message: 'No podrás deshacer esta acción',
+        trueText: 'Eliminar',
+        falseText: 'Cancelar',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.deleteDeclaration(id);
+      }
+    });
+  }
 
   async deleteDeclaration(id: string) {
     try {
       const result = await this.apollo
         .mutate({
-          mutation: gql`
-            mutation {
-              deleteDeclaracion(id: "${id}")
-            }
-          `,
+          mutation: deleteDeclaracion,
+          variables: {
+            id,
+          },
         })
         .toPromise();
 
-      console.log('RESULT', result);
+      console.log(result);
+      this.presentAlert('Tu declaración ha sido eliminada', '');
     } catch (error) {
       console.log(error);
+      this.presentAlert('Error', 'No se pudo eliminar la declaración');
+    } finally {
+      this.getList(this.currentTab);
     }
   }
 
-  async getList() {
+  editDeclaration(declaracion: DeclaracionMetadata) {
+    const tipoDeclaracion = declaracion.tipoDeclaracion.toLocaleLowerCase();
+    const url = declaracion.simplificada
+      ? `/${tipoDeclaracion}/simplificada/situacion-patrimonial`
+      : `/${tipoDeclaracion}/situacion-patrimonial`;
+    this.router.navigate([url], { replaceUrl: true });
+  }
+
+  async getList(tipoDeclaracion: TipoDeclaracion = null) {
     try {
       const { data }: any = await this.apollo
         .query({
-          query: gql`
-            query {
-              declaracionesMetadata(filter: { tipoDeclaracion: INICIAL }) {
-                docs {
-                  _id
-                  completa
-                  simplificada
-                  tipoDeclaracion
-                  updatedAt
-                  owner {
-                    username
-                  }
-                }
-                pageNumber
-              }
-            }
-          `,
+          query: declaracionesMetadata,
+          variables: {
+            filter: {
+              tipoDeclaracion,
+            },
+          },
         })
         .toPromise();
 
@@ -69,6 +87,41 @@ export class MisDeclaracionesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getList();
+    this.getList(this.currentTab);
+  }
+
+  onTabChanged(event: any) {
+    const tabName = event.tab.textLabel;
+
+    const tipoDeclaracionMap = {
+      Inicial: 'INICIAL',
+      Modificación: 'MODIFICACION',
+      Conclusión: 'CONCLUSION',
+    };
+    this.currentTab = tipoDeclaracionMap[tabName];
+    this.getList(tipoDeclaracionMap[tabName]);
+  }
+
+  presentAlert(title: string, message: string) {
+    this.dialog.open(DialogComponent, {
+      data: {
+        title,
+        message,
+        trueText: 'Aceptar',
+      },
+    });
+  }
+
+  previewDeclaration(id: string) {
+    const dialogRef = this.dialog.open(PreviewDeclarationComponent, {
+      data: {
+        id,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+      }
+    });
   }
 }

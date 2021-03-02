@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableComponent } from './table.component';
+import { ChangeRolesComponent } from './change-roles.component';
 
-describe('TableComponent', () => {
-  let component: TableComponent;
-  let fixture: ComponentFixture<TableComponent>;
+describe('ChangeRolesComponent', () => {
+  let component: ChangeRolesComponent;
+  let fixture: ComponentFixture<ChangeRolesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TableComponent],
+      declarations: [ChangeRolesComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TableComponent);
+    fixture = TestBed.createComponent(ChangeRolesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

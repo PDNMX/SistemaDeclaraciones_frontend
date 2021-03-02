@@ -1,5 +1,11 @@
 import gql from 'graphql-tag';
 
+export const deleteDeclaracion = gql`
+  mutation deleteDeclaracion($id: ID!) {
+    deleteDeclaracion(id: $id)
+  }
+`;
+
 export const firmarDeclaracion = gql`
   mutation firmarDeclaracion($id: ID!) {
     firmarDeclaracion(id: $id)

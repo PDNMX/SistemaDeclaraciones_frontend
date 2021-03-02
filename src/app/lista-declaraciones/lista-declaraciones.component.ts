@@ -35,7 +35,6 @@ export class ListaDeclaracionesComponent implements OnInit {
           `,
         })
         .toPromise();
-      console.log('data', data);
       this.declaraciones = data.stats.total || 0;
       this.declaracionesIniciales = data.stats.counters.find((d: any) => d.tipoDeclaracion === 'INICIAL')?.count || 0;
       this.declaracionesModificacion =

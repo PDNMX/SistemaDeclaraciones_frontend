@@ -13,14 +13,8 @@ import { CredentialsService } from '@app/auth/credentials.service';
 
 interface Response {
   data: {
-    users?: {
-      docs: User[];
-      pageNumber: number;
-    };
-    search?: {
-      docs: User[];
-      pageNumber: number;
-    };
+    users?: UsersPage;
+    search?: UsersPage;
   };
 }
 
@@ -30,13 +24,22 @@ interface Response {
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements AfterViewInit {
-  isSuperAdmin = false;
+  isRoot = false;
 
   data: User[] = [];
   dataSearch: User[] = [];
   searchValue = '';
 
-  displayedColumns: string[] = ['curp', 'nombre', 'primerApellido', 'segundoApellido', 'createdAt', 'actions'];
+  displayedColumns: string[] = [
+    'curp',
+    'nombre',
+    'primerApellido',
+    'segundoApellido',
+    'username',
+    'createdAt',
+    'roles',
+    'actions',
+  ];
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -45,18 +48,29 @@ export class UsersComponent implements AfterViewInit {
   emptyResponse: Response = {
     data: {
       users: {
+        totalDocs: 0,
+        limit: 0,
+        totalPages: 0,
+        page: 0,
+        pagingCounter: 0,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: null,
+        nextPage: null,
+        hasMore: false,
         docs: [],
-        pageNumber: 0,
       },
     },
   };
+
+  PAGE_SIZE = 4;
 
   @ViewChild('usersPaginator') usersPaginator: MatPaginator;
   @ViewChild('searchPaginator') searchPaginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private apollo: Apollo, private credentialsService: CredentialsService) {
-    this.isSuperAdmin = this.credentialsService.isSuperAdmin();
+    this.isRoot = this.credentialsService.isRoot();
   }
 
   changeRoles(userId: string) {}
@@ -64,57 +78,6 @@ export class UsersComponent implements AfterViewInit {
   clearSearch() {
     this.searchValue = '';
     this.dataSearch = [];
-  }
-
-  async getDeclaraciones(userID: string) {
-    /*try {
-      const { data }: any = await this.apollo
-        .query({
-          query: gql`
-            query {
-              declaraciones(userID: "${userID}") {
-                _id
-                completa
-                simplificada
-                tipoDeclaracion
-                owner {
-                      _id
-                      username
-                      nombre
-                      primerApellido
-                      segundoApellido
-                      curp
-                      rfc {
-                        rfc
-                        homoClave
-                      }
-                      roles
-                      createdAt
-                  }
-              }
-            }
-          `,
-        })
-        .toPromise();
-
-      console.log('DECLARACIONES', data);
-    } catch (error) {
-      console.log(error);
-    }*/
-  }
-
-  async getList() {
-    try {
-      const { data } = await this.apollo
-        .query<{ users: UsersPage }>({
-          query: users,
-        })
-        .toPromise();
-
-      this.data = data.users.docs;
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   ngAfterViewInit() {
@@ -133,7 +96,7 @@ export class UsersComponent implements AfterViewInit {
         })
         .toPromise();
 
-      this.resultsLength = data.search.docs.length;
+      this.resultsLength = data.search.totalDocs;
       this.dataSearch = data.search.docs;
     } catch (error) {
       console.log(error);
@@ -155,7 +118,10 @@ export class UsersComponent implements AfterViewInit {
             query: search,
             variables: {
               keyword: this.searchValue,
-              pageNumber: this.searchPaginator.pageIndex,
+              pagination: {
+                page: this.searchPaginator.pageIndex,
+                size: this.PAGE_SIZE,
+              },
             },
           });
         }),
@@ -163,7 +129,7 @@ export class UsersComponent implements AfterViewInit {
           // Flip flag to show that loading has finished.
           this.isLoadingResults = false;
           this.isError = false;
-          this.resultsLength = data.search.docs.length;
+          this.resultsLength = data.search.totalDocs || 0;
 
           return data.search.docs;
         }),
@@ -188,7 +154,10 @@ export class UsersComponent implements AfterViewInit {
           return this.apollo.query<{ users: UsersPage }>({
             query: users,
             variables: {
-              pageNumber: this.usersPaginator.pageIndex,
+              pagination: {
+                page: this.usersPaginator.pageIndex,
+                size: this.PAGE_SIZE,
+              },
             },
           });
         }),
@@ -196,7 +165,7 @@ export class UsersComponent implements AfterViewInit {
           // Flip flag to show that loading has finished.
           this.isLoadingResults = false;
           this.isError = false;
-          this.resultsLength = data.users.docs.length;
+          this.resultsLength = data.users.totalDocs || 0;
 
           return data.users.docs;
         }),

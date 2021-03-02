@@ -6,19 +6,25 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
   styleUrls: ['./paginator.component.scss'],
 })
 export class PaginatorComponent implements OnInit {
-  @Input() maxPages = 2;
+  @Input() pageSize = 10;
+  @Input() totalDocs = 1;
   @Output() siguienteClicked: EventEmitter<any> = new EventEmitter<any>();
-  currentPage = 2;
+  currentPage = 0;
+
+  constructor() {}
 
   arrowClicked(arrow: string) {
     if (arrow === 'back' && this.currentPage > 1) {
       this.sendEvent(this.currentPage + 1);
-    } else if (arrow === 'next' && this.maxPages < this.currentPage) {
+    } else if (arrow === 'next' && this.totalDocs > (this.currentPage + 1) * this.pageSize) {
       this.sendEvent(this.currentPage - 1);
     }
   }
 
-  constructor() {}
+  lastPage() {
+    return Math.ceil(this.totalDocs / this.pageSize);
+  }
+
   ngOnInit(): void {}
 
   sendEvent(Num: number) {

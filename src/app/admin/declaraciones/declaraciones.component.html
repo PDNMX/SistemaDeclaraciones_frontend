@@ -25,7 +25,7 @@
 
                   <ng-container matColumnDef="owner">
                     <th mat-header-cell *matHeaderCellDef>Declarante</th>
-                    <td mat-cell *matCellDef="let row">{{ row.owner?.curp }}</td>
+                    <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
                   </ng-container>
 
                   <ng-container matColumnDef="completa">
@@ -51,7 +51,7 @@
                   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
                 </table>
               </div>
-              <mat-paginator [length]="total" [pageSize]="10" #totalPaginator></mat-paginator>
+              <mat-paginator [length]="total" [pageSize]="PAGE_SIZE" #totalPaginator></mat-paginator>
             </div>
           </ng-template>
         </mat-tab>
@@ -72,7 +72,7 @@
 
                 <ng-container matColumnDef="owner">
                   <th mat-header-cell *matHeaderCellDef>Declarante</th>
-                  <td mat-cell *matCellDef="let row">{{ row.owner?.curp }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="completa">
@@ -103,7 +103,7 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
               </table>
             </div>
-            <mat-paginator [length]="totalInicial" [pageSize]="10" #inicialPaginator></mat-paginator>
+            <mat-paginator [length]="totalInicial" [pageSize]="PAGE_SIZE" #inicialPaginator></mat-paginator>
           </div>
         </mat-tab>
 
@@ -123,7 +123,7 @@
 
                 <ng-container matColumnDef="owner">
                   <th mat-header-cell *matHeaderCellDef>Declarante</th>
-                  <td mat-cell *matCellDef="let row">{{ row.owner?.curp }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="completa">
@@ -154,7 +154,7 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
               </table>
             </div>
-            <mat-paginator [length]="totalModificacion" [pageSize]="10" #modificacionPaginator></mat-paginator>
+            <mat-paginator [length]="totalModificacion" [pageSize]="PAGE_SIZE" #modificacionPaginator></mat-paginator>
           </div>
         </mat-tab>
 
@@ -174,7 +174,7 @@
 
                 <ng-container matColumnDef="owner">
                   <th mat-header-cell *matHeaderCellDef>Declarante</th>
-                  <td mat-cell *matCellDef="let row">{{ row.owner?.curp }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="completa">
@@ -205,7 +205,7 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
               </table>
             </div>
-            <mat-paginator [length]="totalConclusion" [pageSize]="10" #conclusionPaginator></mat-paginator>
+            <mat-paginator [length]="totalConclusion" [pageSize]="PAGE_SIZE" #conclusionPaginator></mat-paginator>
           </div>
         </mat-tab>
       </mat-tab-group>

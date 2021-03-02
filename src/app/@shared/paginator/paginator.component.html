@@ -1,13 +1,19 @@
 <div class="flex">
-  <button mat-raised-button *ngIf="currentPage > 1" color="primary" class="pag-arrow" (click)="arrowClicked('back')">
+  <button
+    mat-raised-button
+    [disabled]="currentPage < 1"
+    color="primary"
+    class="pag-arrow"
+    (click)="arrowClicked('back')"
+  >
     <mat-icon>arrow_back</mat-icon>
   </button>
   <button mat-raised-button color="primary" (click)="sendEvent(1)">1</button>
   <button mat-raised-button color="primary" (click)="sendEvent(2)">2</button>
-  <button mat-raised-button color="primary" (click)="sendEvent(3)">3</button>
+  <button mat-raised-button color="primary" (click)="sendEvent(lastPage())">{{ 3 }}</button>
   <button
     mat-raised-button
-    *ngIf="maxPages < currentPage"
+    [disabled]="totalDocs <= (currentPage + 1) * pageSize"
     color="primary"
     class="pag-arrow"
     (click)="arrowClicked('next')"
