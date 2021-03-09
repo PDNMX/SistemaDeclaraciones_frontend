@@ -13,7 +13,7 @@ import { env } from './.env';
 export const environment = {
   production: false,
   version: env.npm_package_version + '-dev',
-  serverUrl: 'http://35.232.93.30:8081',
+  serverUrl: 'http://0.0.0.0:3000',
   defaultLanguage: 'es-ES',
   supportedLanguages: ['es-ES'],
 };
