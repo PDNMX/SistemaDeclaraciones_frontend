@@ -22,11 +22,8 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
   });
 
   const defaultOptions: DefaultOptions = {
-    watchQuery: {
-      fetchPolicy: 'network-only', //'cache-and-network'
-    },
     query: {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'no-cache',
     },
   };
 

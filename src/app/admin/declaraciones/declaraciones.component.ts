@@ -21,6 +21,7 @@ import { PreviewDeclarationComponent } from '@shared/preview-declaration/preview
 })
 export class DeclaracionesComponent implements AfterViewInit, OnInit {
   isSuperAdmin = false;
+  isRoot = false;
 
   @ViewChild('totalPaginator') totalPaginator: MatPaginator;
   @ViewChild('inicialPaginator') inicialPaginator: MatPaginator;
@@ -52,7 +53,8 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
     private dialog: MatDialog
   ) {
     this.isSuperAdmin = this.credentialsService.isSuperAdmin();
-    if (this.isSuperAdmin) {
+    this.isRoot = this.credentialsService.isRoot();
+    if (this.isSuperAdmin || this.isRoot) {
       this.displayedColumns.push('actions');
     }
 

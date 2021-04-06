@@ -1,8 +1,30 @@
 <div class="container">
   <h3><b>Editar roles</b></h3>
+  <h4>{{ data.username }}</h4>
+  <section>
+    <span>
+      <mat-checkbox
+        [checked]="allSelected"
+        [indeterminate]="someSelected()"
+        color="primary"
+        (change)="setAll($event.checked)"
+      >
+        Todos
+      </mat-checkbox>
+    </span>
+    <span>
+      <ul>
+        <li *ngFor="let role of roles">
+          <mat-checkbox [(ngModel)]="role.selected" color="primary" (ngModelChange)="updateAllSelected()">
+            {{ role.name | replace: '_':' ' }}
+          </mat-checkbox>
+        </li>
+      </ul>
+    </span>
+  </section>
 
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Guardar Cambios</button>
+    <button mat-button cdkFocusInitial (click)="changeUserRoles()" [disabled]="!someSelected()">Guardar Cambios</button>
   </mat-dialog-actions>
 </div>

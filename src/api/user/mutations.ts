@@ -9,18 +9,16 @@ export const changePassword = gql`
 export const changeRoles = gql`
   mutation changeRoles($userID: LimitedString!, $roles: [Role!]!) {
     changeRoles(userID: $userID, roles: $roles) {
-      user {
-        _id
-        username
-        nombre
-        primerApellido
-        segundoApellido
-        curp
-        rfc
-        roles
-        createdAt
-        updatedAt
-      }
+      _id
+      username
+      nombre
+      primerApellido
+      segundoApellido
+      curp
+      rfc
+      roles
+      createdAt
+      updatedAt
     }
   }
 `;

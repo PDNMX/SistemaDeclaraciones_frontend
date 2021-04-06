@@ -1,4 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { merge, of as observableOf } from 'rxjs';
@@ -9,6 +10,8 @@ import { search, users } from '@api/user';
 
 import { User, UsersPage } from '@models/user';
 
+import { ChangeRolesComponent } from '../change-roles/change-roles.component';
+import { DialogComponent } from '@shared/dialog/dialog.component';
 import { CredentialsService } from '@app/auth/credentials.service';
 
 interface Response {
@@ -63,26 +66,65 @@ export class UsersComponent implements AfterViewInit {
     },
   };
 
-  PAGE_SIZE = 4;
+  roles = {
+    USER: 'DECLARANTE',
+    ADMIN: 'ADMINISTRATIVO 1',
+    SUPER_ADMIN: 'ADMINISTRATIVO 2',
+    ROOT: 'ADMINISTRADOR',
+  };
+
+  PAGE_SIZE = 10;
 
   @ViewChild('usersPaginator') usersPaginator: MatPaginator;
   @ViewChild('searchPaginator') searchPaginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private apollo: Apollo, private credentialsService: CredentialsService) {
+  constructor(private apollo: Apollo, private credentialsService: CredentialsService, private dialog: MatDialog) {
     this.isRoot = this.credentialsService.isRoot();
   }
 
-  changeRoles(userId: string) {}
+  changeRoles(user: User) {
+    const { _id, roles, username } = user;
+    const dialogRef = this.dialog.open(ChangeRolesComponent, {
+      data: {
+        _id,
+        roles,
+        username,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.presentAlert('Usuario actualizado', 'Se han guardado los cambios');
+        this.clearSearch();
+        this.usersPaginator.page.next({
+          pageIndex: this.usersPaginator.pageIndex,
+          pageSize: this.PAGE_SIZE,
+          length: this.resultsLength,
+        });
+      }
+    });
+  }
 
   clearSearch() {
     this.searchValue = '';
     this.dataSearch = [];
+    this.searchPaginator.pageIndex = 0;
   }
 
   ngAfterViewInit() {
     this.setUserTable();
     this.setSearchTable();
+  }
+
+  presentAlert(title: string, message: string) {
+    this.dialog.open(DialogComponent, {
+      data: {
+        title,
+        message,
+        trueText: 'Aceptar',
+      },
+    });
   }
 
   async search() {
@@ -176,6 +218,12 @@ export class UsersComponent implements AfterViewInit {
         })
       )
       .subscribe((data) => (this.data = data));
+  }
+
+  transformRoles(roles: string[]) {
+    return roles.map((r) => {
+      return this.roles[r];
+    });
   }
 
   userDetail(id: string) {
