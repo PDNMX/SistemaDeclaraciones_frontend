@@ -1,0 +1,32 @@
+<div class="container">
+  <h2 mat-dialog-title>Declaro que:</h2>
+  <mat-dialog-content class="mat-typography">
+    <p>
+      1. <b>Con fundamento en el artículo 108 de la Constitución Política de los Estados Unidos Mexicanos</b>, bajo
+      protesta de decir verdad, manifiesto que la declaración de situación patrimonial {{ data.tipoDeclaracion }} que
+      presento es auténtica y atribuible a mi persona.
+    </p>
+
+    <p>
+      2. Que para el envío de la declaración de situación patrimonial referida en el párrafo anterior, utilicé mi
+      usuario y contraseña de ingreso al Sistema, por lo que es de mi exclusiva responsabilidad su uso, así como la
+      información remitida a través de los medios remotos de comunicación electrónica y las consecuencias jurídicas que
+      de ello derive.
+    </p>
+
+    <p>
+      3. En virtud de estar de acuerdo con las condiciones antes señaladas, firmo esta declaración con mi usuario y
+      contraseña de ingreso al Sistema.
+    </p>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Contraseña</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input matInput type="password" [(ngModel)]="password" />
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="password" [disabled]="!password.length">Firmar</button>
+  </mat-dialog-actions>
+</div>

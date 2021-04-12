@@ -21,7 +21,9 @@ import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { findOption, ifExistEnableFields } from '@utils/utils';
+import { tooltipData } from '@static/tooltips/adeudos';
+
+import { findOption } from '@utils/utils';
 
 @Component({
   selector: 'app-adeudos',
@@ -50,6 +52,8 @@ export class AdeudosComponent implements OnInit {
   tipoDomicilio: MexicoExtranjero = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -159,7 +163,7 @@ export class AdeudosComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.adeudosPasivos) {
         this.setupForm(data.declaracion.adeudosPasivos);
@@ -202,10 +206,8 @@ export class AdeudosComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const adeudo = [...this.adeudo.slice(0, index), ...this.adeudo.slice(index + 1)];
-        console.log('adeudo', this.adeudo);
         const aclaracionesObservaciones = this.adeudosPasivosForm.value.aclaracionesObservaciones;
         this.saveInfo({
           adeudo,

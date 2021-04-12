@@ -13,6 +13,8 @@ import DocumentoObtenido from '@static/catalogos/documentoObtenido.json';
 import Estatus from '@static/catalogos/estatus.json';
 import Nivel from '@static/catalogos/nivel.json';
 
+import { tooltipData } from '@static/tooltips/datos-curriculares';
+
 import { findOption } from '@utils/utils';
 
 import { DatosCurricularesDeclarante, DeclaracionOutput, Escolaridad } from '@models/declaracion';
@@ -38,6 +40,8 @@ export class DatosCurricularesComponent implements OnInit {
   tipoDeclaracion: string = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -100,11 +104,11 @@ export class DatosCurricularesComponent implements OnInit {
           query: datosCurricularesDeclaranteQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
-            simplificada: this.declaracionSimplificada,
+            declaracionCompleta: !this.declaracionSimplificada,
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       this.setupForm(data.declaracion.datosCurricularesDeclarante);
     } catch (error) {
@@ -141,10 +145,8 @@ export class DatosCurricularesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const escolaridad = [...this.escolaridad.slice(0, index), ...this.escolaridad.slice(index + 1)];
-        console.log('escolaridad', this.escolaridad);
         const aclaracionesObservaciones = this.datosCurricularesDeclaranteForm.value.aclaracionesObservaciones;
         this.saveInfo({
           escolaridad,

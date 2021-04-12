@@ -64,7 +64,6 @@ export class RepresentacionComponent implements OnInit {
   }
 
   locationChanged(value: string) {
-    console.log('change', value);
     const localizacion = this.representacionForm.get('representacion').get('ubicacion');
     const pais = localizacion.get('pais');
     const entidadFederativa = localizacion.get('entidadFederativa');
@@ -73,16 +72,12 @@ export class RepresentacionComponent implements OnInit {
       entidadFederativa.disable();
       entidadFederativa.reset();
       this.tipoDomicilio = 'EXTRANJERO';
-      console.log('extranjero');
     } else {
       pais.disable();
       entidadFederativa.enable();
       pais.reset();
       this.tipoDomicilio = 'MEXICO';
-      console.log('mexico');
     }
-
-    console.log('Representación: ', this.representacionForm.value);
   }
 
   cancelEditMode() {
@@ -130,7 +125,6 @@ export class RepresentacionComponent implements OnInit {
       .get('recibeRemuneracion')
       .valueChanges.subscribe((x) => {
         x ? montoMensual.enable() : montoMensual.disable();
-        console.log(this.representacionForm.value);
       });
   }
 
@@ -172,7 +166,7 @@ export class RepresentacionComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.representaciones) {
         this.setupForm(data.declaracion.representaciones);
@@ -215,10 +209,8 @@ export class RepresentacionComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const representacion = [...this.representacion.slice(0, index), ...this.representacion.slice(index + 1)];
-        console.log('representacion', this.representacion);
         const aclaracionesObservaciones = this.representacionForm.value.aclaracionesObservaciones;
         this.saveInfo({
           representacion,

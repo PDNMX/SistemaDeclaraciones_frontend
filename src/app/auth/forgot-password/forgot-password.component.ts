@@ -32,7 +32,7 @@ export class ForgotPasswordComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.passwordForm.markAsPristine();
       this.openSnackBar('Te hemos enviado un correo electrónico para recuperar tu contraseña', 'Aceptar');
     } catch (error) {

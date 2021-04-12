@@ -7,9 +7,16 @@ import { firmarDeclaracion } from '@api/declaracion';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { PreviewDeclarationComponent } from '@shared/preview-declaration/preview-declaration.component';
+import { SignDeclarationComponent } from '../sign-declaration/sign-declaration.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AcuseService } from '@app/services/acuse.service';
+
+enum tipoDeclaracion {
+  inicial = 'inicial',
+  modificacion = 'modificación',
+  conclusion = 'conclusión',
+}
 
 @Component({
   selector: 'section-footer',
@@ -18,6 +25,7 @@ import { AcuseService } from '@app/services/acuse.service';
 })
 export class SectionFooterComponent implements OnInit {
   @Input() declaracionId: string = null;
+  tipoDeclaracion: string = null;
 
   constructor(
     private apollo: Apollo,
@@ -25,7 +33,9 @@ export class SectionFooterComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.tipoDeclaracion = tipoDeclaracion[this.router.url.split('/')[1]];
+  }
 
   ngOnInit(): void {}
 
@@ -37,33 +47,22 @@ export class SectionFooterComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe(async (result) => {
-      console.log(`Dialog result: ${result}`);
-      if (result) {
-        try {
-          await this.signDeclaration();
-          const info: any = await this.acuseService.downloadAcuse(this.declaracionId);
-          const blob = new Blob([info], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          window.open(url);
-          this.finishDeclaration();
-        } catch (error) {
-          console.log(error);
-          this.openSnackBar('ERROR: No pudo firmar la declaración', 'Aceptar');
-        }
+    dialogRef.afterClosed().subscribe(async (finish) => {
+      if (finish) {
+        this.showSignDeclarationModal();
       }
     });
   }
 
-  async finishDeclaration() {
+  async downloadAcuse() {
     try {
-      this.presentSuccessAlert();
-      this.router.navigate([`/declaraciones`], {
-        replaceUrl: true,
-      });
+      const info: any = await this.acuseService.downloadAcuse(this.declaracionId);
+      const blob = new Blob([info], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
     } catch (error) {
       console.log(error);
-      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
+      throw error;
     }
   }
 
@@ -83,21 +82,43 @@ export class SectionFooterComponent implements OnInit {
     });
   }
 
-  async signDeclaration() {
+  showSignDeclarationModal() {
+    const dialogRef = this.dialog.open(SignDeclarationComponent, {
+      data: {
+        tipoDeclaracion: this.tipoDeclaracion,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(async (password) => {
+      if (password) {
+        try {
+          await this.signDeclaration(password);
+          await this.downloadAcuse();
+          this.presentSuccessAlert();
+          this.router.navigate([`/declaraciones`], {
+            replaceUrl: true,
+          });
+        } catch (error) {
+          console.log(error);
+          this.openSnackBar('ERROR: No pudo firmar la declaración', 'Aceptar');
+        }
+      }
+    });
+  }
+
+  async signDeclaration(password: string) {
     try {
-      const result = await this.apollo
+      await this.apollo
         .mutate({
           mutation: firmarDeclaracion,
           variables: {
             id: this.declaracionId,
+            password,
           },
         })
         .toPromise();
-
-      console.log('FIRMADA', result);
     } catch (error) {
-      console.log(error);
-      this.openSnackBar('ERROR: No se pudo firmar la declaración', 'Aceptar');
+      throw error;
     }
   }
 }

@@ -19,6 +19,8 @@ import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import Sector from '@static/catalogos/sector.json';
 import Extranjero from '@static/catalogos/extranjero.json';
 
+import { tooltipData } from '@static/tooltips/experiencia-laboral';
+
 @Component({
   selector: 'app-experiencia-laboral',
   templateUrl: './experiencia-laboral.component.html',
@@ -42,6 +44,8 @@ export class ExperienciaLaboralComponent implements OnInit {
   tipoDeclaracion: string = null;
   declaracionId: string = null;
 
+  tooltipData = tooltipData;
+
   constructor(
     private apollo: Apollo,
     private dialog: MatDialog,
@@ -63,7 +67,6 @@ export class ExperienciaLaboralComponent implements OnInit {
   }
 
   ambitoSectorChanged(clave: string) {
-    console.log('change', clave);
     const experiencia = this.experienciaLaboralForm.get('experiencia');
     if (clave === 'PUB') {
       [
@@ -116,8 +119,6 @@ export class ExperienciaLaboralComponent implements OnInit {
         field.enable();
       });
     }
-
-    console.log('exp', this.experienciaLaboralForm.value);
   }
 
   cancelEditMode() {
@@ -185,12 +186,11 @@ export class ExperienciaLaboralComponent implements OnInit {
           query: experienciaLaboralQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
-            simplificada: this.declaracionSimplificada,
+            declaracionCompleta: !this.declaracionSimplificada,
           },
         })
         .toPromise();
 
-      console.log(data);
       this.declaracionId = data.declaracion._id;
       this.setupForm(data.declaracion.experienciaLaboral);
     } catch (error) {
@@ -231,10 +231,8 @@ export class ExperienciaLaboralComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const experiencia = [...this.experiencia.slice(0, index), ...this.experiencia.slice(index + 1)];
-        console.log('exp', this.experiencia);
         const aclaracionesObservaciones = this.experienciaLaboralForm.value.aclaracionesObservaciones;
         this.saveInfo({
           experiencia,

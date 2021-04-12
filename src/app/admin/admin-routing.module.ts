@@ -18,7 +18,7 @@ const routes: Routes = [
     path: 'declaraciones/:userId',
     pathMatch: 'full',
     component: DeclaracionesComponent,
-    data: { title: marker('Lista de declaraciones') },
+    data: { title: marker('Lista de declaraciones de usuario') },
   },
   {
     path: 'usuarios',
@@ -28,7 +28,7 @@ const routes: Routes = [
   {
     path: 'usuarios/:id',
     component: UserDetailComponent,
-    data: { title: marker('Completar perfil') },
+    data: { title: marker('Detalle de usuario') },
   },
 ];
 

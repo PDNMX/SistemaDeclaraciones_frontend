@@ -18,9 +18,9 @@
                     <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
                   </ng-container>
 
-                  <ng-container matColumnDef="simplificada">
+                  <ng-container matColumnDef="declaracionCompleta">
                     <th mat-header-cell *matHeaderCellDef>Simplificada</th>
-                    <td mat-cell *matCellDef="let row">{{ row.simplificada ? 'SÍ' : 'NO' }}</td>
+                    <td mat-cell *matCellDef="let row">{{ row.declaracionCompleta ? 'NO' : 'SÍ' }}</td>
                   </ng-container>
 
                   <ng-container matColumnDef="owner">
@@ -28,9 +28,9 @@
                     <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
                   </ng-container>
 
-                  <ng-container matColumnDef="completa">
+                  <ng-container matColumnDef="firmada">
                     <th mat-header-cell *matHeaderCellDef>Estatus</th>
-                    <td mat-cell *matCellDef="let row">{{ row.completa ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
+                    <td mat-cell *matCellDef="let row">{{ row.firmada ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
                   </ng-container>
 
                   <ng-container matColumnDef="updatedAt">
@@ -65,9 +65,9 @@
                   <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="simplificada">
+                <ng-container matColumnDef="declaracionCompleta">
                   <th mat-header-cell *matHeaderCellDef>Simplificada</th>
-                  <td mat-cell *matCellDef="let row">{{ row.simplificada ? 'SÍ' : 'NO' }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.declaracionCompleta ? 'NO' : 'SÍ' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="owner">
@@ -75,9 +75,9 @@
                   <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="completa">
+                <ng-container matColumnDef="firmada">
                   <th mat-header-cell *matHeaderCellDef>Estatus</th>
-                  <td mat-cell *matCellDef="let row">{{ row.completa ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.firmada ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="updatedAt">
@@ -92,7 +92,7 @@
                       *ngIf="isSuperAdmin || isRoot"
                       mat-icon-button
                       (click)="previewDeclaration(row._id)"
-                      disabled="!row.completa"
+                      disabled="!row.firmada"
                     >
                       <mat-icon>visibility</mat-icon>
                     </button>
@@ -116,9 +116,9 @@
                   <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="simplificada">
+                <ng-container matColumnDef="declaracionCompleta">
                   <th mat-header-cell *matHeaderCellDef>Simplificada</th>
-                  <td mat-cell *matCellDef="let row">{{ row.simplificada ? 'SÍ' : 'NO' }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.declaracionCompleta ? 'NO' : 'SÍ' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="owner">
@@ -126,9 +126,9 @@
                   <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="completa">
+                <ng-container matColumnDef="firmada">
                   <th mat-header-cell *matHeaderCellDef>Estatus</th>
-                  <td mat-cell *matCellDef="let row">{{ row.completa ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.firmada ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="updatedAt">
@@ -143,7 +143,7 @@
                       *ngIf="isSuperAdmin || isRoot"
                       mat-icon-button
                       (click)="previewDeclaration(row._id)"
-                      disabled="!row.completa"
+                      disabled="!row.firmada"
                     >
                       <mat-icon>visibility</mat-icon>
                     </button>
@@ -167,9 +167,9 @@
                   <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="simplificada">
+                <ng-container matColumnDef="declaracionCompleta">
                   <th mat-header-cell *matHeaderCellDef>Simplificada</th>
-                  <td mat-cell *matCellDef="let row">{{ row.simplificada ? 'SÍ' : 'NO' }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.declaracionCompleta ? 'NO' : 'SÍ' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="owner">
@@ -177,9 +177,9 @@
                   <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="completa">
+                <ng-container matColumnDef="firmada">
                   <th mat-header-cell *matHeaderCellDef>Estatus</th>
-                  <td mat-cell *matCellDef="let row">{{ row.completa ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.firmada ? 'FINALIZADA' : 'EN PROGRESO' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="updatedAt">
@@ -194,7 +194,7 @@
                       *ngIf="isSuperAdmin || isRoot"
                       mat-icon-button
                       (click)="previewDeclaration(row._id)"
-                      [disabled]="!row.completa"
+                      [disabled]="!row.firmada"
                     >
                       <mat-icon>visibility</mat-icon>
                     </button>

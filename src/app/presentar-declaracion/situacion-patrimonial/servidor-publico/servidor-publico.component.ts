@@ -22,6 +22,8 @@ import {
 import TipoBienEnajenado from '@static/catalogos/tipoBienEnajenacionBienes.json';
 import TipoInstrumento from '@static/catalogos/tipoInstrumento.json';
 
+import { tooltipData } from '@static/tooltips/anio-anterior';
+
 @Component({
   selector: 'app-servidor-publico',
   templateUrl: './servidor-publico.component.html',
@@ -52,6 +54,8 @@ export class ServidorPublicoComponent implements OnInit {
   tipoDeclaracion: string = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -449,11 +453,11 @@ export class ServidorPublicoComponent implements OnInit {
           query: actividadAnualAnteriorQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
-            simplificada: this.declaracionSimplificada,
+            declaracionCompleta: !this.declaracionSimplificada,
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.actividadAnualAnterior) {
         this.fillForm(data.declaracion.actividadAnualAnterior);

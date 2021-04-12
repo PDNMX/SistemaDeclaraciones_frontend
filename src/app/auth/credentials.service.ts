@@ -14,10 +14,9 @@ export interface User {
 }
 
 export interface Credentials {
+  refreshJwtToken: string;
   jwtToken: string;
   user: User;
-  id?: string;
-  username?: string;
 }
 
 const credentialsKey = 'credentials';
@@ -85,6 +84,14 @@ export class CredentialsService {
    */
   get credentials(): Credentials | null {
     return this._credentials;
+  }
+
+  /**
+   * Gets the refresh token.
+   * @return The refresh token or null if the user is not authenticated.
+   */
+  get refreshToken(): string | null {
+    return this.isAuthenticated() ? this._credentials.refreshJwtToken : null;
   }
 
   /**

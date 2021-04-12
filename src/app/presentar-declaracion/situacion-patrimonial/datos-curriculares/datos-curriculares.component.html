@@ -98,7 +98,7 @@
         <mat-divider></mat-divider>
         <p>Agregar escolaridad</p>
         <div class="grid-2-col">
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.nivel }}" appearance="fill">
             <mat-label>Nivel</mat-label>
             <mat-icon matPrefix>star</mat-icon>
             <mat-select formControlName="nivel">
@@ -107,13 +107,17 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill" formGroupName="institucionEducativa">
+          <mat-form-field
+            matTooltip="{{ tooltipData.institucionEducativa }}"
+            appearance="fill"
+            formGroupName="institucionEducativa"
+          >
             <mat-label>Institución Educativa</mat-label>
             <mat-icon matPrefix>school</mat-icon>
             <input matInput type="text" formControlName="nombre" />
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.estatus }}" appearance="fill">
             <mat-label>Estatus</mat-label>
             <mat-icon matPrefix>timelapse</mat-icon>
             <mat-select formControlName="estatus">
@@ -122,14 +126,14 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.carreraArea }}" appearance="fill">
             <mat-label>Carrera o Área de conocimiento</mat-label>
             <mat-icon matPrefix>wb_iridescent</mat-icon>
             <input matInput type="text" formControlName="carreraAreaConocimiento" />
           </mat-form-field>
         </div>
         <div class="grid-3-col grid-margin">
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.documentoObtenido }}" appearance="fill">
             <mat-label>Documento Obtenido</mat-label>
             <mat-icon matPrefix>insert_drive_file</mat-icon>
             <mat-select formControlName="documentoObtenido">
@@ -138,14 +142,18 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.fechaObtencionDocumento }}" appearance="fill">
             <mat-label>Fecha de obtención de documento</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="fechaObtencion" />
             <mat-hint>dd/mm/yyyy</mat-hint>
             <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
-          <mat-form-field appearance="fill" formGroupName="institucionEducativa">
+          <mat-form-field
+            matTooltip="{{ tooltipData.lugarInstitucionEducativa }}"
+            appearance="fill"
+            formGroupName="institucionEducativa"
+          >
             <mat-label>Lugar dónde se ubica la Institución Educativa</mat-label>
             <mat-icon matPrefix>public</mat-icon>
             <mat-select formControlName="ubicacion">

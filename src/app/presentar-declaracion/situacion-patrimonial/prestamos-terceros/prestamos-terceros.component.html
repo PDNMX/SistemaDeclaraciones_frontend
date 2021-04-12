@@ -281,9 +281,14 @@
               <mat-form-field appearance="fill">
                 <mat-label>Año</mat-label>
                 <mat-icon matPrefix>date_range</mat-icon>
-                <mat-select formControlName="anio">
-                  <mat-option [value]="2007"> 2007 </mat-option>
-                </mat-select>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="anio"
+                  min="0"
+                  max="{{ currentYear + 1 }}"
+                  placeholder="{{ currentYear }}"
+                />
               </mat-form-field>
               <mat-form-field appearance="fill">
                 <mat-label>Número de Serie o Registro</mat-label>
@@ -471,8 +476,8 @@
         <div class="grid-3-col grid-margin" formGroupName="duenoTitular">
           <mat-radio-group class="checkbox" formControlName="tipoDuenoTitular">
             <p class="question double-col">Dueño o titular</p>
-            <mat-radio-button value="Fisica"><span class="no-public-inline"></span> Persona Física</mat-radio-button>
-            <mat-radio-button value="Moral">Persona Moral</mat-radio-button>
+            <mat-radio-button value="FISICA"><span class="no-public-inline"></span> Persona Física</mat-radio-button>
+            <mat-radio-button value="MORAL">Persona Moral</mat-radio-button>
           </mat-radio-group>
           <mat-form-field appearance="fill">
             <mat-label>Nombre del Dueño o Titular</mat-label>

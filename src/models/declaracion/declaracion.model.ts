@@ -24,8 +24,8 @@ import { Vehiculos } from './vehiculos.model';
 
 export interface Declaracion {
   _id?: string;
-  completa?: boolean;
-  simplificada?: boolean;
+  firmada?: boolean;
+  declaracionCompleta?: boolean;
   tipoDeclaracion?: TipoDeclaracion;
   datosGenerales?: DatosGenerales;
   domicilioDeclarante?: DomicilioDeclarante;

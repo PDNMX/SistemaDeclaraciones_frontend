@@ -17,6 +17,8 @@ import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/countries.json';
 
+import { tooltipData } from '@static/tooltips/datos-empleo';
+
 import { findOption } from '@utils/utils';
 
 @Component({
@@ -41,6 +43,8 @@ export class DatosEmpleoComponent implements OnInit {
   tipoDomicilio = 'MEXICO';
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -142,12 +146,11 @@ export class DatosEmpleoComponent implements OnInit {
           query: datosEmpleoCargoComisionQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
-            simplificada: this.declaracionSimplificada,
+            declaracionCompleta: !this.declaracionSimplificada,
           },
         })
         .toPromise();
 
-      console.log(data);
       this.declaracionId = data.declaracion._id;
       this.fillForm(data.declaracion.datosEmpleoCargoComision || {});
     } catch (error) {

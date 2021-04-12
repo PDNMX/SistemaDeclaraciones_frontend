@@ -33,7 +33,12 @@
           compensaciones, bonos y otras Prestaciones) (cantidades netas después de impuestos)
         </h3>
         <div class="grid-2-col">
-          <mat-form-field appearance="fill" formGroupName="remuneracionMensualCargoPublico" class="grid-item">
+          <mat-form-field
+            matTooltip="{{ tooltipData.RemuneracionNeta }}"
+            appearance="fill"
+            formGroupName="remuneracionMensualCargoPublico"
+            class="grid-item"
+          >
             <mat-label>Monto</mat-label>
             <input matInput type="number" formControlName="valor" min="0" />
             <mat-icon matPrefix>attach_money</mat-icon>
@@ -55,17 +60,27 @@
         <div formArrayName="actividades">
           <div *ngFor="let actividad of actividadIndustrialComercialEmpresarial.controls; let i = index">
             <div class="grid-3-col" [formGroupName]="i">
-              <mat-form-field appearance="fill" formGroupName="remuneracion">
+              <mat-form-field
+                matTooltip="{{ tooltipData.otrosIngresos.actividadIndustrial.actividadIndustrial }}"
+                appearance="fill"
+                formGroupName="remuneracion"
+              >
                 <mat-label>Monto</mat-label>
                 <input matInput type="number" formControlName="valor" min="0" />
                 <mat-icon matPrefix>attach_money</mat-icon>
               </mat-form-field>
-              <mat-form-field appearance="fill">
+              <mat-form-field
+                matTooltip="{{ tooltipData.otrosIngresos.actividadIndustrial.nombreRazonSocial }}"
+                appearance="fill"
+              >
                 <mat-label>Nombre o razón social</mat-label>
                 <input matInput type="text" formControlName="nombreRazonSocial" />
                 <mat-icon matPrefix>dns</mat-icon>
               </mat-form-field>
-              <mat-form-field appearance="fill">
+              <mat-form-field
+                matTooltip="{{ tooltipData.otrosIngresos.actividadIndustrial.tipoNegocio }}"
+                appearance="fill"
+              >
                 <mat-label>Tipo de Negocio</mat-label>
                 <input matInput type="text" formControlName="tipoNegocio" />
                 <mat-icon matPrefix>aspect_ratio</mat-icon>
@@ -95,12 +110,19 @@
         <div formArrayName="actividades">
           <div *ngFor="let actividad of actividadFinanciera.controls; let i = index">
             <div class="grid-2-col" [formGroupName]="i">
-              <mat-form-field appearance="fill" formGroupName="remuneracion">
+              <mat-form-field
+                matTooltip="{{ tooltipData.otrosIngresos.actividadFinanciera.actividadFinanciera }}"
+                appearance="fill"
+                formGroupName="remuneracion"
+              >
                 <mat-label>Monto</mat-label>
                 <input matInput type="number" formControlName="valor" min="0" />
                 <mat-icon matPrefix>attach_money</mat-icon>
               </mat-form-field>
-              <mat-form-field appearance="fill">
+              <mat-form-field
+                matTooltip="{{ tooltipData.otrosIngresos.actividadFinanciera.tipoInstrumento }}"
+                appearance="fill"
+              >
                 <mat-label>Tipo de instrumento que generó el rendimiento o ganancia</mat-label>
                 <mat-icon matPrefix>wb_iridescent</mat-icon>
                 <mat-select formControlName="tipoInstrumento">
@@ -136,12 +158,16 @@
         <div formArrayName="servicios">
           <div *ngFor="let servicio of serviciosProfesionales.controls; let i = index">
             <div class="grid-2-col" [formGroupName]="i">
-              <mat-form-field appearance="fill" formGroupName="remuneracion">
+              <mat-form-field
+                matTooltip="{{ tooltipData.otrosIngresos.servicios.servicios }}"
+                appearance="fill"
+                formGroupName="remuneracion"
+              >
                 <mat-label>Monto</mat-label>
                 <input matInput type="number" formControlName="valor" min="0" />
                 <mat-icon matPrefix>attach_money</mat-icon>
               </mat-form-field>
-              <mat-form-field appearance="fill">
+              <mat-form-field matTooltip="{{ tooltipData.otrosIngresos.servicios.tipoServicio }}" appearance="fill">
                 <mat-label>Tipo de servicio prestado</mat-label>
                 <mat-icon matPrefix>wb_iridescent</mat-icon>
                 <input matInput type="text" formControlName="tipoServicio" />
@@ -171,12 +197,19 @@
         <div formArrayName="ingresos">
           <div *ngFor="let ingreso of otrosIngresos.controls; let i = index">
             <div class="grid-2-col" [formGroupName]="i">
-              <mat-form-field appearance="fill" formGroupName="remuneracion">
+              <mat-form-field
+                matTooltip="{{ tooltipData.otrosIngresos.otrosIngresos.otrosIngresos }}"
+                appearance="fill"
+                formGroupName="remuneracion"
+              >
                 <mat-label>Monto</mat-label>
                 <input matInput type="number" formControlName="valor" min="0" />
                 <mat-icon matPrefix>attach_money</mat-icon>
               </mat-form-field>
-              <mat-form-field appearance="fill">
+              <mat-form-field
+                matTooltip="{{ tooltipData.otrosIngresos.otrosIngresos.especificarTipoIngreso }}"
+                appearance="fill"
+              >
                 <mat-label>Especificar tipo de ingreso (arrendamiento, regalías, sorteos, etc.)</mat-label>
                 <mat-icon matPrefix>wb_iridescent</mat-icon>
                 <input matInput type="text" formControlName="tipoIngreso" />
@@ -211,7 +244,11 @@
       <div class="bloque" formGroupName="ingresoMensualNetoParejaDependiente">
         <h3>B. Ingreso mensual neto de la pareja y/o dependientes económicos (después de impuestos)</h3>
         <div class="grid-2-col">
-          <mat-form-field appearance="fill" class="grid-item">
+          <mat-form-field
+            matTooltip="{{ tooltipData.ingresoNetoParejaDependientes }}"
+            appearance="fill"
+            class="grid-item"
+          >
             <mat-label>Monto</mat-label>
             <input matInput type="number" formControlName="valor" min="0" />
             <mat-icon matPrefix class="no-public">attach_money</mat-icon>
@@ -242,7 +279,7 @@
           <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
-        <mat-form-field appearance="fill" class="grid-margin">
+        <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
           <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>

@@ -62,7 +62,6 @@ export class ClientesPrincipalesComponent implements OnInit {
   }
 
   locationChanged(value: string) {
-    console.log('change', value);
     const localizacion = this.clientesPrincipalesForm.get('cliente').get('ubicacion');
     const pais = localizacion.get('pais');
     const entidadFederativa = localizacion.get('entidadFederativa');
@@ -71,16 +70,12 @@ export class ClientesPrincipalesComponent implements OnInit {
       entidadFederativa.disable();
       entidadFederativa.reset();
       this.tipoDomicilio = 'EXTRANJERO';
-      console.log('extranjero');
     } else {
       pais.disable();
       entidadFederativa.enable();
       pais.reset();
       this.tipoDomicilio = 'MEXICO';
-      console.log('mexico');
     }
-
-    console.log('clientes principales: ', this.clientesPrincipalesForm.value);
   }
 
   cancelEditMode() {
@@ -172,7 +167,7 @@ export class ClientesPrincipalesComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.clientesPrincipales) {
         this.setupForm(data.declaracion.clientesPrincipales);
@@ -215,10 +210,8 @@ export class ClientesPrincipalesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const cliente = [...this.cliente.slice(0, index), ...this.cliente.slice(index + 1)];
-        console.log('cliente', this.cliente);
         const aclaracionesObservaciones = this.clientesPrincipalesForm.value.aclaracionesObservaciones;
         this.saveInfo({
           cliente,

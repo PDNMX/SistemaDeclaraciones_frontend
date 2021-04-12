@@ -281,17 +281,17 @@
         <div class="">
           <h2>Agregar datos del dependiente económico</h2>
           <div class="grid-3-col grid-margin">
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
               <mat-label>Nombre</mat-label>
               <mat-icon matPrefix class="no-public">person</mat-icon>
               <input matInput type="text" formControlName="nombre" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
               <mat-label>Primer Apellido</mat-label>
               <mat-icon matPrefix class="no-public">person</mat-icon>
               <input matInput type="text" formControlName="primerApellido" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
               <mat-label>Segundo Apellido</mat-label>
               <mat-icon matPrefix class="no-public">person</mat-icon>
               <input matInput type="text" formControlName="segundoApellido" />
@@ -299,7 +299,7 @@
           </div>
 
           <div class="grid-2-col grid-margin">
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.fechaNacimiento }}" appearance="fill">
               <mat-label>Fecha de Nacimiento</mat-label>
               <input matInput [matDatepicker]="pickerNacimiento" formControlName="fechaNacimiento" />
               <mat-hint>dd/mm/yyyy</mat-hint>
@@ -307,7 +307,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #pickerNacimiento></mat-datepicker>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.rfc }}" appearance="fill">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
               <input matInput #input_rfc type="text" minlength="10" maxlength="10" formControlName="rfc" />
@@ -316,7 +316,7 @@
           </div>
 
           <div class="grid-3-col grid-margin">
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.relacionDeclarante }}" appearance="fill">
               <mat-label>Parentesco o relación con el declarante</mat-label>
               <mat-icon matPrefix class="no-public">supervisor_account</mat-icon>
               <mat-select formControlName="parentescoRelacion">
@@ -334,18 +334,26 @@
               <mat-icon matPrefix class="no-public">star</mat-icon>
               <input matInput type="text" />
             </mat-form-field>
-            <mat-radio-group class="checkbox" formControlName="extranjero">
+            <mat-radio-group
+              matTooltip="{{ tooltipData.ciudadanoExtranjero }}"
+              class="checkbox"
+              formControlName="extranjero"
+            >
               <p class="question double-col">¿Es ciudadano extranjero?</p>
               <mat-radio-button [value]="true">Sí</mat-radio-button>
               <mat-radio-button [value]="false">No</mat-radio-button>
             </mat-radio-group>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.curp }}" appearance="fill">
               <mat-label>CURP</mat-label>
               <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
               <input matInput #input_curp type="text" maxlength="18" formControlName="curp" />
               <mat-hint align="end">{{ input_curp.value?.length || 0 }}/18</mat-hint>
             </mat-form-field>
-            <mat-radio-group class="checkbox" formControlName="habitaDomicilioDeclarante">
+            <mat-radio-group
+              matTooltip="{{ tooltipData.habitaDomicilioDeclarante }}"
+              class="checkbox"
+              formControlName="habitaDomicilioDeclarante"
+            >
               <p class="question double-col">¿Habita en el domicilio del declarante?</p>
               <mat-radio-button [value]="true">Sí</mat-radio-button>
               <mat-radio-button [value]="false">No</mat-radio-button>
@@ -356,7 +364,7 @@
         <div class="bloque">
           <h2>Domicilio del dependiente económico</h2>
           <div class="grid-2-col grid-margin">
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.lugarDondeReside }}" appearance="fill">
               <mat-label>Lugar en el que reside</mat-label>
               <mat-icon matPrefix class="no-public">public</mat-icon>
               <mat-select formControlName="lugarDondeReside" (selectionChange)="lugarDondeResideChanged($event.value)">
@@ -494,7 +502,7 @@
         <div class="bloque">
           <h2>Actividad Laboral</h2>
           <div class="grid-3-col grid-margin">
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.actividadLaboral }}" appearance="fill">
               <mat-label>Ámbito/Sector al que pertenece</mat-label>
               <mat-icon matPrefix class="no-public">star</mat-icon>
               <mat-select formControlName="actividadLaboral" (selectionChange)="actividadLaboralChanged($event.value)">
@@ -519,7 +527,7 @@
             *ngIf="datosDependientesEconomicosForm.value.dependienteEconomico.actividadLaboral?.clave === 'PUB'"
             formGroupName="actividadLaboralSectorPublico"
           >
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.nivelOrdenGobierno }}" appearance="fill">
               <mat-label>Nivel/Orden de Gobierno </mat-label>
               <mat-icon matPrefix class="no-public">aspect_ratio</mat-icon>
               <mat-select formControlName="nivelOrdenGobierno">
@@ -528,7 +536,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.ambitoPublico }}" appearance="fill">
               <mat-label>Ámbito Público</mat-label>
               <mat-icon matPrefix class="no-public">meeting_room</mat-icon>
               <mat-select formControlName="ambitoPublico">
@@ -537,32 +545,36 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.nombreEntePublico }}" appearance="fill">
               <mat-label>Nombre del ente Público/Nombre de la empresa, sociedad o asociación</mat-label>
               <mat-icon matPrefix class="no-public">dns</mat-icon>
               <input matInput type="text" formControlName="nombreEntePublico" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.areaAdscripcion }}" appearance="fill">
               <mat-label>Área de Adscripción/Área</mat-label>
               <mat-icon matPrefix class="no-public">wb_iridescent</mat-icon>
               <input matInput type="text" formControlName="areaAdscripcion" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.empleoCargoComision }}" appearance="fill">
               <mat-label>Empleo, cargo o comisión</mat-label>
               <mat-icon matPrefix class="no-public">work</mat-icon>
               <input matInput type="text" formControlName="empleoCargoComision" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.especifiqueFuncionPrincipal }}" appearance="fill">
               <mat-label>Especifique función principal</mat-label>
               <mat-icon matPrefix class="no-public">speaker_notes</mat-icon>
               <input matInput type="text" formControlName="funcionPrincipal" />
             </mat-form-field>
-            <mat-form-field appearance="fill" formGroupName="salarioMensualNeto">
+            <mat-form-field
+              matTooltip="{{ tooltipData.sectorPublico.salarioMensualNeto }}"
+              appearance="fill"
+              formGroupName="salarioMensualNeto"
+            >
               <mat-label>Salario Mensual Neto</mat-label>
               <mat-icon matPrefix class="no-public">account_balance_wallet</mat-icon>
               <input matInput type="number" formControlName="valor" min="0" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.fechaIngreso }}" appearance="fill">
               <mat-label>Fecha de ingreso al empleo</mat-label>
               <input matInput [matDatepicker]="pickerPublicIngreso" formControlName="fechaIngreso" />
               <mat-hint>dd/mm/yyyy</mat-hint>
@@ -589,7 +601,10 @@
             "
             formGroupName="actividadLaboralSectorPrivadoOtro"
           >
-            <mat-form-field appearance="fill">
+            <mat-form-field
+              matTooltip="{{ tooltipData.sectorPrivado.nombreEmpresaSociedadAsociacion }}"
+              appearance="fill"
+            >
               <mat-label>Nombre de la empresa, sociedad o asociación</mat-label>
               <mat-icon matPrefix>speaker_notes</mat-icon>
               <input matInput type="text" formControlName="nombreEmpresaSociedadAsociacion" />
@@ -600,7 +615,7 @@
               <input matInput #input_rfc_sprivado type="text" minlength="10" maxlength="13" formControlName="rfc" />
               <mat-hint align="end">{{ input_rfc_sprivado?.length || 0 }}/13</mat-hint>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.empleoCargoComision }}" appearance="fill">
               <mat-label>Empleo, cargo o comisión</mat-label>
               <mat-icon matPrefix class="no-public">work</mat-icon>
               <input matInput type="text" formControlName="empleoCargoComision" />
@@ -610,12 +625,16 @@
               <mat-icon matPrefix class="no-public">speaker_notes</mat-icon>
               <input matInput type="text" formControlName="actividad_laboral" />
             </mat-form-field>-->
-            <mat-form-field appearance="fill" formGroupName="salarioMensualNeto">
+            <mat-form-field
+              matTooltip="{{ tooltipData.sectorPrivado.salarioMensualNeto }}"
+              appearance="fill"
+              formGroupName="salarioMensualNeto"
+            >
               <mat-label>Salario Mensual Neto</mat-label>
               <mat-icon matPrefix class="no-public">account_balance_wallet</mat-icon>
               <input matInput type="number" formControlName="valor" min="0" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.fechaIngreso }}" appearance="fill">
               <mat-label>Fecha de ingreso al empleo</mat-label>
               <input matInput [matDatepicker]="pickerOtroIngreso" formControlName="fechaIngreso" />
               <mat-hint>dd/mm/yyyy</mat-hint>
@@ -623,12 +642,16 @@
               </mat-datepicker-toggle>
               <mat-datepicker #pickerOtroIngreso></mat-datepicker>
             </mat-form-field>
-            <mat-radio-group class="checkbox" formControlName="proveedorContratistaGobierno">
+            <mat-radio-group
+              matTooltip="{{ tooltipData.sectorPrivado.proveedorContratistaGobierno }}"
+              class="checkbox"
+              formControlName="proveedorContratistaGobierno"
+            >
               <p class="question">¿Es proveedor o contratista de gobierno?</p>
               <mat-radio-button [value]="true">Sí</mat-radio-button>
               <mat-radio-button [value]="false">No</mat-radio-button>
             </mat-radio-group>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.sectorPertenece }}" appearance="fill">
               <mat-label>Sector al que pertenece</mat-label>
               <mat-icon matPrefix class="no-public">assistant</mat-icon>
               <mat-select formControlName="sector">
@@ -666,7 +689,7 @@
           <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
-        <mat-form-field appearance="fill" class="grid-margin">
+        <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
           <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>

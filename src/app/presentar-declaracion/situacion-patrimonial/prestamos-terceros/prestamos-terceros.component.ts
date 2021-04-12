@@ -34,6 +34,7 @@ export class PrestamosTercerosComponent implements OnInit {
   editIndex: number = null;
   prestamo: Prestamo[] = [];
   isLoading = false;
+  currentYear = new Date().getFullYear();
 
   tipoInmuebleCatalogo = TipoInmueble;
   tipoVehiculoCatalogo = TipoVehiculo;
@@ -68,7 +69,6 @@ export class PrestamosTercerosComponent implements OnInit {
   }
 
   bienChanged(value: string) {
-    console.log('change', value);
     const tipoBien = this.prestamoComodatoForm.get('prestamo').get('tipoBien');
     const inmueble = tipoBien.get('inmueble');
     const vehiculo = tipoBien.get('vehiculo');
@@ -76,23 +76,18 @@ export class PrestamosTercerosComponent implements OnInit {
       inmueble.enable();
       vehiculo.disable();
       this.tipoBien = 'inmueble';
-      console.log('inmueble on ', this.tipoBien);
     } else {
       inmueble.disable();
       vehiculo.enable();
       this.tipoBien = 'vehiculos';
-      console.log('vehiculo on', this.tipoBien);
     }
-    console.log(tipoBien.value);
   }
 
   tipoDomicilioChanged(value: string) {
-    console.log('change', value);
     const localizacion = this.prestamoComodatoForm.get('prestamo').get('tipoBien').get('inmueble');
     const mexico = localizacion.get('domicilioMexico');
     const extranjero = localizacion.get('domicilioExtranjero');
     if (value === 'EX') {
-      console.log(mexico.value);
       extranjero.enable();
       this.tipoDomicilio = 'EXTRANJERO';
       mexico.disable();
@@ -116,26 +111,10 @@ export class PrestamosTercerosComponent implements OnInit {
         }
         this.estado = value;
       });
-      /* const estado = mexico.get('entidadFederativa');
-      const municipio = mexico.get('municipioAlcaldia');
-      municipio.disable();
-      estado.valueChanges.subscribe((value) => {
-        if (value) {
-          municipio.enable();
-        } else {
-          municipio.disable();
-          municipio.reset();
-        }
-        this.estado = value;
-        console.log(mexico.value);
-      }); */
-      console.log('Localizacion mexicana');
     }
-    console.log(localizacion.value);
   }
 
   localizacionVehiculoChanged(value: string) {
-    console.log('change', value);
     const localizacion = this.prestamoComodatoForm.get('prestamo').get('tipoBien').get('vehiculo').get('lugarRegistro');
     const pais = localizacion.get('pais');
     const entidadFederativa = localizacion.get('entidadFederativa');
@@ -143,14 +122,11 @@ export class PrestamosTercerosComponent implements OnInit {
       entidadFederativa.enable();
       pais.disable();
       this.tipoDomicilio = 'MEXICO';
-      console.log('localizacion extranjera');
     } else {
       entidadFederativa.disable();
       pais.enable();
       this.tipoDomicilio = 'EXTRANJERO';
-      console.log('Localizacion mexicana');
     }
-    console.log(localizacion);
   }
 
   cancelEditMode() {
@@ -222,7 +198,6 @@ export class PrestamosTercerosComponent implements OnInit {
   }
 
   fillForm(prestamo: Prestamo) {
-    console.log(prestamo);
     Object.keys(prestamo.duenoTitular)
       .filter((field) => prestamo.duenoTitular[field] !== null)
       .forEach((field) =>
@@ -289,8 +264,6 @@ export class PrestamosTercerosComponent implements OnInit {
       }
     }
 
-    console.log(this.prestamoComodatoForm.value.prestamo.duenoTitular.relacionConTitular);
-
     this.setSelectedOptions();
   }
 
@@ -304,7 +277,7 @@ export class PrestamosTercerosComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.prestamoComodato) {
         this.setupForm(data.declaracion.prestamoComodato);
@@ -347,10 +320,8 @@ export class PrestamosTercerosComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const prestamo = [...this.prestamo.slice(0, index), ...this.prestamo.slice(index + 1)];
-        console.log('prestamo', this.prestamo);
         const aclaracionesObservaciones = this.prestamoComodatoForm.value.aclaracionesObservaciones;
         this.saveInfo({
           prestamo,

@@ -1,4 +1,5 @@
 [
+  { "clave": "MXN", "valor": "PESO MEXICANO" },
   { "clave": "AFN", "valor": "AFGANI AFGANO" },
   { "clave": "MGA", "valor": "ARIARY MALGACHE" },
   { "clave": "THB", "valor": "BAHT TAILANDÉS" },
@@ -134,7 +135,6 @@
   { "clave": "CUC", "valor": "PESO CUBANO CONVERTIBLE" },
   { "clave": "DOP", "valor": "PESO DOMINICANO" },
   { "clave": "PHP", "valor": "PESO FILIPINO" },
-  { "clave": "MXN", "valor": "PESO MEXICANO" },
   { "clave": "UYU", "valor": "PESO URUGUAYO" },
   { "clave": "BWP", "valor": "PULA DE BOTSUANA" },
   { "clave": "GTQ", "valor": "QUETZAL GUATEMALTECO" },

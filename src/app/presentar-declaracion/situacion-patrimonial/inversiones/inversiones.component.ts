@@ -20,6 +20,8 @@ import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
+import { tooltipData } from '@static/tooltips/inversiones';
+
 import { DeclaracionOutput, Inversion, InversionesCuentasValores } from '@models/declaracion';
 import { findOption, ifExistEnableFields } from '@utils/utils';
 
@@ -52,6 +54,8 @@ export class InversionesComponent implements OnInit {
 
   declaracionId: string = null;
 
+  tooltipData = tooltipData;
+
   constructor(
     private apollo: Apollo,
     private dialog: MatDialog,
@@ -71,7 +75,6 @@ export class InversionesComponent implements OnInit {
   }
 
   localizacionChanged(value: string) {
-    console.log('change', value);
     const localizacionInversion = this.inversionesCuentasValoresForm.get('inversion').get('localizacionInversion');
     const pais = localizacionInversion.get('pais');
     const rfc = localizacionInversion.get('rfc');
@@ -175,7 +178,7 @@ export class InversionesComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.inversionesCuentasValores) {
         this.setupForm(data.declaracion.inversionesCuentasValores);
@@ -218,10 +221,8 @@ export class InversionesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const inversion = [...this.inversion.slice(0, index), ...this.inversion.slice(index + 1)];
-        console.log('inversion', this.inversion);
         const aclaracionesObservaciones = this.inversionesCuentasValoresForm.value.aclaracionesObservaciones;
         this.saveInfo({
           inversion,
@@ -295,9 +296,6 @@ export class InversionesComponent implements OnInit {
     }
 
     if (titular) {
-      console.log(this.titularBienCatalogo);
-      console.log(titular);
-
       this.inversionesCuentasValoresForm
         .get('inversion.titular')
         .setValue(findOption(this.titularBienCatalogo, titular[0]));

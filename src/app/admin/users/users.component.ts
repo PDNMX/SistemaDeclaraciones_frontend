@@ -7,8 +7,8 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { Apollo } from 'apollo-angular';
 import { search, users } from '@api/user';
-
 import { User, UsersPage } from '@models/user';
+import { ROLES } from '@utils/constants';
 
 import { ChangeRolesComponent } from '../change-roles/change-roles.component';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -64,13 +64,6 @@ export class UsersComponent implements AfterViewInit {
         docs: [],
       },
     },
-  };
-
-  roles = {
-    USER: 'DECLARANTE',
-    ADMIN: 'ADMINISTRATIVO 1',
-    SUPER_ADMIN: 'ADMINISTRATIVO 2',
-    ROOT: 'ADMINISTRADOR',
   };
 
   PAGE_SIZE = 10;
@@ -222,11 +215,7 @@ export class UsersComponent implements AfterViewInit {
 
   transformRoles(roles: string[]) {
     return roles.map((r) => {
-      return this.roles[r];
+      return ROLES[r];
     });
-  }
-
-  userDetail(id: string) {
-    console.log('user clicked', id);
   }
 }

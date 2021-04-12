@@ -19,8 +19,8 @@ export const declaracionesMetadata = gql`
       hasMore
       docs {
         _id
-        completa
-        simplificada
+        firmada
+        declaracionCompleta
         tipoDeclaracion
         createdAt
         updatedAt
@@ -55,8 +55,8 @@ export const stats = gql`
 /*** PRESENTAR DECLARACION ***/
 
 export const actividadAnualAnteriorQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       actividadAnualAnterior {
         servidorPublicoAnioAnterior
@@ -158,8 +158,8 @@ export const actividadAnualAnteriorQuery = gql`
 `;
 
 export const adeudosPasivosQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       adeudosPasivos {
         ninguno
@@ -203,8 +203,8 @@ export const adeudosPasivosQuery = gql`
 `;
 
 export const bienesInmueblesQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       bienesInmuebles {
         ninguno
@@ -288,8 +288,8 @@ export const bienesInmueblesQuery = gql`
 `;
 
 export const bienesMueblesQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       bienesMuebles {
         ninguno
@@ -339,8 +339,8 @@ export const bienesMueblesQuery = gql`
 `;
 
 export const datosCurricularesDeclaranteQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       datosCurricularesDeclarante {
         escolaridad {
@@ -364,8 +364,8 @@ export const datosCurricularesDeclaranteQuery = gql`
 `;
 
 export const datosDependientesEconomicosQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       datosDependientesEconomicos {
         ninguno
@@ -447,8 +447,8 @@ export const datosDependientesEconomicosQuery = gql`
 `;
 
 export const datosEmpleoCargoComisionQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       datosEmpleoCargoComision {
         nivelOrdenGobierno
@@ -495,8 +495,8 @@ export const datosEmpleoCargoComisionQuery = gql`
 `;
 
 export const datosGeneralesQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       datosGenerales {
         nombre
@@ -532,8 +532,8 @@ export const datosGeneralesQuery = gql`
 `;
 
 export const datosParejaQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       datosPareja {
         ninguno
@@ -611,8 +611,8 @@ export const datosParejaQuery = gql`
 `;
 
 export const domicilioDeclaranteQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       domicilioDeclarante {
         domicilioMexico {
@@ -646,8 +646,8 @@ export const domicilioDeclaranteQuery = gql`
 `;
 
 export const experienciaLaboralQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       experienciaLaboral {
         ninguno
@@ -682,8 +682,8 @@ export const experienciaLaboralQuery = gql`
 `;
 
 export const ingresosQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       ingresos {
         remuneracionMensualCargoPublico {
@@ -769,8 +769,8 @@ export const ingresosQuery = gql`
 `;
 
 export const inversionesCuentasValoresQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       inversionesCuentasValores {
         ninguno
@@ -810,8 +810,8 @@ export const inversionesCuentasValoresQuery = gql`
 `;
 
 export const prestamoComodatoQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       prestamoComodato {
         ninguno
@@ -878,8 +878,8 @@ export const prestamoComodatoQuery = gql`
 `;
 
 export const vehiculosQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       vehiculos {
         ninguno
@@ -937,8 +937,8 @@ export const vehiculosQuery = gql`
 // INTERESES
 
 export const apoyosQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       apoyos {
         ninguno
@@ -969,8 +969,8 @@ export const apoyosQuery = gql`
 `;
 
 export const beneficiosPrivadosQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       beneficiosPrivados {
         ninguno
@@ -1009,8 +1009,8 @@ export const beneficiosPrivadosQuery = gql`
 `;
 
 export const clientesPrincipalesQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       clientesPrincipales {
         ninguno
@@ -1050,8 +1050,8 @@ export const clientesPrincipalesQuery = gql`
 `;
 
 export const fideicomisosQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       fideicomisos {
         ninguno
@@ -1088,8 +1088,8 @@ export const fideicomisosQuery = gql`
 `;
 
 export const participacionQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       participacion {
         ninguno
@@ -1127,8 +1127,8 @@ export const participacionQuery = gql`
 `;
 
 export const representacionesQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       representaciones {
         ninguno
@@ -1164,8 +1164,8 @@ export const representacionesQuery = gql`
 `;
 
 export const participacionTomaDecisionesQuery = gql`
-  query declaracion($tipoDeclaracion: TipoDeclaracion!, $simplificada: Boolean) {
-    declaracion(tipoDeclaracion: $tipoDeclaracion, simplificada: $simplificada) {
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
       participacionTomaDecisiones {
         ninguno

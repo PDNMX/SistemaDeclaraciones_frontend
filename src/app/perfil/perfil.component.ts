@@ -165,7 +165,7 @@ export class PerfilComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(result);
+
       this.isLoading = false;
       this.openSnackBar('Información actualizada', 'Aceptar');
       this.logout();

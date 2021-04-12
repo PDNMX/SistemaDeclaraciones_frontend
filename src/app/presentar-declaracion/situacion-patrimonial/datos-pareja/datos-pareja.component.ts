@@ -19,6 +19,8 @@ import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/paises.json';
 
+import { tooltipData } from '@static/tooltips/datos-pareja';
+
 import { Catalogo, DatosPareja, DeclaracionOutput } from '@models/declaracion';
 import { findOption } from '@utils/utils';
 
@@ -52,6 +54,8 @@ export class DatosParejaComponent implements OnInit {
 
   declaracionId: string = null;
 
+  tooltipData = tooltipData;
+
   constructor(
     private apollo: Apollo,
     private dialog: MatDialog,
@@ -68,17 +72,14 @@ export class DatosParejaComponent implements OnInit {
     const actividadLaboralSectorPrivadoOtro = this.datosParejaForm.get('actividadLaboralSectorPrivadoOtro');
 
     const clave = value.clave || null;
-    console.log('ACT', value);
+
     if (clave === 'PUB') {
-      console.log('pub');
       actividadLaboralSectorPublico.enable();
       actividadLaboralSectorPrivadoOtro.disable();
     } else if (clave === 'PRI' || clave === 'OTRO') {
-      console.log('pri');
       actividadLaboralSectorPublico.disable();
       actividadLaboralSectorPrivadoOtro.enable();
     } else {
-      console.log('none');
       actividadLaboralSectorPublico.disable();
       actividadLaboralSectorPrivadoOtro.disable();
     }
@@ -232,8 +233,6 @@ export class DatosParejaComponent implements OnInit {
     const domicilioMexico = this.datosParejaForm.get('domicilioMexico');
     const domicilioExtranjero = this.datosParejaForm.get('domicilioExtranjero');
 
-    console.log(value);
-
     switch (value) {
       case 'MEXICO':
         domicilioMexico.enable();
@@ -290,7 +289,7 @@ export class DatosParejaComponent implements OnInit {
       const declaracion = {
         datosPareja: form,
       };
-      console.log('form', declaracion);
+
       const { data } = await this.apollo
         .mutate<DeclaracionOutput>({
           mutation: datosParejaMutation,

@@ -64,7 +64,6 @@ export class ParticipacionEmpresaComponent implements OnInit {
   }
 
   locationChanged(value: string) {
-    console.log('change', value);
     const localizacion = this.participacionForm.get('participacion').get('ubicacion');
     const pais = localizacion.get('pais');
     const entidadFederativa = localizacion.get('entidadFederativa');
@@ -73,16 +72,12 @@ export class ParticipacionEmpresaComponent implements OnInit {
       entidadFederativa.disable();
       entidadFederativa.reset();
       this.tipoDomicilio = 'EXTRANJERO';
-      console.log('extranjero');
     } else {
       pais.disable();
       entidadFederativa.enable();
       pais.reset();
       this.tipoDomicilio = 'MEXICO';
-      console.log('mexico');
     }
-
-    console.log('partcipacion empresa: ', this.participacionForm.value);
   }
 
   cancelEditMode() {
@@ -131,7 +126,6 @@ export class ParticipacionEmpresaComponent implements OnInit {
       .get('recibeRemuneracion')
       .valueChanges.subscribe((x) => {
         x ? montoMensual.enable() : montoMensual.disable();
-        console.log(this.participacionForm.value);
       });
   }
 
@@ -172,7 +166,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.participacion) {
         this.setupForm(data.declaracion.participacion);
@@ -215,10 +209,8 @@ export class ParticipacionEmpresaComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const participacion = [...this.participacion.slice(0, index), ...this.participacion.slice(index + 1)];
-        console.log('par', this.participacion);
         const aclaracionesObservaciones = this.participacionForm.value.aclaracionesObservaciones;
         this.saveInfo({
           participacion,

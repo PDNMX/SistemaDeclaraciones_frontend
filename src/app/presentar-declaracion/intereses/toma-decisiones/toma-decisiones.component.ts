@@ -63,7 +63,6 @@ export class TomaDecisionesComponent implements OnInit {
   }
 
   locationChanged(value: string) {
-    console.log('change', value);
     const localizacion = this.participacionTomaDecisionesForm.get('participacion').get('ubicacion');
     const pais = localizacion.get('pais');
     const entidadFederativa = localizacion.get('entidadFederativa');
@@ -72,16 +71,12 @@ export class TomaDecisionesComponent implements OnInit {
       entidadFederativa.disable();
       entidadFederativa.reset();
       this.tipoDomicilio = 'EXTRANJERO';
-      console.log('extranjero');
     } else {
       pais.disable();
       entidadFederativa.enable();
       pais.reset();
       this.tipoDomicilio = 'MEXICO';
-      console.log('mexico');
     }
-
-    console.log('partcipacion toma desicioes: ', this.participacionTomaDecisionesForm.value);
   }
 
   cancelEditMode() {
@@ -127,7 +122,6 @@ export class TomaDecisionesComponent implements OnInit {
       .get('recibeRemuneracion')
       .valueChanges.subscribe((x) => {
         x ? montoMensual.enable() : montoMensual.disable();
-        console.log(this.participacionTomaDecisionesForm.value);
       });
   }
 
@@ -144,7 +138,6 @@ export class TomaDecisionesComponent implements OnInit {
         this.participacionTomaDecisionesForm.get(`participacion.${field}`).patchValue(participacion[field])
       );
 
-    console.log(participacion.ubicacion.entidadFederativa);
     ifExistEnableFields(
       participacion.ubicacion.entidadFederativa,
       this.participacionTomaDecisionesForm,
@@ -177,7 +170,7 @@ export class TomaDecisionesComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.participacionTomaDecisiones) {
         this.setupForm(data.declaracion.participacionTomaDecisiones);
@@ -220,10 +213,8 @@ export class TomaDecisionesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const participacion = [...this.participacion.slice(0, index), ...this.participacion.slice(index + 1)];
-        console.log('par', this.participacion);
         const aclaracionesObservaciones = this.participacionTomaDecisionesForm.value.aclaracionesObservaciones;
         this.saveInfo({
           participacion,
@@ -298,8 +289,6 @@ export class TomaDecisionesComponent implements OnInit {
     }
 
     if (entidadFederativa) {
-      console.log(entidadFederativa);
-
       this.participacionTomaDecisionesForm
         .get('participacion.ubicacion.entidadFederativa')
         .setValue(findOption(this.estadosCatalogo, entidadFederativa));

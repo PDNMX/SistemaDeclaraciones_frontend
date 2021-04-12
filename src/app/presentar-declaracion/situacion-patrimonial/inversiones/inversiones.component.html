@@ -157,7 +157,7 @@
         <!-- Agregar -->
         <div class="">
           <div class="grid-4-col grid-margin">
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.tipoInverson }}" appearance="fill">
               <mat-label>Tipo de Inversión/Activo</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
               <mat-select formControlName="tipoInversion">
@@ -168,6 +168,7 @@
             </mat-form-field>
             <!-- Bancaria -->
             <mat-form-field
+              matTooltip="{{ tooltipData.bancaria }}"
               appearance="fill"
               *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'BANC'"
             >
@@ -181,6 +182,7 @@
             </mat-form-field>
             <!-- Fondos de Inversión -->
             <mat-form-field
+              matTooltip="{{ tooltipData.fondosInversion }}"
               appearance="fill"
               *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'FINV'"
             >
@@ -194,6 +196,7 @@
             </mat-form-field>
             <!-- Organizaciones Privadas y/o Mercantiles -->
             <mat-form-field
+              matTooltip="{{ tooltipData.organizacionesPrivadasMercantiles }}"
               appearance="fill"
               *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'ORPM'"
             >
@@ -207,6 +210,7 @@
             </mat-form-field>
             <!-- Posesión de Monedas y/o metales -->
             <mat-form-field
+              matTooltip="{{ tooltipData.posesionMonedasMetales }}"
               appearance="fill"
               *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'POMM'"
             >
@@ -220,6 +224,7 @@
             </mat-form-field>
             <!-- Seguros -->
             <mat-form-field
+              matTooltip="{{ tooltipData.seguros }}"
               appearance="fill"
               *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'SEGR'"
             >
@@ -233,6 +238,7 @@
             </mat-form-field>
             <!-- Valores Bursátiles -->
             <mat-form-field
+              matTooltip="{{ tooltipData.valoresBursatiles }}"
               appearance="fill"
               *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'VBUR'"
             >
@@ -246,6 +252,7 @@
             </mat-form-field>
             <!-- Afores y otros -->
             <mat-form-field
+              matTooltip="{{ tooltipData.aforesOtros }}"
               appearance="fill"
               *ngIf="inversionesCuentasValoresForm.value.inversion.tipoInversion?.clave === 'AFOT'"
             >
@@ -257,7 +264,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="double-col">
+            <mat-form-field matTooltip="{{ tooltipData.titularInversion }}" appearance="fill" class="double-col">
               <mat-label>Titular de la inversión, cuenta bancaria y otro tipo de valores</mat-label>
               <mat-icon matPrefix class="no-public">person</mat-icon>
               <mat-select formControlName="titular">
@@ -270,18 +277,18 @@
 
           <!-- Tercero -->
           <div class="grid-4-col grid-margin" formGroupName="tercero">
-            <mat-form-field appearance="fill" class="double-col">
+            <mat-form-field matTooltip="{{ tooltipData.nombreTercero }}" appearance="fill" class="double-col">
               <mat-label>Nombre del Tercero o Terceros</mat-label>
               <mat-icon matPrefix>person</mat-icon>
               <input matInput type="text" formControlName="nombreRazonSocial" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.rfcTercero }}" appearance="fill">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix>fingerprint</mat-icon>
               <input matInput #input_rfc_tercero formControlName="rfc" type="text" maxlength="13" />
               <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.tercero }}" appearance="fill">
               <mat-label>Persona Física o Moral</mat-label>
               <mat-icon matPrefix>person</mat-icon>
               <mat-select formControlName="tipoPersona">
@@ -292,7 +299,11 @@
           </div>
 
           <div class="grid-2-col grid-margin">
-            <mat-form-field appearance="fill" formGroupName="localizacionInversion">
+            <mat-form-field
+              matTooltip="{{ tooltipData.localizaInversion }}"
+              appearance="fill"
+              formGroupName="localizacionInversion"
+            >
               <mat-label>¿Dónde se localiza la inversión, cuenta bancaria y otro tipo de valores/activos? </mat-label>
               <mat-icon matPrefix>public</mat-icon>
               <mat-select #mexicoExtranjero (selectionChange)="localizacionChanged($event.value)">
@@ -302,7 +313,11 @@
             </mat-form-field>
           </div>
           <div class="grid-2-col grid-margin">
-            <mat-form-field appearance="fill" formGroupName="localizacionInversion">
+            <mat-form-field
+              matTooltip="{{ tooltipData.institucionRazonSocial }}"
+              appearance="fill"
+              formGroupName="localizacionInversion"
+            >
               <mat-label>Institución o razón social</mat-label>
               <mat-icon matPrefix>dns</mat-icon>
               <input matInput type="text" formControlName="institucionRazonSocial" />
@@ -328,12 +343,16 @@
             </mat-form-field>
           </div>
           <div class="grid-3-col grid-margin">
-            <mat-form-field appearance="fill" formGroupName="saldoSituacionActual">
+            <mat-form-field matTooltip="{{ tooltipData.saldo }}" appearance="fill" formGroupName="saldoSituacionActual">
               <mat-label>Saldo a la fecha (situación actual)</mat-label>
               <mat-icon matPrefix class="no-public">credit_card</mat-icon>
               <input matInput type="number" formControlName="valor" min="0" />
             </mat-form-field>
-            <mat-form-field appearance="fill" formGroupName="saldoSituacionActual">
+            <mat-form-field
+              matTooltip="{{ tooltipData.tipoMoneda }}"
+              appearance="fill"
+              formGroupName="saldoSituacionActual"
+            >
               <mat-label>Tipo de Moneda</mat-label>
               <mat-icon matPrefix>credit_card</mat-icon>
               <mat-select formControlName="moneda">
@@ -342,7 +361,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.numeroCuentaContrato }}" appearance="fill">
               <mat-label>Número de cuenta, contrato o póliza</mat-label>
               <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
               <input matInput type="text" formControlName="numeroCuentaContrato" />
@@ -364,7 +383,7 @@
           <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
-        <mat-form-field appearance="fill" class="grid-margin">
+        <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
           <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>

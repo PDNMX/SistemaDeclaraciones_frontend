@@ -52,6 +52,7 @@ export class SignupComponent implements OnInit, OnDestroy {
         (success) => {
           if (success) {
             log.debug(`successfully signed up`);
+            this.openSnackBar('Usuario registrado exitosamente', 'Aceptar');
             this.router.navigate([this.route.snapshot.queryParams.redirect || '/'], { replaceUrl: true });
           } else {
             this.openSnackBar('No se pudo completar el registro', 'Aceptar');
