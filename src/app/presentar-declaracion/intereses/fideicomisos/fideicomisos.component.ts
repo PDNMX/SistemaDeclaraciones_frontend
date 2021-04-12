@@ -150,7 +150,7 @@ export class FideicomisosComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.fideicomisos) {
         this.setupForm(data.declaracion.fideicomisos);
@@ -193,10 +193,8 @@ export class FideicomisosComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const fideicomiso = [...this.fideicomiso.slice(0, index), ...this.fideicomiso.slice(index + 1)];
-        console.log('fideicomiso', this.fideicomiso);
         const aclaracionesObservaciones = this.fideicomisosForm.value.aclaracionesObservaciones;
         this.saveInfo({
           fideicomiso,
@@ -286,7 +284,7 @@ export class FideicomisosComponent implements OnInit {
     const fideicomitente = fideicomiso.get('fideicomitente');
     const fiduciario = fideicomiso.get('fiduciario');
     const fideicomisario = fideicomiso.get('fideicomisario');
-    console.log('value', value);
+
     switch (value) {
       case 'FIDEICOMITENTE':
         fideicomitente.reset();
@@ -312,8 +310,6 @@ export class FideicomisosComponent implements OnInit {
         fideicomisario.disable();
         break;
     }
-
-    console.log('fid', this.fideicomisosForm.value);
   }
 
   toggleAclaraciones(value: boolean) {

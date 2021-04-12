@@ -49,7 +49,6 @@ export class MisDeclaracionesComponent implements OnInit {
         })
         .toPromise();
 
-      console.log(result);
       this.presentAlert('Tu declaración ha sido eliminada', '');
     } catch (error) {
       console.log(error);
@@ -61,9 +60,10 @@ export class MisDeclaracionesComponent implements OnInit {
 
   editDeclaration(declaracion: DeclaracionMetadata) {
     const tipoDeclaracion = declaracion.tipoDeclaracion.toLocaleLowerCase();
-    const url = declaracion.simplificada
-      ? `/${tipoDeclaracion}/simplificada/situacion-patrimonial`
-      : `/${tipoDeclaracion}/situacion-patrimonial`;
+    const url = declaracion.declaracionCompleta
+      ? `/${tipoDeclaracion}/situacion-patrimonial`
+      : `/${tipoDeclaracion}/simplificada/situacion-patrimonial`;
+
     this.router.navigate([url], { replaceUrl: true });
   }
 

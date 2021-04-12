@@ -1,12 +1,26 @@
 <div class="container">
-  <h3 *ngIf="data.signDeclaration"><b>¿Deseas finalizar tu declaracion?</b></h3>
-  <button *ngIf="!data.signDeclaration" mat-icon-button mat-dialog-close class="close-button" color="primary">
+  <h3 mat-dialog-title *ngIf="data.signDeclaration"><b>Finalizar tu declaración</b></h3>
+
+  <button
+    mat-dialog-title
+    *ngIf="!data.signDeclaration"
+    mat-icon-button
+    mat-dialog-close
+    class="close-button"
+    color="primary"
+  >
     <mat-icon>close</mat-icon>
   </button>
-  <iframe id="acuse" height="700" width="500"></iframe>
+
+  <mat-dialog-content class="mat-typography">
+    <p *ngIf="data.signDeclaration">
+      Estos son los datos que quedarán almacenados, después de firmar tu declaración no podrás hacer modificaciones.
+    </p>
+    <iframe id="acuse" height="700" width="700"></iframe>
+  </mat-dialog-content>
 
   <mat-dialog-actions align="end" *ngIf="data.signDeclaration">
     <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Finalizar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Continuar</button>
   </mat-dialog-actions>
 </div>

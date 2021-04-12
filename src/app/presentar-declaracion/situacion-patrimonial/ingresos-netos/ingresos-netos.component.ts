@@ -11,6 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import TipoInstrumento from '@static/catalogos/tipoInstrumento.json';
 
+import { tooltipData } from '@static/tooltips/ingresos-netos';
+
 import {
   ActividadFinanciera,
   ActividadIndustrial,
@@ -40,6 +42,8 @@ export class IngresosNetosComponent implements OnInit {
   tipoDeclaracion: string = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -355,11 +359,11 @@ export class IngresosNetosComponent implements OnInit {
           query: ingresosQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
-            simplificada: this.declaracionSimplificada,
+            declaracionCompleta: !this.declaracionSimplificada,
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.ingresos) {
         this.fillForm(data.declaracion.ingresos);

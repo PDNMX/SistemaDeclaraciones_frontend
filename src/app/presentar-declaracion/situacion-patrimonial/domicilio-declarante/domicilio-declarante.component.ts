@@ -129,7 +129,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
           query: domicilioDeclaranteQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
-            simplificada: this.declaracionSimplificada,
+            declaracionCompleta: !this.declaracionSimplificada,
           },
         })
         .toPromise();

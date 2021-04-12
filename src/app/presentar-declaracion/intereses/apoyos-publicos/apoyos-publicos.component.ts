@@ -151,10 +151,8 @@ export class ApoyosPublicosComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const apoyo = [...this.apoyo.slice(0, index), ...this.apoyo.slice(index + 1)];
-        console.log('apoyo', this.apoyo);
         const aclaracionesObservaciones = this.apoyosForm.value.aclaracionesObservaciones;
         this.saveInfo({
           apoyo,
@@ -218,8 +216,6 @@ export class ApoyosPublicosComponent implements OnInit {
 
   setSelectedOptions() {
     const { beneficiarioPrograma, tipoApoyo } = this.apoyosForm.value.apoyo;
-
-    console.log(beneficiarioPrograma);
 
     if (beneficiarioPrograma) {
       this.apoyosForm

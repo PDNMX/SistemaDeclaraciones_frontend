@@ -20,6 +20,8 @@ import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
+import { tooltipData } from '@static/tooltips/vehiculos';
+
 import { DeclaracionOutput, Vehiculo, Vehiculos } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
@@ -36,6 +38,7 @@ export class VehiculosComponent implements OnInit {
   editIndex: number = null;
   vehiculo: Vehiculo[] = [];
   isLoading = false;
+  currentYear = new Date().getFullYear();
 
   tipoVehiculoCatalogo = TipoVehiculo;
   formaAdquisicionCatalogo = FormaAdquisicion;
@@ -52,6 +55,8 @@ export class VehiculosComponent implements OnInit {
   tipoDomicilio: string;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -72,7 +77,6 @@ export class VehiculosComponent implements OnInit {
   }
 
   locationChanged(value: string) {
-    console.log('change', value);
     const localizacion = this.vehiculosForm.get('vehiculo').get('lugarRegistro');
     const pais = localizacion.get('pais');
     const entidadFederativa = localizacion.get('entidadFederativa');
@@ -81,16 +85,12 @@ export class VehiculosComponent implements OnInit {
       pais.enable();
       entidadFederativa.disable();
       entidadFederativa.reset();
-      console.log('extranjero');
     } else {
       this.tipoDomicilio = 'MEXICO';
       pais.disable();
       entidadFederativa.enable();
       pais.reset();
-      console.log('mexico');
     }
-
-    console.log('exp', this.vehiculosForm.value);
   }
 
   cancelEditMode() {
@@ -190,7 +190,6 @@ export class VehiculosComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.vehiculos) {
         this.setupForm(data.declaracion.vehiculos);
@@ -233,10 +232,8 @@ export class VehiculosComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const vehiculo = [...this.vehiculo.slice(0, index), ...this.vehiculo.slice(index + 1)];
-        console.log('vehiculo', this.vehiculo);
         const aclaracionesObservaciones = this.vehiculosForm.value.aclaracionesObservaciones;
         this.saveInfo({
           vehiculo,

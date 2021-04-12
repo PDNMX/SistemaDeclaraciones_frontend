@@ -2,8 +2,8 @@ import { TipoDeclaracion } from './types';
 import { User } from '@models/user';
 
 export interface DeclaracionMetadata {
-  completa: boolean;
-  simplificada: boolean;
+  firmada: boolean;
+  declaracionCompleta: boolean;
   tipoDeclaracion: TipoDeclaracion;
   createdAt: string;
   updatedAt: string;

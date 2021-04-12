@@ -10,11 +10,28 @@
         <mat-card-content>
           <div class="size-20">
             <p>
-              <span class="negritas">
-                nombre usuario
-                <!-- {{ user?.nombre }} {{ user?.primerApellido }} {{ user?.segundoApellido }} --></span
-              >
+              <span class="negritas"> {{ user?.nombre }} {{ user?.primerApellido }} {{ user?.segundoApellido }} </span>
             </p>
+          </div>
+          <div class="grid-2-col">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">fingerprint</mat-icon>
+              <p>
+                CURP:
+                <span class="resaltar">
+                  {{ user?.curp }}
+                </span>
+              </p>
+            </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">fingerprint</mat-icon>
+              <p>
+                RFC:
+                <span class="resaltar">
+                  {{ user?.rfc }}
+                </span>
+              </p>
+            </div>
           </div>
           <div class="grid-2-col">
             <div class="paragraph-flex">
@@ -22,19 +39,28 @@
               <p>
                 Fecha de Registro:
                 <span class="resaltar">
-                  23/12/2015
-                  <!-- {{ user?.createdAt | date: 'dd/MM/yyyy' }} --></span
-                >
+                  {{ user?.createdAt | date: 'dd/MM/yyyy' }}
+                </span>
               </p>
             </div>
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">email</mat-icon>
               <p>
-                Correo Electrónico
+                Correo Electrónico:
                 <span class="resaltar">
-                  any@mail.com
-                  <!-- {{ user?.username }} --></span
-                >
+                  {{ user?.username }}
+                </span>
+              </p>
+            </div>
+          </div>
+          <div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">supervisor_account</mat-icon>
+              <p>
+                Roles:
+                <span class="resaltar">
+                  {{ transformRoles(user?.roles) }}
+                </span>
               </p>
             </div>
           </div>

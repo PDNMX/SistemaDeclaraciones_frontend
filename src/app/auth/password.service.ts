@@ -40,7 +40,6 @@ export class PasswordService {
       .post(`${environment.serverUrl}/reset_password`, context)
       .toPromise()
       .then((result: any) => {
-        console.log('result', result);
         return result.success;
       })
       .catch((error) => {

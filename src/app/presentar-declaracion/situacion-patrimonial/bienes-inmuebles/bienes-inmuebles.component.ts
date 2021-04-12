@@ -20,6 +20,8 @@ import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
+import { tooltipData } from '@static/tooltips/bien-inmueble';
+
 import { BienInmueble, BienesInmuebles, Catalogo, DeclaracionOutput } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
@@ -53,6 +55,8 @@ export class BienesInmueblesComponent implements OnInit {
   tipoDomicilio = 'MEXICO';
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -206,7 +210,7 @@ export class BienesInmueblesComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.bienesInmuebles) {
         this.setupForm(data.declaracion.bienesInmuebles);
@@ -249,10 +253,8 @@ export class BienesInmueblesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const bienInmueble = [...this.bienInmueble.slice(0, index), ...this.bienInmueble.slice(index + 1)];
-        console.log('bienInmueble', this.bienInmueble);
         const aclaracionesObservaciones = this.bienesInmueblesForm.value.aclaracionesObservaciones;
         this.saveInfo({
           bienInmueble,
@@ -349,7 +351,6 @@ export class BienesInmueblesComponent implements OnInit {
         .get('bienInmueble.formaAdquisicion')
         .setValue(findOption(this.formaAdquisicionCatalogo, formaAdquisicion));
     }
-    console.log(this.bienesInmueblesForm.get('bienInmueble.transmisor.relacion'));
 
     if (relacion) {
       this.bienesInmueblesForm

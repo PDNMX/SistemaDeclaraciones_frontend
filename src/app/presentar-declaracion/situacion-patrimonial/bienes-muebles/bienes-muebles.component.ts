@@ -17,6 +17,8 @@ import ParentescoRelacion from '@static/catalogos/parentescoRelacion.json';
 import ValorConformeA from '@static/catalogos/valorConformeA.json';
 import Monedas from '@static/catalogos/monedas.json';
 
+import { tooltipData } from '@static/tooltips/bienes-muebles';
+
 import { BienMueble, BienesMuebles, DeclaracionOutput } from '@models/declaracion';
 
 import { findOption } from '@utils/utils';
@@ -45,6 +47,8 @@ export class BienesMueblesComponent implements OnInit {
   tipoDeclaracion: string = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -143,7 +147,7 @@ export class BienesMueblesComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.bienesMuebles) {
         this.setupForm(data.declaracion.bienesMuebles);
@@ -186,10 +190,8 @@ export class BienesMueblesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const bienMueble = [...this.bienMueble.slice(0, index), ...this.bienMueble.slice(index + 1)];
-        console.log('bienMueble', this.bienMueble);
         const aclaracionesObservaciones = this.bienesMueblesForm.value.aclaracionesObservaciones;
         this.saveInfo({
           bienMueble,
@@ -274,8 +276,6 @@ export class BienesMueblesComponent implements OnInit {
     }
 
     if (relacion) {
-      console.log(this.bienesMueblesForm.value.bienMueble);
-
       this.bienesMueblesForm
         .get('bienMueble.transmisor.relacion')
         .setValue(findOption(this.parentescoRelacionCatalogo, relacion.clave));

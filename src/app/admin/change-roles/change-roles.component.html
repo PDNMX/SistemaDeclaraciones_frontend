@@ -16,7 +16,7 @@
       <ul>
         <li *ngFor="let role of roles">
           <mat-checkbox [(ngModel)]="role.selected" color="primary" (ngModelChange)="updateAllSelected()">
-            {{ role.name | replace: '_':' ' }}
+            {{ role.name }}
           </mat-checkbox>
         </li>
       </ul>

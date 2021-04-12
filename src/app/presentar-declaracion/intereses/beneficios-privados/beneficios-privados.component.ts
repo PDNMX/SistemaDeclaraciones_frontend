@@ -163,10 +163,8 @@ export class BeneficiosPrivadosComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const beneficio = [...this.beneficio.slice(0, index), ...this.beneficio.slice(index + 1)];
-        console.log('beneficio', this.beneficio);
         const aclaracionesObservaciones = this.beneficiosPrivadosForm.value.aclaracionesObservaciones;
         this.saveInfo({
           beneficio,
@@ -191,7 +189,7 @@ export class BeneficiosPrivadosComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log('result', data);
+
       this.editMode = false;
       if (data.declaracion.beneficiosPrivados) {
         this.setupForm(data.declaracion.beneficiosPrivados);

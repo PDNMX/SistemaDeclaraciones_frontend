@@ -7,8 +7,8 @@ export const deleteDeclaracion = gql`
 `;
 
 export const firmarDeclaracion = gql`
-  mutation firmarDeclaracion($id: ID!) {
-    firmarDeclaracion(id: $id)
+  mutation firmarDeclaracion($id: ID!, $password: String!) {
+    firmarDeclaracion(id: $id, password: $password)
   }
 `;
 
@@ -201,7 +201,7 @@ export const datosCurricularesMutation = gql`
   mutation declaracion($id: ID!, $declaracion: DeclaracionSeccionesInput!) {
     declaracion(id: $id, declaracion: $declaracion) {
       _id
-      simplificada
+      declaracionCompleta
       tipoDeclaracion
       datosCurricularesDeclarante {
         escolaridad {
@@ -390,7 +390,7 @@ export const declaracionMutation = gql`
   mutation declaracion($id: ID!, $declaracion: DeclaracionSeccionesInput!) {
     declaracion(id: $id, declaracion: $declaracion) {
       _id
-      simplificada
+      declaracionCompleta
       tipoDeclaracion
     }
   }
@@ -400,7 +400,7 @@ export const experienciaLaboralMutation = gql`
   mutation declaracion($id: ID!, $declaracion: DeclaracionSeccionesInput!) {
     declaracion(id: $id, declaracion: $declaracion) {
       _id
-      simplificada
+      declaracionCompleta
       tipoDeclaracion
       experienciaLaboral {
         ninguno

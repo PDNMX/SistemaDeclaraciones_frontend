@@ -102,7 +102,6 @@ export class ShellComponent implements OnInit {
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        console.log('ROUTE', this.router.url);
         this.url = this.router.url;
       }
     });
@@ -114,7 +113,7 @@ export class ShellComponent implements OnInit {
 
   get username(): string | null {
     const credentials = this.credentialsService.credentials;
-    return credentials ? credentials.username : null;
+    return credentials ? credentials.user.username : null;
   }
 
   get isMobile(): boolean {

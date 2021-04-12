@@ -18,11 +18,11 @@ export interface DialogData {
 })
 export class ChangeRolesComponent implements OnInit {
   allSelected = false;
-  roles: { name: Role; selected: boolean }[] = [
-    { name: 'USER', selected: false },
-    { name: 'ADMIN', selected: false },
-    { name: 'SUPER_ADMIN', selected: false },
-    { name: 'ROOT', selected: false },
+  roles: { name: string; selected: boolean; value: Role }[] = [
+    { name: 'DECLARANTE', selected: false, value: 'USER' },
+    { name: 'ADMINISTRATIVO 1', selected: false, value: 'ADMIN' },
+    { name: 'ADMINISTRATIVO 2', selected: false, value: 'SUPER_ADMIN' },
+    { name: 'ADMINISTRADOR', selected: false, value: 'ROOT' },
   ];
 
   constructor(
@@ -32,9 +32,9 @@ export class ChangeRolesComponent implements OnInit {
   ) {}
 
   async changeUserRoles() {
-    const roles = this.roles.filter((t) => t.selected).map((r) => r.name);
+    const roles = this.roles.filter((t) => t.selected).map((r) => r.value);
     try {
-      const { data }: any = await this.apollo
+      await this.apollo
         .mutate({
           mutation: changeRoles,
           variables: {
@@ -43,7 +43,6 @@ export class ChangeRolesComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
       this.dialogRef.close(true);
     } catch (error) {
       console.log(error);
@@ -52,7 +51,7 @@ export class ChangeRolesComponent implements OnInit {
 
   ngOnInit(): void {
     this.roles.forEach((role, index) => {
-      this.roles[index].selected = this.data.roles.includes(role.name);
+      this.roles[index].selected = this.data.roles.includes(role.value);
     });
   }
 

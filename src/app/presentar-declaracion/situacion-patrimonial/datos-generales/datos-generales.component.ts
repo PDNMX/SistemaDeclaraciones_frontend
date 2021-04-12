@@ -15,6 +15,8 @@ import Paises from '@static/catalogos/paises.json';
 import SituacionPersonalEstadoCivil from '@static/catalogos/situacionPersonalEstadoCivil.json';
 import RegimenMatrimonial from '@static/catalogos/regimenMatrimonial.json';
 
+import { tooltipData } from '@static/tooltips/datos-generales';
+
 import { findOption } from '@utils/utils';
 
 import { DatosGenerales, DeclaracionOutput } from '@models/declaracion';
@@ -37,6 +39,8 @@ export class DatosGeneralesComponent implements OnInit {
   declaracionSimplificada = false;
   tipoDeclaracion: string = null;
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -143,7 +147,7 @@ export class DatosGeneralesComponent implements OnInit {
           query: datosGeneralesQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
-            simplificada: this.declaracionSimplificada,
+            declaracionCompleta: !this.declaracionSimplificada,
           },
         })
         .toPromise();

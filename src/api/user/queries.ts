@@ -20,14 +20,15 @@ export const login = gql`
         roles
         createdAt
       }
+      refreshJwtToken
       jwtToken
     }
   }
 `;
 
 export const userProfileQuery = gql`
-  query userProfile {
-    userProfile {
+  query userProfile($id: ID) {
+    userProfile(id: $id) {
       _id
       username
       nombre

@@ -145,7 +145,7 @@
       <!-- Primer bloque -->
       <div>
         <div class="grid-2-col">
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.nivelOrdenGobierno }}" appearance="fill">
             <mat-label>Nivel/Orden de Gobierno </mat-label>
             <mat-icon matPrefix>star</mat-icon>
             <mat-select formControlName="nivelOrdenGobierno" required>
@@ -154,7 +154,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.ambitoPublico }}" appearance="fill">
             <mat-label>Ámbito Público</mat-label>
             <mat-icon matPrefix>aspect_ratio</mat-icon>
             <mat-select formControlName="ambitoPublico">
@@ -164,24 +164,24 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.nombreEntePublico }}" appearance="fill">
             <mat-label>Nombre del Ente Público</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
             <input matInput type="text" formControlName="nombreEntePublico" />
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.areaAdscripcion }}" appearance="fill">
             <mat-label>Área de Adscripción</mat-label>
             <mat-icon matPrefix>wb_iridescent</mat-icon>
             <input matInput type="text" formControlName="areaAdscripcion" />
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.empleoCargoComision }}" appearance="fill">
             <mat-label>Empleo, cargo o comisión</mat-label>
             <mat-icon matPrefix>wb_iridescent</mat-icon>
             <input matInput type="text" formControlName="empleoCargoComision" />
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.especifiqueFuncionPrincipal }}" appearance="fill">
             <mat-label>Especifique función principal</mat-label>
             <mat-icon matPrefix>speaker_notes</mat-icon>
             <input matInput type="text" formControlName="funcionPrincipal" />
@@ -192,13 +192,13 @@
             <mat-radio-button [value]="true">Sí</mat-radio-button>
             <mat-radio-button [value]="false">No</mat-radio-button>
           </mat-radio-group>
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.nivelEmpleoCargoComision }}" appearance="fill">
             <mat-label>Nivel del empleo, cargo o comisión</mat-label>
             <mat-icon matPrefix>work</mat-icon>
             <input matInput #input_nivel_cargo type="text" formControlName="nivelEmpleoCargoComision" />
           </mat-form-field>
           <!--</div>-->
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.fechaTomaPosesion }}" appearance="fill">
             <mat-label>Fecha de toma de posesión del empleo, cargo o comisión</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="fechaTomaPosesion" />
             <mat-hint>dd/mm/yyyy</mat-hint>
@@ -206,13 +206,23 @@
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
           <div class="grid-3-col">
-            <mat-form-field appearance="fill" class="double-col" formGroupName="telefonoOficina">
+            <mat-form-field
+              matTooltip="{{ tooltipData.telefonoOficinaExtension }}"
+              appearance="fill"
+              class="double-col"
+              formGroupName="telefonoOficina"
+            >
               <mat-label>Teléfono de oficina</mat-label>
               <mat-icon matPrefix>call</mat-icon>
               <input matInput type="text" #input_telefono_oficina formControlName="telefono" maxlength="10" />
               <mat-hint align="end">{{ input_telefono_oficina.value?.length || 0 }}/10</mat-hint>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="extension" formGroupName="telefonoOficina">
+            <mat-form-field
+              matTooltip="{{ tooltipData.telefonoOficinaExtension }}"
+              appearance="fill"
+              class="extension"
+              formGroupName="telefonoOficina"
+            >
               <mat-label>Extensión</mat-label>
               <mat-icon matPrefix>call</mat-icon>
               <input matInput type="text" formControlName="extension" maxlength="10" />

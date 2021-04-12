@@ -172,7 +172,7 @@
         <div class="">
           <h2>Agregar bien mueble</h2>
           <div class="grid-2-col grid-margin">
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.tipoBien }}" appearance="fill">
               <mat-label>Tipo del bien</mat-label>
               <mat-icon matPrefix>dns</mat-icon>
               <mat-select formControlName="tipoBien">
@@ -189,7 +189,7 @@
               <mat-icon matPrefix class="no-public">dns</mat-icon>
               <input matInput type="text" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.titularBien }}" appearance="fill">
               <mat-label>Titular del Bien</mat-label>
               <mat-icon matPrefix class="no-public">person</mat-icon>
               <mat-select formControlName="titular">
@@ -202,17 +202,17 @@
 
           <!-- Tercero -->
           <div class="grid-3-col grid-margin" formGroupName="tercero">
-            <mat-radio-group class="checkbox" formControlName="tipoPersona">
+            <mat-radio-group matTooltip="{{ tooltipData.tercero }}" class="checkbox" formControlName="tipoPersona">
               <p class="question double-col">Tercero</p>
               <mat-radio-button value="Fisica"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
               <mat-radio-button value="Moral">Persona Moral</mat-radio-button>
             </mat-radio-group>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.nombreTercero }}" appearance="fill">
               <mat-label>Nombre del Tercero o Terceros</mat-label>
               <mat-icon matPrefix>group</mat-icon>
               <input matInput type="text" formControlName="nombreRazonSocial" />
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.rfcTercero }}" appearance="fill">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix>fingerprint</mat-icon>
               <input matInput #input_rfc_tercero formControlName="rfc" type="text" maxlength="13" />
@@ -221,7 +221,7 @@
           </div>
 
           <div class="grid-3-col grid-margin">
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.formaAdquisicion }}" appearance="fill">
               <mat-label>Forma de Adquisición</mat-label>
               <mat-icon matPrefix>credit_card</mat-icon>
               <mat-select formControlName="formaAdquisicion">
@@ -230,7 +230,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.formaPago }}" appearance="fill">
               <mat-label>Forma de Pago</mat-label>
               <mat-icon matPrefix>credit_card</mat-icon>
               <mat-select formControlName="formaPago">
@@ -239,7 +239,11 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" formGroupName="transmisor">
+            <mat-form-field
+              matTooltip="{{ tooltipData.relacionTransmisorTitular }}"
+              appearance="fill"
+              formGroupName="transmisor"
+            >
               <mat-label>Relación del transmisor del bien con el titular</mat-label>
               <mat-icon matPrefix class="no-public">group</mat-icon>
               <mat-select formControlName="relacion">
@@ -260,18 +264,23 @@
           </div>
 
           <div class="grid-4-col grid-margin">
-            <mat-form-field appearance="fill" class="double-col" formGroupName="transmisor">
+            <mat-form-field
+              matTooltip="{{ tooltipData.nombreRazonSocial }}"
+              appearance="fill"
+              class="double-col"
+              formGroupName="transmisor"
+            >
               <mat-label>Nombre o razón social del transmisor</mat-label>
               <mat-icon matPrefix class="no-public">dns</mat-icon>
               <input matInput type="text" formControlName="nombreRazonSocial" />
             </mat-form-field>
-            <mat-form-field appearance="fill" formGroupName="transmisor">
+            <mat-form-field matTooltip="{{ tooltipData.rfcTransmisor }}" appearance="fill" formGroupName="transmisor">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
               <input matInput #input_rfc_transmisor formControlName="rfc" type="text" maxlength="13" />
               <mat-hint align="end">{{ input_rfc_transmisor.value?.length || 0 }}/13</mat-hint>
             </mat-form-field>
-            <mat-form-field appearance="fill" formGroupName="transmisor">
+            <mat-form-field matTooltip="{{ tooltipData.transmisor }}" appearance="fill" formGroupName="transmisor">
               <mat-label>Persona Física o Moral</mat-label>
               <mat-icon matPrefix class="no-public">person</mat-icon>
               <mat-select formControlName="tipoPersona">
@@ -280,7 +289,11 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="fill" class="quadruple-col">
+            <mat-form-field
+              matTooltip="{{ tooltipData.descripcionGeneralBien }}"
+              appearance="fill"
+              class="quadruple-col"
+            >
               <mat-label>Descripción general del bien</mat-label>
               <mat-icon matPrefix>speaker_notes</mat-icon>
               <input matInput type="text" formControlName="descripcionGeneralBien" />
@@ -288,12 +301,20 @@
           </div>
 
           <div class="grid-3-col grid-margin">
-            <mat-form-field appearance="fill" formGroupName="valorAdquisicion">
+            <mat-form-field
+              matTooltip="{{ tooltipData.valorAdquisicion }}"
+              appearance="fill"
+              formGroupName="valorAdquisicion"
+            >
               <mat-label>Valor de Adquisición del mueble</mat-label>
               <mat-icon matPrefix>credit_card</mat-icon>
               <input matInput type="number" formControlName="valor" min="0" />
             </mat-form-field>
-            <mat-form-field appearance="fill" formGroupName="valorAdquisicion">
+            <mat-form-field
+              matTooltip="{{ tooltipData.tipoMoneda }}"
+              appearance="fill"
+              formGroupName="valorAdquisicion"
+            >
               <mat-label>Tipo de Moneda</mat-label>
               <mat-icon matPrefix>call_merge</mat-icon>
               <mat-select formControlName="moneda">
@@ -302,7 +323,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field matTooltip="{{ tooltipData.fechaAdquisicion }}" appearance="fill">
               <mat-label>Fecha de Adquisición del Inmueble</mat-label>
               <input matInput [matDatepicker]="pickerAdquisicion" formControlName="fechaAdquisicion" />
               <mat-hint>dd/mm/yyyy</mat-hint>
@@ -326,7 +347,7 @@
           <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
-        <mat-form-field appearance="fill" class="grid-margin">
+        <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
           <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>

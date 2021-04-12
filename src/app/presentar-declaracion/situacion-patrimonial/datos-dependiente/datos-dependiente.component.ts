@@ -20,6 +20,8 @@ import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/paises.json';
 
+import { tooltipData } from '@static/tooltips/datos-dependiente';
+
 import { Catalogo, DependienteEconomico, DatosDependientesEconomicos, DeclaracionOutput } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
@@ -53,6 +55,8 @@ export class DatosDependienteComponent implements OnInit {
   tipoDomicilio: string = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
@@ -230,8 +234,6 @@ export class DatosDependienteComponent implements OnInit {
       this.toggleAclaraciones(true);
     }
 
-    console.log(this.datosDependientesEconomicosForm.value.dependienteEconomico);
-
     this.setSelectedOptions();
   }
 
@@ -245,7 +247,7 @@ export class DatosDependienteComponent implements OnInit {
           },
         })
         .toPromise();
-      console.log(data);
+
       this.declaracionId = data.declaracion._id;
       if (data.declaracion.datosDependientesEconomicos) {
         this.setupForm(data.declaracion.datosDependientesEconomicos);
@@ -313,13 +315,12 @@ export class DatosDependienteComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}, ${index}`);
       if (result) {
         const dependienteEconomico = [
           ...this.dependienteEconomico.slice(0, index),
           ...this.dependienteEconomico.slice(index + 1),
         ];
-        console.log('dependienteEconomico', this.dependienteEconomico);
+
         const aclaracionesObservaciones = this.datosDependientesEconomicosForm.value.aclaracionesObservaciones;
         this.saveInfo({
           dependienteEconomico,

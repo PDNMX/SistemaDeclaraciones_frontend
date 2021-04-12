@@ -28,7 +28,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
   @ViewChild('modificacionPaginator') modificacionPaginator: MatPaginator;
   @ViewChild('conclusionPaginator') conclusionPaginator: MatPaginator;
 
-  displayedColumns = ['tipoDeclaracion', 'simplificada', 'owner', 'completa', 'updatedAt'];
+  displayedColumns = ['tipoDeclaracion', 'declaracionCompleta', 'owner', 'firmada', 'updatedAt'];
   isLoadingResults = true;
   isError = false;
 
