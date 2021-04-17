@@ -4,21 +4,19 @@ const tooltipData = {
   tipoFideicomiso: 'Seleccionar si es público, privado o mixto.',
   tipoParticipacion:
     'Seleccionar su participación como fideicomitente, fiduciario, fideicomisario o dentro del Comité Técnico.',
-  rfcFideicomiso:
-    'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del fideicomiso.',
+  rfcFideicomiso: 'Proporcionar los trece dígitos.',
   fideicomitente: 'Seleccionar si es persona física o persona moral.',
   nombreRazonSocialFideicomitente: 'Proporcionar nombre completo.',
-  rfcFideicomitente:
-    'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del fideicomitente.',
+  rfcFideicomitente: 'Proporcionar los trece dígitos.',
   nombreRazonSocialFiduciario: 'Proporcionar nombre completo.',
-  rfcFiduciario:
-    'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del fiduciario.',
+  rfcFiduciario: 'Proporcionar los trece dígitos.',
   fideicomisario: 'Seleccionar si es persona física o persona moral.',
   nombreRazonSocialFideicomisario: 'Proporcionar nombre completo.',
-  rfcFideicomisario:
-    'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del fideicomisario.',
+  rfcFideicomisario: 'Proporcionar los trece dígitos.',
   sectorProductivo: 'Seleccionar alguno de la lista desplegable.',
   localizaFideicomiso: 'Seleccionar en México o en el extranjero.',
+  aclaracionesObservaciones:
+    'En este espacio el Declarante podrá realizar las aclaraciones u observaciones que considere pertinentes respecto de alguno o algunos de los incisos de este apartado.',
 };
 
 export { tooltipData };

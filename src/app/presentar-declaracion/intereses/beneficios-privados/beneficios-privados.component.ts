@@ -15,6 +15,8 @@ import beneficiario from '@static/catalogos/beneficiariosPrograma.json';
 import FormaRecepcion from '@static/catalogos/formaRecepcion.json';
 import Sector from '@static/catalogos/sector.json';
 
+import { tooltipData } from '@static/tooltips/intereses/beneficios';
+
 import { Beneficio, BeneficiosPrivados, DeclaracionOutput } from '@models/declaracion';
 
 import { findOption } from '@utils/utils';
@@ -40,6 +42,8 @@ export class BeneficiosPrivadosComponent implements OnInit {
   tipoDeclaracion: string = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,

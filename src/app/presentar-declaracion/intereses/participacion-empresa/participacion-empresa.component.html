@@ -136,7 +136,7 @@
         <mat-divider></mat-divider>
 
         <div class="grid-2-col grid-margin">
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.declaranteParejaDependiente }}" appearance="fill">
             <mat-label>¿Quién participa?</mat-label>
             <mat-icon matPrefix>person</mat-icon>
             <mat-select formControlName="tipoRelacion">
@@ -148,7 +148,11 @@
         </div>
 
         <div class="grid-3-col grid-margin">
-          <mat-form-field appearance="fill" class="double-col">
+          <mat-form-field
+            matTooltip="{{ tooltipData.nombreEmpresaSociedadAsociacion }}"
+            appearance="fill"
+            class="double-col"
+          >
             <mat-label>Nombre de la empresa, sociedad o asoiación</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
             <input matInput type="text" formControlName="nombreEmpresaSociedadAsociacion" />
@@ -162,12 +166,12 @@
         </div>
 
         <div class="grid-2-col grid-margin">
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.porcentajeParticipacion }}" appearance="fill">
             <mat-label>Porcentaje de participación de acuerdo a escritura</mat-label>
             <mat-icon matPrefix>donut_large</mat-icon>
             <input matInput type="number" formControlName="porcentajeParticipacion" min="0" max="100" />
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.tipoParticipacion }}" appearance="fill">
             <mat-label>Tipo de participación</mat-label>
             <mat-icon matPrefix>feedback</mat-icon>
             <mat-select formControlName="tipoParticipacion">
@@ -180,13 +184,21 @@
 
         <div class="grid-2-col grid-margin">
           <div class="grid-2-col">
-            <mat-radio-group class="checkbox checkbox-height" formControlName="recibeRemuneracion">
+            <mat-radio-group
+              matTooltip="{{ tooltipData.recibeRemuneracion }}"
+              class="checkbox checkbox-height"
+              formControlName="recibeRemuneracion"
+            >
               <label class="question">¿Recibe remuneración por su paticipación?</label>
               <mat-radio-button [value]="true">Si</mat-radio-button>
               <mat-radio-button [value]="false">No</mat-radio-button>
             </mat-radio-group>
           </div>
-          <mat-form-field appearance="fill" formGroupName="montoMensual">
+          <mat-form-field
+            matTooltip="{{ tooltipData.montoMensualNeto }}"
+            appearance="fill"
+            formGroupName="montoMensual"
+          >
             <mat-label>Monto Mensual Neto</mat-label>
             <mat-icon matPrefix>account_balance_wallet</mat-icon>
             <input matInput type="number" formControlName="valor" min="0" />
@@ -194,7 +206,7 @@
         </div>
 
         <div class="grid-2-col grid-margin" formGroupName="ubicacion">
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.lugarDondeUbica }}" appearance="fill">
             <mat-label>Lugar donde se ubica</mat-label>
             <mat-icon matPrefix>public</mat-icon>
             <mat-select (selectionChange)="locationChanged($event.value)">
@@ -224,7 +236,7 @@
           </mat-form-field>
         </div>
         <div class="grid-2-col grid-margin">
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.sectorProductivo }}" appearance="fill">
             <mat-label>Sector productivo al que pertenece</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
             <mat-select formControlName="sector">
@@ -249,7 +261,7 @@
           <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
-        <mat-form-field appearance="fill" class="grid-margin">
+        <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
           <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>

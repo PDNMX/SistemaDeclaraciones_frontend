@@ -11,7 +11,8 @@
 
     <mat-toolbar class="background-white">
       <label class="step-title">
-        8. Ingresos netos del declarante, pareja y/o dependiente económicos (situación actual)</label
+        {{ declaracionSimplificada ? '6.' : '8.' }} Ingresos netos del declarante, pareja y/o dependiente económicos
+        (situación actual)</label
       >
     </mat-toolbar>
 
@@ -299,11 +300,21 @@
 
     <div class="boton center">
       <button
+        *ngIf="!declaracionSimplificada"
         mat-raised-button
         color="primary"
         [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/servidor-publico'"
       >
         CONTINUAR 9 DE 15
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+      <button
+        *ngIf="declaracionSimplificada"
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/simplificada/situacion-patrimonial/servidor-publico'"
+      >
+        CONTINUAR 7 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
     </div>

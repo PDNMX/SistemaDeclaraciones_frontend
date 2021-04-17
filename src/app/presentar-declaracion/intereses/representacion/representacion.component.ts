@@ -16,6 +16,8 @@ import TipoRepresentacion from '@static/catalogos/tipoRepresentacion.json';
 import Extranjero from '@static/catalogos/extranjero.json';
 import Sector from '@static/catalogos/sector.json';
 
+import { tooltipData } from '@static/tooltips/intereses/representacion';
+
 import { DeclaracionOutput, Representacion, Representaciones } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
@@ -44,6 +46,8 @@ export class RepresentacionComponent implements OnInit {
   tipoDomicilio: string;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,

@@ -115,7 +115,7 @@
         <p>Agregar participación</p>
         <!-- Datos -->
         <div class="grid-2-col grid-margin">
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.beneficiario }}" appearance="fill">
             <mat-label>Beneficiario de algún programa</mat-label>
             <mat-icon matPrefix class="no-public">person</mat-icon>
             <mat-select formControlName="beneficiarioPrograma">
@@ -132,18 +132,18 @@
               <mat-option value="MORAL"> MORAL </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.nombrePrograma }}" appearance="fill">
             <mat-label>Nombre del programa</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
             <input matInput type="text" formControlName="nombrePrograma" />
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.institucionOtorgaApoyo }}" appearance="fill">
             <mat-label>Institución que otorga el apoyo</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
             <input matInput type="text" formControlName="institucionOtorgante" />
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.nivelOrdenGobierno }}" appearance="fill">
             <mat-label>Nivel u orden de gobierno</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
             <mat-select formControlName="nivelOrdenGobierno">
@@ -153,7 +153,7 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.tipoApoyo }}" appearance="fill">
             <mat-label>Tipo de apoyo</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
             <mat-select formControlName="tipoApoyo">
@@ -171,7 +171,7 @@
             <mat-icon matPrefix class="no-public">dns</mat-icon>
             <input matInput type="text" />
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field matTooltip="{{ tooltipData.formaRecepcionApoyo }}" appearance="fill">
             <mat-label>Forma de recepción de pago</mat-label>
             <mat-icon matPrefix>public</mat-icon>
             <mat-select formControlName="formaRecepcion">
@@ -181,7 +181,11 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field appearance="fill" formGroupName="montoApoyoMensual">
+          <mat-form-field
+            matTooltip="{{ tooltipData.montoAproximado }}"
+            appearance="fill"
+            formGroupName="montoApoyoMensual"
+          >
             <mat-label>Monto aproximado del apoyo mensual</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
             <input matInput type="number" formControlName="valor" min="0" />
@@ -207,7 +211,7 @@
           <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
-        <mat-form-field appearance="fill" class="grid-margin">
+        <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
           <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>

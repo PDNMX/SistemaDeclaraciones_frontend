@@ -10,7 +10,10 @@
     <mat-divider></mat-divider>
 
     <mat-toolbar class="background-white">
-      <label class="step-title"> 9. ¿Te desempeñaste como servidor público en el año inmediato anterior?</label>
+      <label class="step-title"
+        >{{ declaracionSimplificada ? '7.' : '9.' }} ¿Te desempeñaste como servidor público en el año inmediato
+        anterior?</label
+      >
     </mat-toolbar>
 
     <mat-divider></mat-divider>
@@ -364,6 +367,7 @@
 
     <div class="boton center">
       <button
+        *ngIf="!declaracionSimplificada"
         mat-raised-button
         color="primary"
         [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/bienes-inmuebles'"

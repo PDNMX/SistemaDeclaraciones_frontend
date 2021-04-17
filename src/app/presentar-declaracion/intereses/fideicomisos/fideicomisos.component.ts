@@ -15,6 +15,8 @@ import TipoParticipacion from '@static/catalogos/tipoParticipacionFideicomiso.js
 import Sector from '@static/catalogos/sector.json';
 import Extranjero from '@static/catalogos/extranjero.json';
 
+import { tooltipData } from '@static/tooltips/intereses/fideicomisos';
+
 import { DeclaracionOutput, Fideicomiso, Fideicomisos } from '@models/declaracion';
 
 import { findOption } from '@utils/utils';
@@ -41,6 +43,8 @@ export class FideicomisosComponent implements OnInit {
   tipoDeclaracion: string = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
