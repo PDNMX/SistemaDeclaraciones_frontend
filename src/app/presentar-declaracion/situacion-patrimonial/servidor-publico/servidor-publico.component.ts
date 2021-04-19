@@ -205,18 +205,20 @@ export class ServidorPublicoComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const form: ActividadAnualAnterior = this.actividadAnualAnteriorForm.value;
-        //sections
-        form.actividadIndustrialComercialEmpresarial.remuneracionTotal.valor = this.calcTotalAmountOfSection(
-          'actividadIndustrialComercialEmpresarial'
-        );
-        form.actividadFinanciera.remuneracionTotal.valor = this.calcTotalAmountOfSection('actividadFinanciera');
-        form.otrosIngresos.remuneracionTotal.valor = this.calcTotalAmountOfSection('otrosIngresos');
-        form.enajenacionBienes.remuneracionTotal.valor = this.calcTotalAmountOfSection('enajenacionBienes');
-        form.serviciosProfesionales.remuneracionTotal.valor = this.calcTotalAmountOfSection('serviciosProfesionales');
-        //totals
-        form.otrosIngresosTotal.valor = this.otrosIngresosDeclarante;
-        form.ingresoNetoAnualDeclarante.valor = this.ingresoNetoDeclarante;
-        form.totalIngresosNetosAnuales.valor = this.ingresosTotales;
+        if (form.servidorPublicoAnioAnterior) {
+          //sections
+          form.actividadIndustrialComercialEmpresarial.remuneracionTotal.valor = this.calcTotalAmountOfSection(
+            'actividadIndustrialComercialEmpresarial'
+          );
+          form.actividadFinanciera.remuneracionTotal.valor = this.calcTotalAmountOfSection('actividadFinanciera');
+          form.otrosIngresos.remuneracionTotal.valor = this.calcTotalAmountOfSection('otrosIngresos');
+          form.enajenacionBienes.remuneracionTotal.valor = this.calcTotalAmountOfSection('enajenacionBienes');
+          form.serviciosProfesionales.remuneracionTotal.valor = this.calcTotalAmountOfSection('serviciosProfesionales');
+          //totals
+          form.otrosIngresosTotal.valor = this.otrosIngresosDeclarante;
+          form.ingresoNetoAnualDeclarante.valor = this.ingresoNetoDeclarante;
+          form.totalIngresosNetosAnuales.valor = this.ingresosTotales;
+        }
         this.saveInfo(form);
       }
     });
@@ -490,7 +492,7 @@ export class ServidorPublicoComponent implements OnInit {
       this.isLoading = true;
 
       const declaracion = {
-        ingresos: form,
+        actividadAnualAnterior: form,
       };
 
       const result = await this.apollo

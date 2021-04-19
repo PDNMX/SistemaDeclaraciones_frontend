@@ -181,7 +181,7 @@ export class BeneficiosPrivadosComponent implements OnInit {
   async saveInfo(form: BeneficiosPrivados) {
     try {
       const declaracion = {
-        benificiosPrivados: form,
+        beneficiosPrivados: form,
       };
 
       const { data } = await this.apollo

@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { datosDependientesEconomicosMutation, datosCurricularesDeclaranteQuery } from '@api/declaracion';
+import { datosDependientesEconomicosMutation, datosDependientesEconomicosQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -241,7 +241,7 @@ export class DatosDependienteComponent implements OnInit {
     try {
       const { data } = await this.apollo
         .query<DeclaracionOutput>({
-          query: datosCurricularesDeclaranteQuery,
+          query: datosDependientesEconomicosQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
           },
