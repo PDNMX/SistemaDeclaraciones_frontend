@@ -16,6 +16,8 @@ import Paises from '@static/catalogos/paises.json';
 import Estados from '@static/catalogos/estados.json';
 import Sector from '@static/catalogos/sector.json';
 
+import { tooltipData } from '@static/tooltips/intereses/participacion-empresa';
+
 import { DeclaracionOutput, Participacion, Participaciones } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
@@ -44,6 +46,8 @@ export class ParticipacionEmpresaComponent implements OnInit {
   tipoDomicilio: string;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,

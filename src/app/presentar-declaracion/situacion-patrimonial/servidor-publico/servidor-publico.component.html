@@ -10,17 +10,29 @@
     <mat-divider></mat-divider>
 
     <mat-toolbar class="background-white">
-      <label class="step-title"> 9. ¿Te desempeñaste como servidor público en el año inmediato anterior?</label>
+      <label class="step-title"
+        >{{ declaracionSimplificada ? '7.' : '9.' }} ¿Te desempeñaste como servidor público en el año inmediato
+        anterior?</label
+      >
     </mat-toolbar>
 
     <mat-divider></mat-divider>
 
-    <p>
+    <p *ngIf="tipoDeclaracion === 'modificacion'">
+      Esta sección únicamente aplica para la declaración de inicio y conclusión, en razón de que la declaración de
+      modificación refiere la situación del año inmediato anterior.
+    </p>
+
+    <p *ngIf="tipoDeclaracion !== 'modificacion'">
       Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
       resaltados <span class="no-public-inline"></span> no serán públicos.
     </p>
 
-    <form (ngSubmit)="confirmSaveInfo()" [formGroup]="actividadAnualAnteriorForm">
+    <form
+      *ngIf="tipoDeclaracion !== 'modificacion'"
+      (ngSubmit)="confirmSaveInfo()"
+      [formGroup]="actividadAnualAnteriorForm"
+    >
       <div class="bloque">
         <h3>¿Te desempeñaste como servidor público en el año inmediato anterior?</h3>
         <mat-radio-group class="grid-2-col" formControlName="servidorPublicoAnioAnterior">
@@ -364,6 +376,7 @@
 
     <div class="boton center">
       <button
+        *ngIf="!declaracionSimplificada"
         mat-raised-button
         color="primary"
         [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/bienes-inmuebles'"

@@ -373,11 +373,22 @@
 
     <div class="boton center">
       <button
+        *ngIf="!declaracionSimplificada"
         mat-raised-button
         color="primary"
         [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/datos-pareja'"
       >
         CONTINUAR 6 DE 15
+        <mat-icon matSofix>arrow_forward</mat-icon>
+      </button>
+
+      <button
+        *ngIf="declaracionSimplificada"
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/simplificada/situacion-patrimonial/ingresos-netos'"
+      >
+        CONTINUAR 6 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
     </div>

@@ -16,6 +16,8 @@ import beneficiarioPrograma from '@static/catalogos/beneficiariosPrograma.json';
 import NivelGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import TiposApoyo from '@static/catalogos/tipoApoyo.json';
 import RecepcionApoyo from '@static/catalogos/formaRecepcion.json';
+
+import { tooltipData } from '@static/tooltips/intereses/apoyos';
 import { apoyosQuery, apoyosMutation } from '@api/declaracion';
 
 @Component({
@@ -39,6 +41,8 @@ export class ApoyosPublicosComponent implements OnInit {
   tipoDeclaracion: string = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,

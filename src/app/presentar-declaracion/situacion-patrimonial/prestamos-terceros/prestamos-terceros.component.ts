@@ -17,6 +17,8 @@ import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import ParentescoRelacion from '@static/catalogos/parentescoRelacion.json';
 
+import { tooltipData } from '@static/tooltips/prestamo-terceros';
+
 import { Catalogo, DeclaracionOutput, Prestamo, PrestamoComodato } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
@@ -49,6 +51,8 @@ export class PrestamosTercerosComponent implements OnInit {
   tipoDomicilio: string;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,

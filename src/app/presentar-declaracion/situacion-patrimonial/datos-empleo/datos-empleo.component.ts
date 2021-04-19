@@ -200,8 +200,9 @@ export class DatosEmpleoComponent implements OnInit {
       this.datosEmpleoCargoComisionForm
         .get('domicilioMexico.municipioAlcaldia')
         .setValue(
-          findOption(this.municipiosCatalogo[this.estado?.clave] || [], domicilioMexico.municipioAlcaldia.clave)
+          findOption(this.municipiosCatalogo[this.estado?.clave] || [], domicilioMexico.municipioAlcaldia?.clave)
         );
+      this.tipoDomicilio = 'MEXICO';
     } else {
       this.tipoDomicilio = 'EXTRANJERO';
     }

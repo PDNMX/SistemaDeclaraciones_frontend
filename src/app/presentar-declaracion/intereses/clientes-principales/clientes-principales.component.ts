@@ -15,6 +15,8 @@ import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
 import Estados from '@static/catalogos/estados.json';
 
+import { tooltipData } from '@static/tooltips/intereses/clientes-principales';
+
 import { Cliente, ClientesPrincipales, DeclaracionOutput } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
@@ -42,6 +44,8 @@ export class ClientesPrincipalesComponent implements OnInit {
   tipoDomicilio: string = null;
 
   declaracionId: string = null;
+
+  tooltipData = tooltipData;
 
   constructor(
     private apollo: Apollo,
