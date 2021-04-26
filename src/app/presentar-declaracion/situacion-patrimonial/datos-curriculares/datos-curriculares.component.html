@@ -16,10 +16,10 @@
     <mat-divider></mat-divider>
 
     <p>
-      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      Todos los campos * son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
       resaltados <span class="no-public-inline"></span> no serán públicos.<br />
       Información relativa a las instituciones educativas hasta los
-      <span class="negritas">cinco últimos grados de escolaridad</span>, iniciando con la más reciente
+      <span class="negritas">cinco últimos grados de escolaridad</span>, iniciando con la más reciente.
     </p>
 
     <mat-card class="info" *ngFor="let e of escolaridad; let i = index">
@@ -99,7 +99,7 @@
         <p>Agregar escolaridad</p>
         <div class="grid-2-col">
           <mat-form-field matTooltip="{{ tooltipData.nivel }}" appearance="fill">
-            <mat-label>Nivel</mat-label>
+            <mat-label>* Nivel</mat-label>
             <mat-icon matPrefix>star</mat-icon>
             <mat-select formControlName="nivel">
               <mat-option *ngFor="let opt of nivelCatalogo" [value]="opt">
@@ -112,13 +112,13 @@
             appearance="fill"
             formGroupName="institucionEducativa"
           >
-            <mat-label>Institución Educativa</mat-label>
+            <mat-label>* Institución Educativa</mat-label>
             <mat-icon matPrefix>school</mat-icon>
-            <input matInput type="text" formControlName="nombre" />
+            <input matInput type="text" formControlName="nombre" [errorStateMatcher]="errorMatcher" />
           </mat-form-field>
 
           <mat-form-field matTooltip="{{ tooltipData.estatus }}" appearance="fill">
-            <mat-label>Estatus</mat-label>
+            <mat-label>* Estatus</mat-label>
             <mat-icon matPrefix>timelapse</mat-icon>
             <mat-select formControlName="estatus">
               <mat-option *ngFor="let opt of estatusCatalogo" value="{{ opt }}">
@@ -129,12 +129,12 @@
           <mat-form-field matTooltip="{{ tooltipData.carreraArea }}" appearance="fill">
             <mat-label>Carrera o Área de conocimiento</mat-label>
             <mat-icon matPrefix>wb_iridescent</mat-icon>
-            <input matInput type="text" formControlName="carreraAreaConocimiento" />
+            <input matInput type="text" formControlName="carreraAreaConocimiento" [errorStateMatcher]="errorMatcher" />
           </mat-form-field>
         </div>
         <div class="grid-3-col grid-margin">
           <mat-form-field matTooltip="{{ tooltipData.documentoObtenido }}" appearance="fill">
-            <mat-label>Documento Obtenido</mat-label>
+            <mat-label>* Documento Obtenido</mat-label>
             <mat-icon matPrefix>insert_drive_file</mat-icon>
             <mat-select formControlName="documentoObtenido">
               <mat-option *ngFor="let opt of documentoObtenidoCatalogo" [value]="opt">
@@ -143,8 +143,13 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.fechaObtencionDocumento }}" appearance="fill">
-            <mat-label>Fecha de obtención de documento</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="fechaObtencion" />
+            <mat-label>* Fecha de obtención de documento</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="fechaObtencion"
+              [errorStateMatcher]="errorMatcher"
+            />
             <mat-hint>dd/mm/yyyy</mat-hint>
             <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -154,7 +159,7 @@
             appearance="fill"
             formGroupName="institucionEducativa"
           >
-            <mat-label>Lugar dónde se ubica la Institución Educativa</mat-label>
+            <mat-label>* Lugar dónde se ubica la Institución Educativa</mat-label>
             <mat-icon matPrefix>public</mat-icon>
             <mat-select formControlName="ubicacion">
               <mat-option value="MX"> MÉXICO </mat-option>
@@ -177,7 +182,12 @@
 
         <mat-form-field appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+          <textarea
+            matInput
+            formControlName="aclaracionesObservaciones"
+            rows="10"
+            [errorStateMatcher]="errorMatcher"
+          ></textarea>
         </mat-form-field>
       </div>
 

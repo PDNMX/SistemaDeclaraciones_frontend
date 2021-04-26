@@ -17,6 +17,8 @@ import { findOption } from '@utils/utils';
 
 import { Catalogo, DomicilioDeclarante } from '@models/declaracion';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-domicilio-declarante',
   templateUrl: './domicilio-declarante.component.html',
@@ -37,6 +39,8 @@ export class DomicilioDeclaranteComponent implements OnInit {
   tipoDomicilio = 'MEXICO';
 
   declaracionId: string = null;
+
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -76,7 +80,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
         calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
-        coloniaLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        coloniaLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         municipioAlcaldia: [{ disabled: true, value: null }, [Validators.required]],
         entidadFederativa: [null, [Validators.required]],
         codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
@@ -85,15 +89,12 @@ export class DomicilioDeclaranteComponent implements OnInit {
         calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
-        ciudadLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        ciudadLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         estadoProvincia: [null, [Validators.required]],
         pais: [null, Validators.required],
         codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
       }),
-      aclaracionesObservaciones: [
-        { disabled: true, value: null },
-        [Validators.required, Validators.pattern(/^\S.*\S$/)],
-      ],
+      aclaracionesObservaciones: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
     });
 
     this.domicilioDeclaranteForm.get('domicilioExtranjero').disable();
@@ -138,6 +139,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
       this.fillForm(data.declaracion.domicilioDeclarante);
     } catch (error) {
       console.log(error);
+      this.openSnackBar('Ha ocurrido un error', 'Aceptar');
     }
   }
 
@@ -168,7 +170,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
         .toPromise();
 
       this.isLoading = false;
-      this.openSnackBar('Información actualizada', 'Aceptar');
+      this.openSnackBar(result.errors ? 'ERROR: No se guardaron los cambios' : 'Información actualizada', 'Aceptar');
     } catch (error) {
       console.log(error);
       this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');

@@ -167,24 +167,24 @@
           <mat-form-field matTooltip="{{ tooltipData.nombreEntePublico }}" appearance="fill">
             <mat-label>Nombre del Ente Público</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
-            <input matInput type="text" formControlName="nombreEntePublico" />
+            <input matInput type="text" formControlName="nombreEntePublico" [errorStateMatcher]="errorMatcher" />
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.areaAdscripcion }}" appearance="fill">
             <mat-label>Área de Adscripción</mat-label>
             <mat-icon matPrefix>wb_iridescent</mat-icon>
-            <input matInput type="text" formControlName="areaAdscripcion" />
+            <input matInput type="text" formControlName="areaAdscripcion" [errorStateMatcher]="errorMatcher" />
           </mat-form-field>
 
           <mat-form-field matTooltip="{{ tooltipData.empleoCargoComision }}" appearance="fill">
             <mat-label>Empleo, cargo o comisión</mat-label>
             <mat-icon matPrefix>wb_iridescent</mat-icon>
-            <input matInput type="text" formControlName="empleoCargoComision" />
+            <input matInput type="text" formControlName="empleoCargoComision" [errorStateMatcher]="errorMatcher" />
           </mat-form-field>
 
           <mat-form-field matTooltip="{{ tooltipData.especifiqueFuncionPrincipal }}" appearance="fill">
             <mat-label>Especifique función principal</mat-label>
             <mat-icon matPrefix>speaker_notes</mat-icon>
-            <input matInput type="text" formControlName="funcionPrincipal" />
+            <input matInput type="text" formControlName="funcionPrincipal" [errorStateMatcher]="errorMatcher" />
           </mat-form-field>
           <!--<div class="grid-2-col">-->
           <mat-radio-group class="checkbox" appearance="fill" formControlName="contratadoPorHonorarios">
@@ -195,12 +195,23 @@
           <mat-form-field matTooltip="{{ tooltipData.nivelEmpleoCargoComision }}" appearance="fill">
             <mat-label>Nivel del empleo, cargo o comisión</mat-label>
             <mat-icon matPrefix>work</mat-icon>
-            <input matInput #input_nivel_cargo type="text" formControlName="nivelEmpleoCargoComision" />
+            <input
+              matInput
+              #input_nivel_cargo
+              type="text"
+              formControlName="nivelEmpleoCargoComision"
+              [errorStateMatcher]="errorMatcher"
+            />
           </mat-form-field>
           <!--</div>-->
           <mat-form-field matTooltip="{{ tooltipData.fechaTomaPosesion }}" appearance="fill">
-            <mat-label>Fecha de toma de posesión del empleo, cargo o comisión</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="fechaTomaPosesion" />
+            <mat-label>Fecha de toma de posesión/conclusión del empleo, cargo o comisión</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="fechaTomaPosesion"
+              [errorStateMatcher]="errorMatcher"
+            />
             <mat-hint>dd/mm/yyyy</mat-hint>
             <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -214,7 +225,14 @@
             >
               <mat-label>Teléfono de oficina</mat-label>
               <mat-icon matPrefix>call</mat-icon>
-              <input matInput type="text" #input_telefono_oficina formControlName="telefono" maxlength="10" />
+              <input
+                matInput
+                type="text"
+                #input_telefono_oficina
+                formControlName="telefono"
+                maxlength="10"
+                [errorStateMatcher]="errorMatcher"
+              />
               <mat-hint align="end">{{ input_telefono_oficina.value?.length || 0 }}/10</mat-hint>
             </mat-form-field>
             <mat-form-field
@@ -225,7 +243,13 @@
             >
               <mat-label>Extensión</mat-label>
               <mat-icon matPrefix>call</mat-icon>
-              <input matInput type="text" formControlName="extension" maxlength="10" />
+              <input
+                matInput
+                type="text"
+                formControlName="extension"
+                maxlength="10"
+                [errorStateMatcher]="errorMatcher"
+              />
             </mat-form-field>
           </div>
         </div>
@@ -249,28 +273,49 @@
             <mat-form-field appearance="fill">
               <mat-label>Calle</mat-label>
               <mat-icon matPrefix>streetview</mat-icon>
-              <input matInput type="text" formControlName="calle" required />
+              <input matInput type="text" formControlName="calle" required [errorStateMatcher]="errorMatcher" />
             </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile colspan="3">
             <mat-form-field appearance="fill">
               <mat-label>Número Exterior</mat-label>
               <mat-icon matPrefix>image_aspect_ratio</mat-icon>
-              <input matInput type="text" formControlName="numeroExterior" maxlength="5" />
+              <input
+                matInput
+                type="text"
+                formControlName="numeroExterior"
+                maxlength="5"
+                [errorStateMatcher]="errorMatcher"
+              />
             </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile colspan="3">
             <mat-form-field appearance="fill">
               <mat-label>Número Interior</mat-label>
               <mat-icon matPrefix>image_aspect_ratio</mat-icon>
-              <input matInput #input_ni type="text" formControlName="numeroInterior" maxlength="10" />
+              <input
+                matInput
+                #input_ni
+                type="text"
+                formControlName="numeroInterior"
+                maxlength="10"
+                [errorStateMatcher]="errorMatcher"
+              />
             </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile colspan="3">
             <mat-form-field appearance="fill">
               <mat-label>Código Postal</mat-label>
               <mat-icon matPrefix>markunread_mailbox</mat-icon>
-              <input matInput #input_cp maxlength="5" type="text" formControlName="codigoPostal" required />
+              <input
+                matInput
+                #input_cp
+                maxlength="5"
+                type="text"
+                formControlName="codigoPostal"
+                required
+                [errorStateMatcher]="errorMatcher"
+              />
               <mat-hint align="end">{{ input_cp.value?.length || 0 }}/5</mat-hint>
             </mat-form-field>
           </mat-grid-tile>
@@ -316,28 +361,41 @@
             <mat-form-field appearance="fill">
               <mat-label>Calle</mat-label>
               <mat-icon matPrefix>streetview</mat-icon>
-              <input matInput type="text" formControlName="calle" />
+              <input matInput type="text" formControlName="calle" [errorStateMatcher]="errorMatcher" />
             </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile colspan="3">
             <mat-form-field appearance="fill">
               <mat-label>Número Exterior</mat-label>
               <mat-icon matPrefix>image_aspect_ratio</mat-icon>
-              <input matInput type="text" formControlName="numeroExterior" />
+              <input matInput type="text" formControlName="numeroExterior" [errorStateMatcher]="errorMatcher" />
             </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile colspan="3">
             <mat-form-field appearance="fill">
               <mat-label>Número Interior</mat-label>
               <mat-icon matPrefix>image_aspect_ratio</mat-icon>
-              <input matInput #input_ni type="text" formControlName="numeroInterior" />
+              <input
+                matInput
+                #input_ni
+                type="text"
+                formControlName="numeroInterior"
+                [errorStateMatcher]="errorMatcher"
+              />
             </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile colspan="3">
             <mat-form-field appearance="fill">
               <mat-label>Código Postal</mat-label>
               <mat-icon matPrefix>markunread_mailbox</mat-icon>
-              <input matInput #input_cp maxlength="5" type="text" formControlName="codigoPostal" />
+              <input
+                matInput
+                #input_cp
+                maxlength="5"
+                type="text"
+                formControlName="codigoPostal"
+                [errorStateMatcher]="errorMatcher"
+              />
               <mat-hint align="end">{{ input_cp.value?.length || 0 }}/5</mat-hint>
             </mat-form-field>
           </mat-grid-tile>
@@ -357,14 +415,26 @@
             <mat-form-field appearance="fill">
               <mat-label>Estado/Provincia</mat-label>
               <mat-icon matPrefix>public</mat-icon>
-              <input matInput #input_ep type="text" formControlName="estadoProvincia" />
+              <input
+                matInput
+                #input_ep
+                type="text"
+                formControlName="estadoProvincia"
+                [errorStateMatcher]="errorMatcher"
+              />
             </mat-form-field>
           </mat-grid-tile>
           <mat-grid-tile colspan="5">
             <mat-form-field appearance="fill">
               <mat-label>Ciudad/Localidad</mat-label>
               <mat-icon matPrefix>beenhere</mat-icon>
-              <input matInput #input_cl type="text" formControlName="ciudadLocalidad" />
+              <input
+                matInput
+                #input_cl
+                type="text"
+                formControlName="ciudadLocalidad"
+                [errorStateMatcher]="errorMatcher"
+              />
             </mat-form-field>
           </mat-grid-tile>
         </mat-grid-list>
@@ -383,7 +453,12 @@
 
         <mat-form-field appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+          <textarea
+            matInput
+            formControlName="aclaracionesObservaciones"
+            rows="10"
+            [errorStateMatcher]="errorMatcher"
+          ></textarea>
         </mat-form-field>
       </div>
 

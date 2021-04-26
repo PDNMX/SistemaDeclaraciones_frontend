@@ -230,10 +230,6 @@ export class DatosDependienteComponent implements OnInit {
       'dependienteEconomico.actividadLaboralSectorPrivadoOtro'
     );
 
-    if (dependienteEconomico.aclaracionesObservaciones) {
-      this.toggleAclaraciones(true);
-    }
-
     this.setSelectedOptions();
   }
 

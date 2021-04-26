@@ -20,6 +20,7 @@ import Paises from '@static/catalogos/countries.json';
 import { tooltipData } from '@static/tooltips/datos-empleo';
 
 import { findOption } from '@utils/utils';
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
 @Component({
   selector: 'app-datos-empleo',
@@ -45,6 +46,7 @@ export class DatosEmpleoComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

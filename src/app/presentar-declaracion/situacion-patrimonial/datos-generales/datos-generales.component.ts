@@ -21,6 +21,8 @@ import { findOption } from '@utils/utils';
 
 import { DatosGenerales, DeclaracionOutput } from '@models/declaracion';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-datos-generales',
   templateUrl: './datos-generales.component.html',
@@ -30,6 +32,7 @@ export class DatosGeneralesComponent implements OnInit {
   aclaraciones = false;
   datosGeneralesForm: FormGroup;
   isLoading = false;
+  others = {};
 
   nacionalidadesCatalogo = Nacionalidades;
   paisesCatalogo = Paises;
@@ -41,6 +44,7 @@ export class DatosGeneralesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -100,21 +104,18 @@ export class DatosGeneralesComponent implements OnInit {
       }),
       //rfc con homoclave /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
       correoElectronico: this.formBuilder.group({
-        institucional: [null, [Validators.required, Validators.email]],
+        institucional: [null, [Validators.email]],
         personal: [null, [Validators.required, Validators.email]],
       }),
       telefono: this.formBuilder.group({
-        casa: [null, [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        casa: [null, [Validators.pattern(/^\d{10}$/)]],
         celularPersonal: [null, [Validators.required, Validators.pattern(/^\d{10}$/)]],
       }),
       situacionPersonalEstadoCivil: [null, Validators.required],
       regimenMatrimonial: [{ disabled: true, value: null }, Validators.required],
       paisNacimiento: [null, Validators.required],
       nacionalidad: [null, [Validators.required, Validators.pattern(/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/i)]], //solo letras, incluyendo acentos
-      aclaracionesObservaciones: [
-        { disabled: true, value: null },
-        [Validators.required, Validators.pattern(/^\S.*\S$/)],
-      ],
+      aclaracionesObservaciones: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
     });
 
     const situacionPersonal = this.datosGeneralesForm.get('situacionPersonalEstadoCivil');
@@ -156,6 +157,7 @@ export class DatosGeneralesComponent implements OnInit {
       this.fillForm(data.declaracion.datosGenerales);
     } catch (error) {
       console.log(error);
+      this.openSnackBar('Ha ocurrido un error', 'Aceptar');
     }
   }
 
@@ -185,10 +187,24 @@ export class DatosGeneralesComponent implements OnInit {
         })
         .toPromise();
       this.isLoading = false;
-      this.openSnackBar('Información actualizada', 'Aceptar');
+      this.openSnackBar(result.errors ? 'ERROR: No se guardaron los cambios' : 'Información actualizada', 'Aceptar');
     } catch (error) {
       console.log(error);
       this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
+    }
+  }
+
+  setOtherValue(path: string, { value }: any) {
+    const parts = path.split('.');
+    let tmp;
+    for (let i = 0; i < parts.length; i++) {
+      tmp = this.others[parts[i]];
+      if (value !== undefined && i == parts.length - 1) {
+        tmp = this.others[parts[i]] = value;
+      } else if (tmp === undefined) {
+        tmp = this.others[parts[i]] = {};
+      }
+      this.others = tmp;
     }
   }
 
