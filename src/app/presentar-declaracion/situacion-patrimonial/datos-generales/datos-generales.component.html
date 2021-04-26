@@ -16,44 +16,65 @@
     <mat-divider></mat-divider>
 
     <p>
-      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      Todos los campos * son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
       resaltados <span class="no-public-inline"></span> no serán públicos.
     </p>
     <form (ngSubmit)="confirmSaveInfo()" [formGroup]="datosGeneralesForm">
       <div class="grid-3-col">
         <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
-          <mat-label>Nombre</mat-label>
+          <mat-label>* Nombre</mat-label>
           <mat-icon matPrefix>person</mat-icon>
-          <input matInput type="text" formControlName="nombre" />
+          <input matInput type="text" formControlName="nombre" [errorStateMatcher]="errorMatcher" />
         </mat-form-field>
         <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
-          <mat-label>Primer Apellido</mat-label>
+          <mat-label>* Primer Apellido</mat-label>
           <mat-icon matPrefix>person</mat-icon>
-          <input matInput type="text" formControlName="primerApellido" />
+          <input matInput type="text" formControlName="primerApellido" [errorStateMatcher]="errorMatcher" />
         </mat-form-field>
         <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
           <mat-label>Segundo Apellido</mat-label>
           <mat-icon matPrefix>person</mat-icon>
-          <input matInput type="text" formControlName="segundoApellido" />
+          <input matInput type="text" formControlName="segundoApellido" [errorStateMatcher]="errorMatcher" />
         </mat-form-field>
 
         <mat-form-field matTooltip="{{ tooltipData.curp }}" appearance="fill">
-          <mat-label>CURP</mat-label>
+          <mat-label>* CURP</mat-label>
           <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-          <input matInput #input_curp maxlength="18" type="text" formControlName="curp" />
+          <input
+            matInput
+            #input_curp
+            maxlength="18"
+            type="text"
+            formControlName="curp"
+            [errorStateMatcher]="errorMatcher"
+          />
           <mat-hint align="end">{{ input_curp.value?.length || 0 }}/18</mat-hint>
         </mat-form-field>
 
         <mat-form-field matTooltip="{{ tooltipData.rfc }}" appearance="fill" formGroupName="rfc">
-          <mat-label>RFC</mat-label>
+          <mat-label>* RFC</mat-label>
           <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-          <input matInput #input_rfc maxlength="10" type="text" formControlName="rfc" />
+          <input
+            matInput
+            #input_rfc
+            maxlength="10"
+            type="text"
+            formControlName="rfc"
+            [errorStateMatcher]="errorMatcher"
+          />
           <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/10</mat-hint>
         </mat-form-field>
         <mat-form-field matTooltip="{{ tooltipData.rfc }}" appearance="fill" formGroupName="rfc">
-          <mat-label>Homoclave</mat-label>
+          <mat-label>* Homoclave</mat-label>
           <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-          <input matInput #input_homoclave maxlength="3" type="text" formControlName="homoClave" />
+          <input
+            matInput
+            #input_homoclave
+            maxlength="3"
+            type="text"
+            formControlName="homoClave"
+            [errorStateMatcher]="errorMatcher"
+          />
           <mat-hint align="end">{{ input_homoclave.value?.length || 0 }}/3</mat-hint>
         </mat-form-field>
       </div>
@@ -66,33 +87,47 @@
         >
           <mat-label>Correo Electrónico Institucional</mat-label>
           <mat-icon matPrefix>mail</mat-icon>
-          <input matInput type="email" formControlName="institucional" />
+          <input matInput type="email" formControlName="institucional" [errorStateMatcher]="errorMatcher" />
         </mat-form-field>
         <mat-form-field
           matTooltip="{{ tooltipData.correoPersonal }}"
           appearance="fill"
           formGroupName="correoElectronico"
         >
-          <mat-label>Correo Electrónico Personal / Alterno</mat-label>
+          <mat-label>* Correo Electrónico Personal / Alterno</mat-label>
           <mat-icon matPrefix class="no-public">mail</mat-icon>
-          <input matInput type="email" formControlName="personal" />
+          <input matInput type="email" formControlName="personal" [errorStateMatcher]="errorMatcher" />
         </mat-form-field>
 
         <mat-form-field matTooltip="{{ tooltipData.telefonoCasa }}" appearance="fill" formGroupName="telefono">
           <mat-label>Número Telefónico de Casa</mat-label>
           <mat-icon matPrefix class="no-public">local_phone</mat-icon>
-          <input matInput #input_tel_casa maxlength="10" type="tel" formControlName="casa" />
+          <input
+            matInput
+            #input_tel_casa
+            maxlength="10"
+            type="tel"
+            formControlName="casa"
+            [errorStateMatcher]="errorMatcher"
+          />
           <mat-hint align="end">{{ input_tel_casa.value?.length || 0 }}/10</mat-hint>
         </mat-form-field>
         <mat-form-field matTooltip="{{ tooltipData.telefonoCelular }}" appearance="fill" formGroupName="telefono">
-          <mat-label>Número Celular Personal</mat-label>
+          <mat-label>* Número Celular Personal</mat-label>
           <mat-icon matPrefix class="no-public">stay_primary_portrait</mat-icon>
-          <input matInput #input_tel_celular maxlength="10" type="tel" formControlName="celularPersonal" />
+          <input
+            matInput
+            #input_tel_celular
+            maxlength="10"
+            type="tel"
+            formControlName="celularPersonal"
+            [errorStateMatcher]="errorMatcher"
+          />
           <mat-hint align="end">{{ input_tel_celular.value?.length || 0 }}/10</mat-hint>
         </mat-form-field>
 
         <mat-form-field matTooltip="{{ tooltipData.estadoCivil }}" appearance="fill">
-          <mat-label>Situación Personal / Estado Civil</mat-label>
+          <mat-label>* Situación Personal / Estado Civil</mat-label>
           <mat-icon matPrefix class="no-public">people</mat-icon>
           <mat-select formControlName="situacionPersonalEstadoCivil">
             <mat-option *ngFor="let opt of situacionPersonalEstadoCivilCatalogo" [value]="opt">
@@ -101,7 +136,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field matTooltip="{{ tooltipData.regimenMatrimonial }}" appearance="fill">
-          <mat-label>Régimen Matrimonial</mat-label>
+          <mat-label>* Régimen Matrimonial</mat-label>
           <mat-icon matPrefix class="no-public">people</mat-icon>
           <mat-select formControlName="regimenMatrimonial">
             <mat-option *ngFor="let opt of regimenMatrimonialCatalogo" [value]="opt">
@@ -110,8 +145,20 @@
           </mat-select>
         </mat-form-field>
 
+        <mat-form-field *ngIf="false && datosGeneralesForm.value.regimenMatrimonial?.clave === 'OTR'" appearance="fill">
+          <mat-label>* Especifique Régimen Matrimonial</mat-label>
+          <mat-icon matPrefix class="no-public">people</mat-icon>
+          <input
+            matInput
+            minlength="1"
+            type="text"
+            (change)="setOtherValue('regimenMatrimonial', $event.target)"
+            [errorStateMatcher]="errorMatcher"
+          />
+        </mat-form-field>
+
         <mat-form-field matTooltip="{{ tooltipData.paisNacimiento }}" appearance="fill">
-          <mat-label>País de Nacimiento</mat-label>
+          <mat-label>* País de Nacimiento</mat-label>
           <mat-icon matPrefix class="no-public">public</mat-icon>
           <mat-select formControlName="paisNacimiento">
             <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
@@ -120,7 +167,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field matTooltip="{{ tooltipData.nacionalidad }}" appearance="fill">
-          <mat-label>Nacionalidad</mat-label>
+          <mat-label>* Nacionalidad</mat-label>
           <mat-icon matPrefix class="no-public">public</mat-icon>
           <mat-select formControlName="nacionalidad">
             <mat-option *ngFor="let opt of nacionalidadesCatalogo" [value]="opt.clave">
@@ -142,7 +189,12 @@
 
         <mat-form-field appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+          <textarea
+            matInput
+            formControlName="aclaracionesObservaciones"
+            rows="10"
+            [errorStateMatcher]="errorMatcher"
+          ></textarea>
         </mat-form-field>
       </div>
 

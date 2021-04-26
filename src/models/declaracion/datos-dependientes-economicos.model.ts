@@ -20,9 +20,9 @@ export interface DependienteEconomico {
   lugarDondeReside: LugarResidencia;
   domicilioMexico?: DomicilioMexico;
   domicilioExtranjero?: DomicilioExtranjero;
+  actividadLaboral: Catalogo;
   actividadLaboralSectorPublico?: ActividadLaboralSectorPublico;
   actividadLaboralSectorPrivadoOtro?: ActividadLaboralSectorPrivadoOtro;
-  aclaracionesObservaciones?: string;
 }
 
 export interface DatosDependientesEconomicos {

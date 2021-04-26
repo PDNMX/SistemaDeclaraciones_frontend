@@ -12,12 +12,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import DocumentoObtenido from '@static/catalogos/documentoObtenido.json';
 import Estatus from '@static/catalogos/estatus.json';
 import Nivel from '@static/catalogos/nivel.json';
-
 import { tooltipData } from '@static/tooltips/datos-curriculares';
 
 import { findOption } from '@utils/utils';
 
 import { DatosCurricularesDeclarante, DeclaracionOutput, Escolaridad } from '@models/declaracion';
+
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
 @Component({
   selector: 'app-datos-curriculares',
@@ -42,6 +43,7 @@ export class DatosCurricularesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -71,17 +73,17 @@ export class DatosCurricularesComponent implements OnInit {
   createForm() {
     this.datosCurricularesDeclaranteForm = this.formBuilder.group({
       escolaridad: this.formBuilder.group({
-        nivel: [{ clave: '', valor: '' }, Validators.required],
+        nivel: [{ clave: '', valor: '' }, [Validators.required]],
         institucionEducativa: this.formBuilder.group({
           nombre: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-          ubicacion: ['', Validators.required],
+          ubicacion: ['', [Validators.required]],
         }),
-        carreraAreaConocimiento: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        estatus: ['', Validators.required],
-        documentoObtenido: ['', Validators.required],
+        carreraAreaConocimiento: ['', [Validators.pattern(/^\S.*\S$/)]],
+        estatus: ['', [Validators.required]],
+        documentoObtenido: ['', [Validators.required]],
         fechaObtencion: ['', [Validators.required]],
       }),
-      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*$/)]],
     });
   }
 
