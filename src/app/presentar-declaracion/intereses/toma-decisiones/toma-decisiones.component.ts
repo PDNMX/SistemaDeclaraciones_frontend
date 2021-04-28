@@ -21,6 +21,8 @@ import { DeclaracionOutput, ParticipacionTD, ParticipacionTomaDecisiones } from 
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-toma-decisiones',
   templateUrl: './toma-decisiones.component.html',
@@ -47,6 +49,7 @@ export class TomaDecisionesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

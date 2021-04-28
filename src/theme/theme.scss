@@ -28,9 +28,28 @@ body {
   --stepper-width: 290px;
 }
 
-/*---------- TEXT ---------*/
+/*--------------------------*/
+/*---------- TEXT ----------*/
+/*--------------------------*/
 .text-primary {
   color: var(--primary-color);
+}
+
+.text-center,
+.center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-wrap {
+  white-space: normal;
 }
 
 .section-main-container {
@@ -43,10 +62,6 @@ body {
 .step-title {
   font-size: 36px;
   white-space: normal;
-}
-
-.background-white {
-  background-color: #ffffff;
 }
 
 .title-toolbar {
@@ -64,16 +79,22 @@ body {
   }
 }
 
+/*---------------------------*/
+/*-------- NO PUBLIC --------*/
+/*---------------------------*/
 .no-public-inline {
-  border: solid var(--no-public-color) 6px;
+  border: solid var(--no-public-color) 4px;
   height: 100%;
   display: inline-block;
   margin: 0 2.5px;
   height: 20px;
+  vertical-align: middle;
 }
+
 .no-public-inline-margin {
   margin-top: 5px;
 }
+
 .no-public::before {
   content: " ";
   border: solid var(--no-public-color) 4px;
@@ -84,16 +105,17 @@ body {
   position: absolute;
   margin-top: -16px;
 }
+
 .card-no-public::before {
   content: " ";
   border: solid var(--no-public-color) 4px;
-  margin-left: -8px;
   margin-left: -10px;
-  height: 20px;
+  height: 12px;
   z-index: 1;
   position: absolute;
   margin-top: 0;
 }
+
 .no-public-picker::before {
   content: " ";
   border: solid var(--no-public-color) 4.2px;
@@ -103,6 +125,7 @@ body {
   position: absolute;
   margin-top: -10px;
 }
+
 .aclaraciones-no-public::before {
   content: " ";
   border: solid var(--no-public-color) 4px;
@@ -113,11 +136,36 @@ body {
   margin-top: -152px;
 }
 
+/*---------------------------*/
+/*--------- GENERAL ---------*/
+/*---------------------------*/
+.background-white {
+  background-color: #ffffff;
+}
+
 mat-form-field {
   width: calc(100% - 10px);
 }
 
-// Bloque de infotmacion
+.hidden {
+  display: none !important;
+}
+
+.inline-loader {
+  display: inline-block;
+}
+
+.vertical-margin-25 {
+  margin: 25px 0;
+}
+
+.vertical-padding-50 {
+  padding: 50px 0;
+}
+
+/*-----------------------------*/
+/*-------- INFORMATION --------*/
+/*-----------------------------*/
 mat-card.info {
   margin-bottom: 40px;
   padding: 20px 50px;
@@ -143,11 +191,13 @@ mat-card.info {
 }
 .paragraph-flex {
   display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 10px;
+  }
 }
-.paragraph-flex .icon {
-  margin-top: 12px;
-  margin-right: 10px;
-}
+
 .shadow {
   box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.15);
 }
@@ -230,24 +280,11 @@ mat-card.info {
   color: white;
   font-weight: 700;
 }
-.center {
-  text-align: center;
-}
-
-.text-left {
-  text-align: left;
-}
-
-.text-right {
-  text-align: right;
-}
 
 .bloque {
   padding: 50px 0;
 }
-.hidden {
-  display: none !important;
-}
+
 .checkbox {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -274,6 +311,10 @@ mat-card.info {
   padding: 50px 0;
 }
 
-.inline-loader {
-  display: inline-block;
+mat-grid-tile.content-left > figure {
+  justify-content: flex-start !important;
+
+  button {
+    margin-left: 2px;
+  }
 }

@@ -21,6 +21,8 @@ import { DeclaracionOutput, Fideicomiso, Fideicomisos } from '@models/declaracio
 
 import { findOption } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-fideicomisos',
   templateUrl: './fideicomisos.component.html',
@@ -45,6 +47,7 @@ export class FideicomisosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

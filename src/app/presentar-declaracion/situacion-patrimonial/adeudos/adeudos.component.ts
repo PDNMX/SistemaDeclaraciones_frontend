@@ -25,6 +25,8 @@ import { tooltipData } from '@static/tooltips/adeudos';
 
 import { findOption } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-adeudos',
   templateUrl: './adeudos.component.html',
@@ -54,6 +56,7 @@ export class AdeudosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

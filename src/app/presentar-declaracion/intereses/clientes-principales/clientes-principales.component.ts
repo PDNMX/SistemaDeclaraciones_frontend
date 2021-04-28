@@ -21,6 +21,8 @@ import { Cliente, ClientesPrincipales, DeclaracionOutput } from '@models/declara
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-clientes-principales',
   templateUrl: './clientes-principales.component.html',
@@ -46,6 +48,7 @@ export class ClientesPrincipalesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

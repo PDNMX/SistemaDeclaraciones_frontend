@@ -17,7 +17,7 @@ export class ShellComponent implements OnInit {
     { text: 'Domicilio del declarante', url: '/situacion-patrimonial/domicilio-declarante', simplificada: true },
     { text: 'Datos curriculares del declarante', url: '/situacion-patrimonial/datos-curriculares', simplificada: true },
     {
-      text: 'Datos del empleo, cargo o comisión que inicia',
+      text: 'Datos del empleo, cargo o comisión',
       url: '/situacion-patrimonial/datos-empleo',
       simplificada: true,
     },

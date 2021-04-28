@@ -41,7 +41,7 @@
             class="grid-item"
           >
             <mat-label>Monto</mat-label>
-            <input matInput type="number" formControlName="valor" min="0" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
             <mat-icon matPrefix>attach_money</mat-icon>
           </mat-form-field>
         </div>
@@ -67,7 +67,7 @@
                 formGroupName="remuneracion"
               >
                 <mat-label>Monto</mat-label>
-                <input matInput type="number" formControlName="valor" min="0" />
+                <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
                 <mat-icon matPrefix>attach_money</mat-icon>
               </mat-form-field>
               <mat-form-field
@@ -75,7 +75,7 @@
                 appearance="fill"
               >
                 <mat-label>Nombre o razón social</mat-label>
-                <input matInput type="text" formControlName="nombreRazonSocial" />
+                <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombreRazonSocial" />
                 <mat-icon matPrefix>dns</mat-icon>
               </mat-form-field>
               <mat-form-field
@@ -83,7 +83,7 @@
                 appearance="fill"
               >
                 <mat-label>Tipo de Negocio</mat-label>
-                <input matInput type="text" formControlName="tipoNegocio" />
+                <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="tipoNegocio" />
                 <mat-icon matPrefix>aspect_ratio</mat-icon>
               </mat-form-field>
             </div>
@@ -117,7 +117,7 @@
                 formGroupName="remuneracion"
               >
                 <mat-label>Monto</mat-label>
-                <input matInput type="number" formControlName="valor" min="0" />
+                <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
                 <mat-icon matPrefix>attach_money</mat-icon>
               </mat-form-field>
               <mat-form-field
@@ -165,13 +165,13 @@
                 formGroupName="remuneracion"
               >
                 <mat-label>Monto</mat-label>
-                <input matInput type="number" formControlName="valor" min="0" />
+                <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
                 <mat-icon matPrefix>attach_money</mat-icon>
               </mat-form-field>
               <mat-form-field matTooltip="{{ tooltipData.otrosIngresos.servicios.tipoServicio }}" appearance="fill">
                 <mat-label>Tipo de servicio prestado</mat-label>
                 <mat-icon matPrefix>wb_iridescent</mat-icon>
-                <input matInput type="text" formControlName="tipoServicio" />
+                <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="tipoServicio" />
               </mat-form-field>
             </div>
             <button
@@ -204,7 +204,7 @@
                 formGroupName="remuneracion"
               >
                 <mat-label>Monto</mat-label>
-                <input matInput type="number" formControlName="valor" min="0" />
+                <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
                 <mat-icon matPrefix>attach_money</mat-icon>
               </mat-form-field>
               <mat-form-field
@@ -213,7 +213,7 @@
               >
                 <mat-label>Especificar tipo de ingreso (arrendamiento, regalías, sorteos, etc.)</mat-label>
                 <mat-icon matPrefix>wb_iridescent</mat-icon>
-                <input matInput type="text" formControlName="tipoIngreso" />
+                <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="tipoIngreso" />
               </mat-form-field>
             </div>
             <button
@@ -251,7 +251,7 @@
             class="grid-item"
           >
             <mat-label>Monto</mat-label>
-            <input matInput type="number" formControlName="valor" min="0" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
             <mat-icon matPrefix class="no-public">attach_money</mat-icon>
           </mat-form-field>
         </div>
@@ -277,12 +277,17 @@
       <div *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
         </div>
 
         <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+          <textarea
+            [errorStateMatcher]="errorMatcher"
+            matInput
+            formControlName="aclaracionesObservaciones"
+            rows="10"
+          ></textarea>
         </mat-form-field>
       </div>
 

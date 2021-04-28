@@ -13,6 +13,8 @@ import TipoInstrumento from '@static/catalogos/tipoInstrumento.json';
 
 import { tooltipData } from '@static/tooltips/ingresos-netos';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 import {
   ActividadFinanciera,
   ActividadIndustrial,
@@ -44,6 +46,7 @@ export class IngresosNetosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

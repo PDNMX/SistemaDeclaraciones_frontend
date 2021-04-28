@@ -24,6 +24,8 @@ import { tooltipData } from '@static/tooltips/datos-pareja';
 import { Catalogo, DatosPareja, DeclaracionOutput } from '@models/declaracion';
 import { findOption } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-datos-pareja',
   templateUrl: './datos-pareja.component.html',
@@ -55,6 +57,7 @@ export class DatosParejaComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

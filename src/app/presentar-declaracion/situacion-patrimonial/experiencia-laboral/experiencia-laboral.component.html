@@ -15,9 +15,11 @@
 
     <mat-divider></mat-divider>
 
-    <p>
-      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
-      resaltados <span class="no-public-inline"></span> no serán públicos.
+    <p class="vertical-margin-25">
+      Todos los campos * son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      resaltados <span class="no-public-inline"></span> no serán públicos. Proporcionar información correspondiente a
+      los últimos cinco empleos de experiencia laboral. Se llenará la información relativa a todos los encargos, empleos
+      o comisiones públicos o privados que haya tenido.
     </p>
 
     <!-- Botones iniciales -->
@@ -38,14 +40,14 @@
 
     <!-- card de información -->
     <div>
-      <mat-card class="info" *ngIf="experienciaLaboralForm.value.ninguno">
-        <p>Ningún empleo</p>
+      <mat-card class="info text-center" *ngIf="experienciaLaboralForm.value.ninguno">
+        <h3 class="vertical-padding-50">Ningún empleo</h3>
       </mat-card>
 
       <mat-card class="info" *ngFor="let e of experiencia; let i = index">
         <mat-card-content class="">
           <!-- Publico -->
-          <div class="grid-3fr-1fr" *ngIf="e.ambitoSector.valor == 'PÚBLICO'">
+          <div class="grid-3fr-1fr" *ngIf="e.ambitoSector.clave === 'PUB'">
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">aspect_ratio</mat-icon>
               <p>
@@ -83,8 +85,8 @@
               </p>
             </div>
           </div>
-          <!-- Fin Publico -->
-          <div class="grid-3fr-1fr" *ngIf="e.ambitoSector.valor == 'PRIVADO'">
+          <!-- Privado u Otro -->
+          <div class="grid-3fr-1fr" *ngIf="e.ambitoSector.clave === 'PRV' || e.ambitoSector.clave === 'OTR'">
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">aspect_ratio</mat-icon>
               <p>
@@ -99,7 +101,7 @@
             </div>
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">fingerprint</mat-icon>
-              <p>rfc: {{ e.rfc }}</p>
+              <p>RFC: {{ e.rfc }}</p>
             </div>
 
             <div class="paragraph-flex">
@@ -122,7 +124,7 @@
           </div>
           <!-- Funcion principal -->
           <mat-divider></mat-divider>
-          <div class="padding-card-section" *ngIf="e.ambitoSector.valor == 'PÚBLICO'">
+          <div class="padding-card-section" *ngIf="e.ambitoSector.clave == 'PUB'">
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
               <p>Especifique función principal</p>
@@ -154,7 +156,7 @@
             </div>
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">public</mat-icon>
-              <p>{{ e.ubicacion === 'MX' ? 'En México' : 'En el extranjero' }}</p>
+              <p>{{ e.ubicacion === 'MX' ? 'EN MÉXICO' : 'EN EL EXTRANJERO' }}</p>
             </div>
           </div>
           <!--<mat-divider></mat-divider>
@@ -176,6 +178,14 @@
         </mat-card-actions>
       </mat-card>
 
+      <div *ngIf="!editMode && aclaracionesText">
+        <div class="paragraph-flex aclaraciones">
+          <mat-icon matPrefix class="icon card-no-public">insert_comment</mat-icon>
+          <p>Aclaraciones / Observaciones</p>
+        </div>
+        <p class="vertical-margin-25">{{ aclaracionesText }}</p>
+      </div>
+
       <div
         class="boton-agregar"
         *ngIf="(experiencia.length > 0 && experiencia.length < 5 && !editMode) || experienciaLaboralForm.value.ninguno"
@@ -184,176 +194,233 @@
       </div>
     </div>
 
-    <form (ngSubmit)="saveItem()" [formGroup]="experienciaLaboralForm" *ngIf="editMode">
+    <form (ngSubmit)="saveItem()" [formGroup]="experienciaLaboralForm" [ngClass]="{ hidden: !editMode }">
       <!-- Agregar empleo, cargo o comisión -->
-      <div class="" formGroupName="experiencia">
-        <div class="padding-agregar">
-          <mat-divider></mat-divider>
-          <p>Agregar empleo, cargo o comisión</p>
-          <div class="grid-2-col grid-margin">
-            <mat-form-field matTooltip="{{ tooltipData.ambitoSector }}" appearance="fill">
-              <mat-label>Ámbito/Sector en el que laboraste</mat-label>
-              <mat-icon matPrefix>start</mat-icon>
-              <mat-select formControlName="ambitoSector">
-                <mat-option *ngFor="let ambito of ambitoSectorCatalogo" [value]="ambito">
-                  {{ ambito.valor }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field
-              appearance="fill"
-              *ngIf="experienciaLaboralForm.value.experiencia.ambitoSector?.clave === 'OTR'"
-            >
-              <mat-label>Especifique</mat-label>
-              <mat-icon matPrefix class="no-public">start</mat-icon>
-              <input matInput type="text" />
-            </mat-form-field>
-          </div>
-
-          <!-- Publico -->
-          <div *ngIf="experienciaLaboralForm.value.experiencia.ambitoSector?.clave === 'PUB'">
-            <div class="grid-2-col grid-margin">
-              <mat-form-field appearance="fill">
-                <mat-label>Nivel/Orden de Gobierno </mat-label>
-                <mat-icon matPrefix>aspect_ratio</mat-icon>
-                <mat-select
-                  matTooltip="{{ tooltipData.sectorPublico.nivelOrdenGobierno }}"
-                  formControlName="nivelOrdenGobierno"
-                >
-                  <mat-option *ngFor="let orden of nivelOrdenGobiernoCatalogo" value="{{ orden }}">
-                    {{ orden | replace: '_':' ' }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field matTooltip="{{ tooltipData.sectorPublico.ambitoPublico }}" appearance="fill">
-                <mat-label>Ámbito Público</mat-label>
-                <mat-icon matPrefix>meeting_room</mat-icon>
-                <mat-select formControlName="ambitoPublico">
-                  <mat-option *ngFor="let publico of ambitoPublicoCatalogo" value="{{ publico }}">
-                    {{ publico | replace: '_':' ' }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field matTooltip="{{ tooltipData.sectorPublico.nombreEntePublico }}" appearance="fill">
-                <mat-label>Nombre del ente Público</mat-label>
-                <mat-icon matPrefix>dns</mat-icon>
-                <input matInput type="text" formControlName="nombreEntePublico" />
-              </mat-form-field>
-              <mat-form-field matTooltip="{{ tooltipData.sectorPublico.areaAdscripcion }}" appearance="fill">
-                <mat-label>Área de Adscripción/Área</mat-label>
-                <mat-icon matPrefix>wb_iridescent</mat-icon>
-                <input matInput type="text" formControlName="areaAdscripcion" />
-              </mat-form-field>
-              <mat-form-field matTooltip="{{ tooltipData.sectorPublico.empleoCargoComision }}" appearance="fill">
-                <mat-label>Empleo, cargo o comisión/Puesto</mat-label>
-                <mat-icon matPrefix>work</mat-icon>
-                <input matInput type="text" formControlName="empleoCargoComision" />
-              </mat-form-field>
-              <mat-form-field
-                matTooltip="{{ tooltipData.sectorPublico.especifiqueFuncionPrincipal }}"
-                appearance="fill"
-              >
-                <mat-label>Especifique función principal</mat-label>
-                <mat-icon matPrefix>speaker_notes</mat-icon>
-                <input matInput type="text" formControlName="funcionPrincipal" />
-              </mat-form-field>
-            </div>
-          </div>
-
-          <!-- otro y privado -->
-          <div
-            class="grid-2-col grid-margin"
-            *ngIf="
-              experienciaLaboralForm.value.experiencia.ambitoSector?.clave === 'PRV' ||
-              experienciaLaboralForm.value.experiencia.ambitoSector?.clave === 'OTR'
-            "
+      <div formGroupName="experiencia">
+        <p class="vertical-margin-25">Agregar empleo, cargo o comisión</p>
+        <div class="grid-2-col grid-margin">
+          <mat-form-field matTooltip="{{ tooltipData.ambitoSector }}" appearance="fill">
+            <mat-label>Ámbito/Sector en el que laboraste</mat-label>
+            <mat-icon matPrefix>start</mat-icon>
+            <mat-select formControlName="ambitoSector" required>
+              <mat-option *ngFor="let ambito of ambitoSectorCatalogo" [value]="ambito">
+                {{ ambito.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field
+            appearance="fill"
+            [ngClass]="{ hidden: experienciaLaboralForm.value.experiencia.ambitoSector?.clave !== 'OTR' }"
           >
-            <mat-form-field
-              matTooltip="{{ tooltipData.sectorPrivado.nombreEmpresSociedadAsociacion }}"
-              appearance="fill"
-            >
-              <mat-label>Nombre de la empresa, sociedad o asociación</mat-label>
-              <mat-icon matPrefix>speaker_notes</mat-icon>
-              <input matInput type="text" formControlName="nombreEmpresaSociedadAsociacion" />
-            </mat-form-field>
-            <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.rfc }}" appearance="fill">
-              <mat-label>RFC</mat-label>
-              <mat-icon matPrefix>fingerprint</mat-icon>
-              <input matInput #input_rfc type="text" formControlName="rfc" maxlength="13" />
-              <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/13</mat-hint>
-            </mat-form-field>
-            <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.area }}" appearance="fill">
-              <mat-label>Área</mat-label>
-              <mat-icon matPrefix>wb_iridescent</mat-icon>
-              <input matInput type="text" formControlName="area" />
-            </mat-form-field>
-            <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.puesto }}" appearance="fill">
-              <mat-label>Puesto</mat-label>
-              <mat-icon matPrefix>work</mat-icon>
-              <input matInput type="text" formControlName="puesto" />
-            </mat-form-field>
-            <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.sectorPertenece }}" appearance="fill">
-              <mat-label>Sector al que pertenece</mat-label>
-              <mat-icon matPrefix>assistant</mat-icon>
-              <mat-select formControlName="sector">
-                <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
-                  {{ sector.valor }}
+            <mat-label>Especifique</mat-label>
+            <mat-icon matPrefix>start</mat-icon>
+            <input [errorStateMatcher]="errorMatcher" #otroAmbitoSector matInput type="text" required />
+          </mat-form-field>
+        </div>
+
+        <!-- Publico -->
+        <div [ngClass]="{ hidden: experienciaLaboralForm.value.experiencia.ambitoSector?.clave !== 'PUB' }">
+          <div class="grid-2-col grid-margin">
+            <mat-form-field appearance="fill">
+              <mat-label>Nivel/Orden de Gobierno </mat-label>
+              <mat-icon matPrefix>aspect_ratio</mat-icon>
+              <mat-select
+                matTooltip="{{ tooltipData.sectorPublico.nivelOrdenGobierno }}"
+                formControlName="nivelOrdenGobierno"
+                required
+              >
+                <mat-option *ngFor="let orden of nivelOrdenGobiernoCatalogo" value="{{ orden }}">
+                  {{ orden | replace: '_':' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="experienciaLaboralForm.value.experiencia.sector?.clave === 'OTRO'">
-              <mat-label>Especifique</mat-label>
-              <mat-icon matPrefix class="no-public">assistant</mat-icon>
-              <input matInput type="text" />
-            </mat-form-field>
-          </div>
-
-          <div class="grid-2-col grid-margin" *ngIf="experienciaLaboralForm.value.experiencia.ambitoSector">
-            <mat-form-field matTooltip="{{ tooltipData.fechaIngreso }}" appearance="fill">
-              <mat-label>Fecha de Ingreso</mat-label>
-              <input matInput formControlName="fechaIngreso" [matDatepicker]="pickerOtroIngreso" />
-              <mat-hint>dd/mm/yyyy</mat-hint>
-              <mat-datepicker-toggle matPrefix [for]="pickerOtroIngreso"></mat-datepicker-toggle>
-              <mat-datepicker #pickerOtroIngreso></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field matTooltip="{{ tooltipData.fechaEgreso }}" appearance="fill">
-              <mat-label>Fecha de Egreso</mat-label>
-              <input matInput formControlName="fechaEgreso" [matDatepicker]="pickerOtroEgreso" />
-              <mat-hint>dd/mm/yyyy</mat-hint>
-              <mat-datepicker-toggle matPrefix [for]="pickerOtroEgreso"></mat-datepicker-toggle>
-              <mat-datepicker #pickerOtroEgreso></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field matTooltip="{{ tooltipData.lugarDondeSeUbica }}" appearance="fill">
-              <mat-label>Lugar donde se ubica</mat-label>
-              <mat-icon matPrefix>public</mat-icon>
-              <mat-select formControlName="ubicacion">
-                <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
-                <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.ambitoPublico }}" appearance="fill">
+              <mat-label>Ámbito Público</mat-label>
+              <mat-icon matPrefix>meeting_room</mat-icon>
+              <mat-select formControlName="ambitoPublico" required>
+                <mat-option *ngFor="let publico of ambitoPublicoCatalogo" value="{{ publico }}">
+                  {{ publico | replace: '_':' ' }}
+                </mat-option>
               </mat-select>
+            </mat-form-field>
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.nombreEntePublico }}" appearance="fill">
+              <mat-label>Nombre del ente Público</mat-label>
+              <mat-icon matPrefix>dns</mat-icon>
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                type="text"
+                formControlName="nombreEntePublico"
+                required
+              />
+            </mat-form-field>
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.areaAdscripcion }}" appearance="fill">
+              <mat-label>Área de Adscripción</mat-label>
+              <mat-icon matPrefix>wb_iridescent</mat-icon>
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                type="text"
+                formControlName="areaAdscripcion"
+                required
+              />
+            </mat-form-field>
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.empleoCargoComision }}" appearance="fill">
+              <mat-label>Empleo, cargo o comisión</mat-label>
+              <mat-icon matPrefix>work</mat-icon>
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                type="text"
+                formControlName="empleoCargoComision"
+                required
+              />
+            </mat-form-field>
+            <mat-form-field matTooltip="{{ tooltipData.sectorPublico.especifiqueFuncionPrincipal }}" appearance="fill">
+              <mat-label>Especifique función principal</mat-label>
+              <mat-icon matPrefix>speaker_notes</mat-icon>
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                type="text"
+                formControlName="funcionPrincipal"
+                required
+              />
             </mat-form-field>
           </div>
         </div>
+
+        <!-- otro y privado -->
+        <div
+          class="grid-2-col grid-margin"
+          [ngClass]="{
+            hidden: !(
+              experienciaLaboralForm.value.experiencia.ambitoSector?.clave === 'PRV' ||
+              experienciaLaboralForm.value.experiencia.ambitoSector?.clave === 'OTR'
+            )
+          }"
+        >
+          <mat-form-field
+            matTooltip="{{ tooltipData.sectorPrivado.nombreEmpresSociedadAsociacion }}"
+            appearance="fill"
+            required
+          >
+            <mat-label>Nombre de la empresa, sociedad o asociación</mat-label>
+            <mat-icon matPrefix>speaker_notes</mat-icon>
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              type="text"
+              formControlName="nombreEmpresaSociedadAsociacion"
+              required
+            />
+          </mat-form-field>
+          <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.rfc }}" appearance="fill">
+            <mat-label>RFC</mat-label>
+            <mat-icon matPrefix>fingerprint</mat-icon>
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              #input_rfc
+              type="text"
+              formControlName="rfc"
+              maxlength="12"
+              required
+            />
+            <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/12</mat-hint>
+          </mat-form-field>
+          <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.area }}" appearance="fill">
+            <mat-label>Área</mat-label>
+            <mat-icon matPrefix>wb_iridescent</mat-icon>
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="area" required />
+          </mat-form-field>
+          <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.puesto }}" appearance="fill">
+            <mat-label>Puesto</mat-label>
+            <mat-icon matPrefix>work</mat-icon>
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="puesto" required />
+          </mat-form-field>
+          <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.sectorPertenece }}" appearance="fill">
+            <mat-label>Sector al que pertenece</mat-label>
+            <mat-icon matPrefix>assistant</mat-icon>
+            <mat-select formControlName="sector" required>
+              <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
+                {{ sector.valor }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field
+            appearance="fill"
+            [ngClass]="{ hidden: experienciaLaboralForm.value.experiencia.sector?.clave !== 'OTRO' }"
+          >
+            <mat-label>Especifique</mat-label>
+            <mat-icon matPrefix>assistant</mat-icon>
+            <input [errorStateMatcher]="errorMatcher" #otroSector matInput type="text" required />
+          </mat-form-field>
+        </div>
+
+        <div class="grid-2-col grid-margin" *ngIf="experienciaLaboralForm.value.experiencia.ambitoSector">
+          <mat-form-field matTooltip="{{ tooltipData.fechaIngreso }}" appearance="fill">
+            <mat-label>Fecha de Ingreso</mat-label>
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              formControlName="fechaIngreso"
+              [matDatepicker]="pickerOtroIngreso"
+              required
+            />
+            <mat-hint>dd/mm/yyyy</mat-hint>
+            <mat-datepicker-toggle matPrefix [for]="pickerOtroIngreso"></mat-datepicker-toggle>
+            <mat-datepicker #pickerOtroIngreso></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field matTooltip="{{ tooltipData.fechaEgreso }}" appearance="fill">
+            <mat-label>Fecha de Egreso</mat-label>
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              formControlName="fechaEgreso"
+              [matDatepicker]="pickerOtroEgreso"
+              required
+            />
+            <mat-hint>dd/mm/yyyy</mat-hint>
+            <mat-datepicker-toggle matPrefix [for]="pickerOtroEgreso"></mat-datepicker-toggle>
+            <mat-datepicker #pickerOtroEgreso></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field matTooltip="{{ tooltipData.lugarDondeSeUbica }}" appearance="fill">
+            <mat-label>Lugar donde se ubica</mat-label>
+            <mat-icon matPrefix>public</mat-icon>
+            <mat-select formControlName="ubicacion" required>
+              <mat-option value="{{ extranjeroCatalogo[0] }}"> EN MÉXICO </mat-option>
+              <mat-option value="{{ extranjeroCatalogo[1] }}"> EN EL EXTRANJERO </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
 
-      <div class="boton" *ngIf="!aclaraciones">
-        <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
-          AGREGAR ACLARACIONES / OBSERVACIONES
-        </button>
-      </div>
+      <mat-grid-list *ngIf="!aclaraciones" cols="15" rowHeight="100px">
+        <mat-grid-tile class="content-left" colspan="15">
+          <button mat-raised-button type="button" class="text-primary" (click)="toggleAclaraciones(true)">
+            AGREGAR ACLARACIONES / OBSERVACIONES
+          </button>
+        </mat-grid-tile>
+      </mat-grid-list>
+
       <div *ngIf="aclaraciones">
-        <div class="flex">
+        <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
         </div>
 
         <mat-form-field appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+          <textarea
+            [errorStateMatcher]="errorMatcher"
+            matInput
+            formControlName="aclaracionesObservaciones"
+            rows="10"
+          ></textarea>
         </mat-form-field>
       </div>
-
-      <mat-divider></mat-divider>
 
       <div class="boton text-right">
         <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
@@ -363,7 +430,11 @@
         <button mat-raised-button color="primary" type="button" (click)="experienciaLaboralForm.reset()">
           LIMPIAR FORMULARIO
         </button>
-        <button mat-raised-button color="primary" [disabled]="experienciaLaboralForm.invalid || isLoading">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="experienciaLaboralForm.invalid || !inputsAreValid() || isLoading"
+        >
           GUARDAR CAMBIOS
         </button>
       </div>

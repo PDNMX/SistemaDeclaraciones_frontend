@@ -4,7 +4,7 @@ import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import { Logger } from '@core';
 import { CredentialsService } from './credentials.service';
 
-const log = new Logger('DeclerantGuard');
+const log = new Logger('DeclarantGuard');
 
 @Injectable({
   providedIn: 'root',

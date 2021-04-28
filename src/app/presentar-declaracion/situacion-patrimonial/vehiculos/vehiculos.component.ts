@@ -26,6 +26,8 @@ import { DeclaracionOutput, Vehiculo, Vehiculos } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
@@ -57,6 +59,7 @@ export class VehiculosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
