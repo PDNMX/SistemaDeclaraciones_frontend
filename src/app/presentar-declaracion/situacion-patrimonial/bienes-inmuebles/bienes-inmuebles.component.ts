@@ -26,6 +26,8 @@ import { BienInmueble, BienesInmuebles, Catalogo, DeclaracionOutput } from '@mod
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-bienes-inmuebles',
   templateUrl: './bienes-inmuebles.component.html',
@@ -57,6 +59,7 @@ export class BienesInmueblesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

@@ -22,6 +22,8 @@ import { DeclaracionOutput, Representacion, Representaciones } from '@models/dec
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-representacion',
   templateUrl: './representacion.component.html',
@@ -48,6 +50,7 @@ export class RepresentacionComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

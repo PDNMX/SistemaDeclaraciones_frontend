@@ -3,22 +3,19 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { datosCurricularesMutation, datosCurricularesDeclaranteQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { datosCurricularesMutation, datosCurricularesDeclaranteQuery } from '@api/declaracion';
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+import { DatosCurricularesDeclarante, DeclaracionOutput, Escolaridad } from '@models/declaracion';
 import DocumentoObtenido from '@static/catalogos/documentoObtenido.json';
 import Estatus from '@static/catalogos/estatus.json';
 import Nivel from '@static/catalogos/nivel.json';
 import { tooltipData } from '@static/tooltips/datos-curriculares';
-
 import { findOption } from '@utils/utils';
-
-import { DatosCurricularesDeclarante, DeclaracionOutput, Escolaridad } from '@models/declaracion';
-
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
 @Component({
   selector: 'app-datos-curriculares',
@@ -27,6 +24,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class DatosCurricularesComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   datosCurricularesDeclaranteForm: FormGroup;
   editMode = true;
   editIndex: number = null;
@@ -61,6 +59,7 @@ export class DatosCurricularesComponent implements OnInit {
 
   addItem() {
     this.datosCurricularesDeclaranteForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -73,17 +72,17 @@ export class DatosCurricularesComponent implements OnInit {
   createForm() {
     this.datosCurricularesDeclaranteForm = this.formBuilder.group({
       escolaridad: this.formBuilder.group({
-        nivel: [{ clave: '', valor: '' }, [Validators.required]],
+        nivel: [null, [Validators.required]],
         institucionEducativa: this.formBuilder.group({
-          nombre: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-          ubicacion: ['', [Validators.required]],
+          nombre: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+          ubicacion: [null, [Validators.required]],
         }),
-        carreraAreaConocimiento: ['', [Validators.pattern(/^\S.*\S$/)]],
-        estatus: ['', [Validators.required]],
-        documentoObtenido: ['', [Validators.required]],
-        fechaObtencion: ['', [Validators.required]],
+        carreraAreaConocimiento: [null, [Validators.pattern(/^\S.*\S$/)]],
+        estatus: [null, [Validators.required]],
+        documentoObtenido: [null, [Validators.required]],
+        fechaObtencion: [null, [Validators.required]],
       }),
-      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*$/)]],
+      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
   }
 
@@ -95,13 +94,13 @@ export class DatosCurricularesComponent implements OnInit {
 
   fillForm(escolaridad: Escolaridad) {
     this.datosCurricularesDeclaranteForm.get('escolaridad').patchValue(escolaridad);
-
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
   async getUserInfo() {
     try {
-      const { data } = await this.apollo
+      const { data, errors } = await this.apollo
         .query<DeclaracionOutput>({
           query: datosCurricularesDeclaranteQuery,
           variables: {
@@ -111,10 +110,15 @@ export class DatosCurricularesComponent implements OnInit {
         })
         .toPromise();
 
-      this.declaracionId = data.declaracion._id;
-      this.setupForm(data.declaracion.datosCurricularesDeclarante);
+      if (errors) {
+        throw errors;
+      }
+
+      this.declaracionId = data?.declaracion._id;
+      this.setupForm(data?.declaracion.datosCurricularesDeclarante);
     } catch (error) {
       console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -164,7 +168,7 @@ export class DatosCurricularesComponent implements OnInit {
         datosCurricularesDeclarante: form,
       };
 
-      const { data } = await this.apollo
+      const { data, errors } = await this.apollo
         .mutate<DeclaracionOutput>({
           mutation: datosCurricularesMutation,
           variables: {
@@ -174,12 +178,16 @@ export class DatosCurricularesComponent implements OnInit {
         })
         .toPromise();
 
+      if (errors) {
+        throw errors;
+      }
+
       this.editMode = false;
-      this.setupForm(data.declaracion.datosCurricularesDeclarante);
+      this.setupForm(data?.declaracion.datosCurricularesDeclarante);
       this.presentSuccessAlert();
     } catch (error) {
       console.log(error);
-      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
+      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
     }
   }
 
@@ -204,6 +212,12 @@ export class DatosCurricularesComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.datosCurricularesDeclaranteForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.datosCurricularesDeclaranteForm.reset();
     this.editMode = true;
@@ -225,8 +239,7 @@ export class DatosCurricularesComponent implements OnInit {
     const aclaraciones = datosCurricularesDeclarante?.aclaracionesObservaciones;
 
     if (aclaraciones) {
-      this.datosCurricularesDeclaranteForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     this.editMode = !!!this.escolaridad.length;

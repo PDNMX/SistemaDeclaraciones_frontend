@@ -26,6 +26,8 @@ import { Catalogo, DependienteEconomico, DatosDependientesEconomicos, Declaracio
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-datos-dependiente',
   templateUrl: './datos-dependiente.component.html',
@@ -57,6 +59,7 @@ export class DatosDependienteComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

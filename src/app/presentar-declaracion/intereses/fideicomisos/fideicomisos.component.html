@@ -121,7 +121,7 @@
           <mat-form-field matTooltip="{{ tooltipData.participacionFideicomisos }}" appearance="fill">
             <mat-label>Participación en Fideicomisos</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="tipoRelacion">
+            <mat-select formControlName="tipoRelacion" required>
               <mat-option value="{{ relacionCatalogo[0] }}"> Declarante </mat-option>
               <mat-option value="{{ relacionCatalogo[1] }}"> Pareja </mat-option>
               <mat-option value="{{ relacionCatalogo[2] }}"> Dependiente Económico </mat-option>
@@ -130,7 +130,7 @@
           <mat-form-field matTooltip="{{ tooltipData.tipoFideicomiso }}" appearance="fill">
             <mat-label>Tipo de Fideicomisos</mat-label>
             <mat-icon matPrefix>person</mat-icon>
-            <mat-select formControlName="tipoFideicomiso">
+            <mat-select formControlName="tipoFideicomiso" required>
               <mat-option *ngFor="let tipoFideicomiso of tipoFideicomisoCatalogo" value="{{ tipoFideicomiso }}">
                 {{ tipoFideicomiso }}
               </mat-option>
@@ -140,7 +140,11 @@
           <mat-form-field matTooltip="{{ tooltipData.tipoParticipacion }}" appearance="fill">
             <mat-label>Tipo de Participación</mat-label>
             <mat-icon matPrefix>account_balance_wallet</mat-icon>
-            <mat-select formControlName="tipoParticipacion" (selectionChange)="tipoParticipacionChanged($event.value)">
+            <mat-select
+              formControlName="tipoParticipacion"
+              (selectionChange)="tipoParticipacionChanged($event.value)"
+              required
+            >
               <mat-option value="{{ tipoParticipacionCatalogo[0] }}"> Fideicomitente </mat-option>
               <mat-option value="{{ tipoParticipacionCatalogo[1] }}"> Fiduciario </mat-option>
               <mat-option value="{{ tipoParticipacionCatalogo[2] }}"> Fideicomisario </mat-option>
@@ -150,7 +154,15 @@
           <mat-form-field matTooltip="{{ tooltipData.rfcFideicomiso }}" appearance="fill">
             <mat-label>RFC del Fideicomiso</mat-label>
             <mat-icon matPrefix>fingerprint</mat-icon>
-            <input matInput #input_rfc_fideicomiso type="text" formControlName="rfcFideicomiso" maxlength="13" />
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              #input_rfc_fideicomiso
+              type="text"
+              formControlName="rfcFideicomiso"
+              maxlength="13"
+              required
+            />
             <mat-hint align="end">{{ input_rfc_fideicomiso.value?.length || 0 }}/13</mat-hint>
           </mat-form-field>
         </div>
@@ -168,12 +180,19 @@
           <mat-form-field matTooltip="{{ tooltipData.nombreRazonSocialFideicomitente }}" appearance="fill">
             <mat-label>Nombre o razón social del Fideicomitente</mat-label>
             <mat-icon matPrefix class="no-public">person</mat-icon>
-            <input matInput type="text" formControlName="nombreRazonSocial" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombreRazonSocial" />
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.rfcFideicomitente }}" appearance="fill">
             <mat-label>RFC del Fideicomitente</mat-label>
             <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-            <input matInput #input_rfc type="text" maxlength="13" formControlName="rfc" />
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              #input_rfc
+              type="text"
+              maxlength="13"
+              formControlName="rfc"
+            />
             <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/13</mat-hint>
           </mat-form-field>
         </div>
@@ -186,13 +205,19 @@
           <mat-form-field matTooltip="{{ tooltipData.nombreRazonSocialFiduciario }}" appearance="fill">
             <mat-label>Nombre del Fiduciario</mat-label>
             <mat-icon matPrefix class="no-public">person</mat-icon>
-            <input matInput type="text" formControlName="nombreRazonSocial" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombreRazonSocial" />
           </mat-form-field>
 
           <mat-form-field matTooltip="{{ tooltipData.rfcFiduciario }}" appearance="fill">
             <mat-label>RFC del Fiduciario</mat-label>
             <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-            <input matInput #input_rfc_fiduciario type="text" formControlName="rfc" />
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              #input_rfc_fiduciario
+              type="text"
+              formControlName="rfc"
+            />
             <mat-hint align="end">{{ input_rfc_fiduciario.value?.length || 0 }}/13</mat-hint>
           </mat-form-field>
         </div>
@@ -210,12 +235,19 @@
           <mat-form-field matTooltip="{{ tooltipData.nombreRazonSocialFideicomisario }}" appearance="fill">
             <mat-label>Nombre o razón social del Fideicomisario</mat-label>
             <mat-icon matPrefix class="no-public">person</mat-icon>
-            <input matInput type="text" formControlName="nombreRazonSocial" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombreRazonSocial" />
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.rfcFideicomisario }}" appearance="fill">
             <mat-label>RFC del Fideicomisario</mat-label>
             <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-            <input matInput #input_rfc_fideicomisario type="text" maxlength="13" formControlName="rfc" />
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              #input_rfc_fideicomisario
+              type="text"
+              maxlength="13"
+              formControlName="rfc"
+            />
             <mat-hint align="end">{{ input_rfc_fideicomisario.value?.length || 0 }}/13</mat-hint>
           </mat-form-field>
         </div>
@@ -224,7 +256,7 @@
           <mat-form-field matTooltip="{{ tooltipData.sectorProductivo }}" appearance="fill">
             <mat-label>Sector productivo al que pertenece</mat-label>
             <mat-icon matPrefix>public</mat-icon>
-            <mat-select formControlName="sector">
+            <mat-select formControlName="sector" required>
               <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
                 {{ sector.valor }}
               </mat-option>
@@ -233,13 +265,13 @@
           <mat-form-field appearance="fill" *ngIf="fideicomisosForm.value.fideicomiso.sector?.clave === 'OTRO'">
             <mat-label>Especifique</mat-label>
             <mat-icon matPrefix class="no-public">public</mat-icon>
-            <input matInput type="text" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" required />
           </mat-form-field>
 
           <mat-form-field matTooltip="{{ tooltipData.localizaFideicomiso }}" appearance="fill">
             <mat-label>¿Dónde se localiza el fideicomiso?</mat-label>
             <mat-icon matPrefix>public</mat-icon>
-            <mat-select formControlName="extranjero">
+            <mat-select formControlName="extranjero" required>
               <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
               <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
             </mat-select>
@@ -257,12 +289,17 @@
       <div *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
         </div>
 
         <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+          <textarea
+            [errorStateMatcher]="errorMatcher"
+            matInput
+            formControlName="aclaracionesObservaciones"
+            rows="10"
+          ></textarea>
         </mat-form-field>
       </div>
 

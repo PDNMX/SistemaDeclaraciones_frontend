@@ -1,26 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { experienciaLaboralMutation, experienciaLaboralQuery } from '@api/declaracion';
+
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { experienciaLaboralMutation, experienciaLaboralQuery } from '@api/declaracion';
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+import { UntilDestroy, untilDestroyed } from '@core';
 import { DeclaracionOutput } from '@models/declaracion/declaracion.model';
 import { Experiencia, ExperienciaLaboral } from '@models/declaracion/experiencia-laboral.model';
-
-import { findOption } from '@utils/utils';
-
-import AmbitoSector from '@static/catalogos/ambitoSector.json';
 import AmbitoPublico from '@static/catalogos/ambitoPublico.json';
+import AmbitoSector from '@static/catalogos/ambitoSector.json';
+import Extranjero from '@static/catalogos/extranjero.json';
 import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import Sector from '@static/catalogos/sector.json';
-import Extranjero from '@static/catalogos/extranjero.json';
-
 import { tooltipData } from '@static/tooltips/experiencia-laboral';
+import { findOption } from '@utils/utils';
 
+@UntilDestroy()
 @Component({
   selector: 'app-experiencia-laboral',
   templateUrl: './experiencia-laboral.component.html',
@@ -28,11 +29,15 @@ import { tooltipData } from '@static/tooltips/experiencia-laboral';
 })
 export class ExperienciaLaboralComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   experienciaLaboralForm: FormGroup;
   editMode = false;
   editIndex: number = null;
   experiencia: Experiencia[] = [];
   isLoading = false;
+
+  @ViewChild('otroAmbitoSector') otroAmbitoSector: ElementRef;
+  @ViewChild('otroSector') otroSector: ElementRef;
 
   ambitoSectorCatalogo = AmbitoSector;
   ambitoPublicoCatalogo = AmbitoPublico;
@@ -45,6 +50,7 @@ export class ExperienciaLaboralComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -62,6 +68,7 @@ export class ExperienciaLaboralComponent implements OnInit {
 
   addItem() {
     this.experienciaLaboralForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -130,37 +137,36 @@ export class ExperienciaLaboralComponent implements OnInit {
     this.experienciaLaboralForm = this.formBuilder.group({
       ninguno: [false],
       experiencia: this.formBuilder.group({
-        ambitoSector: [{ clave: '', valor: '' }, Validators.required],
-        nivelOrdenGobierno: ['', [Validators.required]],
-        ambitoPublico: ['', [Validators.required]],
-        nombreEntePublico: ['', [Validators.required]],
-        areaAdscripcion: ['', [Validators.required]],
-        empleoCargoComision: ['', [Validators.required]],
-        funcionPrincipal: ['', [Validators.required]],
-        fechaIngreso: ['', [Validators.required]],
-        fechaEgreso: ['', [Validators.required]],
-        ubicacion: ['', [Validators.required]],
-
-        nombreEmpresaSociedadAsociacion: ['', [Validators.required]],
+        ambitoSector: [null, [Validators.required]],
+        nivelOrdenGobierno: [null, [Validators.required]],
+        ambitoPublico: [null, [Validators.required]],
+        nombreEntePublico: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        areaAdscripcion: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        empleoCargoComision: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        funcionPrincipal: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        fechaIngreso: [null, [Validators.required]],
+        fechaEgreso: [null, [Validators.required]],
+        ubicacion: [null, [Validators.required]],
+        nombreEmpresaSociedadAsociacion: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
         rfc: [
-          '',
+          null,
           [
             Validators.required,
             Validators.pattern(
-              /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
+              /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
             ),
           ],
         ],
-        area: ['', [Validators.required]],
-        puesto: ['', [Validators.required]],
-        sector: [{ clave: '', valor: '' }, [Validators.required]],
+        area: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        puesto: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        sector: [null, [Validators.required]],
       }),
-      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required]],
+      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
     const ambitoSector = this.experienciaLaboralForm.get('experiencia.ambitoSector');
 
-    ambitoSector.valueChanges.subscribe((value) => {
+    ambitoSector.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
       if (value) {
         this.ambitoSectorChanged(value.clave);
       }
@@ -175,13 +181,22 @@ export class ExperienciaLaboralComponent implements OnInit {
 
   fillForm(experiencia: Experiencia) {
     this.experienciaLaboralForm.get('experiencia').patchValue(experiencia);
+    this.setAclaraciones(this.aclaracionesText);
+
+    if (experiencia.ambitoSector?.clave === 'OTR') {
+      this.otroAmbitoSector.nativeElement.value = experiencia.ambitoSector?.valor;
+    }
+
+    if (experiencia.sector?.clave === 'OTRO') {
+      this.otroSector.nativeElement.value = experiencia.sector.valor;
+    }
 
     this.setSelectedOptions(experiencia);
   }
 
   async getUserInfo() {
     try {
-      const { data } = await this.apollo
+      const { data, errors } = await this.apollo
         .query<DeclaracionOutput>({
           query: experienciaLaboralQuery,
           variables: {
@@ -191,11 +206,44 @@ export class ExperienciaLaboralComponent implements OnInit {
         })
         .toPromise();
 
-      this.declaracionId = data.declaracion._id;
-      this.setupForm(data.declaracion.experienciaLaboral);
+      if (errors) {
+        throw errors;
+      }
+
+      this.declaracionId = data?.declaracion._id;
+      this.setupForm(data?.declaracion.experienciaLaboral);
     } catch (error) {
       console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
+  }
+
+  get finalExperienciaForm() {
+    const form = JSON.parse(JSON.stringify(this.experienciaLaboralForm.value.experiencia)); // Deep copy
+
+    if (form.ambitoSector?.clave === 'OTR') {
+      form.ambitoSector.valor = this.otroAmbitoSector.nativeElement.value;
+    }
+
+    if (form.sector?.clave === 'OTRO') {
+      form.sector.valor = this.otroSector.nativeElement.value;
+    }
+
+    return form;
+  }
+
+  inputsAreValid(): boolean {
+    let result = true;
+
+    if (this.experienciaLaboralForm.value.experiencia.ambitoSector?.clave === 'OTR') {
+      result = result && this.otroAmbitoSector.nativeElement.value?.match(/^\S.*\S$/);
+    }
+
+    if (this.experienciaLaboralForm.value.experiencia.sector?.clave === 'OTRO') {
+      result = result && this.otroSector.nativeElement.value?.match(/^\S.*\S$/);
+    }
+
+    return result;
   }
 
   ngOnInit(): void {}
@@ -248,7 +296,7 @@ export class ExperienciaLaboralComponent implements OnInit {
         experienciaLaboral: form,
       };
 
-      const { data } = await this.apollo
+      const { data, errors } = await this.apollo
         .mutate<DeclaracionOutput>({
           mutation: experienciaLaboralMutation,
           variables: {
@@ -258,19 +306,23 @@ export class ExperienciaLaboralComponent implements OnInit {
         })
         .toPromise();
 
+      if (errors) {
+        throw errors;
+      }
+
       this.editMode = false;
-      this.setupForm(data.declaracion.experienciaLaboral);
+      this.setupForm(data?.declaracion.experienciaLaboral);
       this.presentSuccessAlert();
     } catch (error) {
       console.log(error);
-      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
+      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
     }
   }
 
   saveItem() {
     let experiencia = [...this.experiencia];
     const aclaracionesObservaciones = this.experienciaLaboralForm.value.aclaracionesObservaciones;
-    const newItem = this.experienciaLaboralForm.value.experiencia;
+    const newItem = this.finalExperienciaForm;
 
     if (this.editIndex === null) {
       experiencia = [...experiencia, newItem];
@@ -286,6 +338,12 @@ export class ExperienciaLaboralComponent implements OnInit {
     });
 
     this.isLoading = false;
+  }
+
+  setAclaraciones(aclaraciones?: string) {
+    this.experienciaLaboralForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
   }
 
   setEditMode() {
@@ -317,8 +375,7 @@ export class ExperienciaLaboralComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.experienciaLaboralForm.get('aclaracionesObservaciones').patchValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     // this.editMode = !!!this.experiencia.length;

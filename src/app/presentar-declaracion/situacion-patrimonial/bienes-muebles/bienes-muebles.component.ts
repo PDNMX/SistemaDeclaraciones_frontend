@@ -23,6 +23,8 @@ import { BienMueble, BienesMuebles, DeclaracionOutput } from '@models/declaracio
 
 import { findOption } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-bienes-muebles',
   templateUrl: './bienes-muebles.component.html',
@@ -49,6 +51,7 @@ export class BienesMueblesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

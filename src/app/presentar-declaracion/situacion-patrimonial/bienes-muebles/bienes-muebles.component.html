@@ -175,7 +175,7 @@
             <mat-form-field matTooltip="{{ tooltipData.tipoBien }}" appearance="fill">
               <mat-label>Tipo del bien</mat-label>
               <mat-icon matPrefix>dns</mat-icon>
-              <mat-select formControlName="tipoBien">
+              <mat-select formControlName="tipoBien" required>
                 <mat-option
                   *ngFor="let tipoBienBienesMuebles of tipoBienBienesMueblesCatalogo"
                   [value]="tipoBienBienesMuebles"
@@ -187,12 +187,12 @@
             <mat-form-field appearance="fill" *ngIf="bienesMueblesForm.value.bienMueble.tipoBien?.clave === 'OTRO'">
               <mat-label>Especifique</mat-label>
               <mat-icon matPrefix class="no-public">dns</mat-icon>
-              <input matInput type="text" />
+              <input [errorStateMatcher]="errorMatcher" matInput type="text" required />
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.titularBien }}" appearance="fill">
               <mat-label>Titular del Bien</mat-label>
               <mat-icon matPrefix class="no-public">person</mat-icon>
-              <mat-select formControlName="titular">
+              <mat-select formControlName="titular" required>
                 <mat-option *ngFor="let titularBien of titularBienCatalogo" [value]="titularBien">
                   {{ titularBien.valor }}
                 </mat-option>
@@ -210,12 +210,19 @@
             <mat-form-field matTooltip="{{ tooltipData.nombreTercero }}" appearance="fill">
               <mat-label>Nombre del Tercero o Terceros</mat-label>
               <mat-icon matPrefix>group</mat-icon>
-              <input matInput type="text" formControlName="nombreRazonSocial" />
+              <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombreRazonSocial" />
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.rfcTercero }}" appearance="fill">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix>fingerprint</mat-icon>
-              <input matInput #input_rfc_tercero formControlName="rfc" type="text" maxlength="13" />
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                #input_rfc_tercero
+                formControlName="rfc"
+                type="text"
+                maxlength="13"
+              />
               <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
             </mat-form-field>
           </div>
@@ -224,7 +231,7 @@
             <mat-form-field matTooltip="{{ tooltipData.formaAdquisicion }}" appearance="fill">
               <mat-label>Forma de Adquisición</mat-label>
               <mat-icon matPrefix>credit_card</mat-icon>
-              <mat-select formControlName="formaAdquisicion">
+              <mat-select formControlName="formaAdquisicion" required>
                 <mat-option *ngFor="let formaAdquisicion of formaAdquisicionCatalogo" [value]="formaAdquisicion">
                   {{ formaAdquisicion.valor }}
                 </mat-option>
@@ -233,7 +240,7 @@
             <mat-form-field matTooltip="{{ tooltipData.formaPago }}" appearance="fill">
               <mat-label>Forma de Pago</mat-label>
               <mat-icon matPrefix>credit_card</mat-icon>
-              <mat-select formControlName="formaPago">
+              <mat-select formControlName="formaPago" required>
                 <mat-option *ngFor="let formaPago of formaPagoCatalogo" value="{{ formaPago }}">
                   {{ formaPago | replace: '_':' ' }}
                 </mat-option>
@@ -246,7 +253,7 @@
             >
               <mat-label>Relación del transmisor del bien con el titular</mat-label>
               <mat-icon matPrefix class="no-public">group</mat-icon>
-              <mat-select formControlName="relacion">
+              <mat-select formControlName="relacion" required>
                 <mat-option *ngFor="let parentescoRelacion of parentescoRelacionCatalogo" [value]="parentescoRelacion">
                   {{ parentescoRelacion.valor }}
                 </mat-option>
@@ -259,7 +266,7 @@
             >
               <mat-label>Especifique</mat-label>
               <mat-icon matPrefix class="no-public">group</mat-icon>
-              <input matInput type="text" />
+              <input [errorStateMatcher]="errorMatcher" matInput type="text" required />
             </mat-form-field>
           </div>
 
@@ -272,18 +279,32 @@
             >
               <mat-label>Nombre o razón social del transmisor</mat-label>
               <mat-icon matPrefix class="no-public">dns</mat-icon>
-              <input matInput type="text" formControlName="nombreRazonSocial" />
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                type="text"
+                formControlName="nombreRazonSocial"
+                required
+              />
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.rfcTransmisor }}" appearance="fill" formGroupName="transmisor">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-              <input matInput #input_rfc_transmisor formControlName="rfc" type="text" maxlength="13" />
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                #input_rfc_transmisor
+                formControlName="rfc"
+                type="text"
+                maxlength="13"
+                required
+              />
               <mat-hint align="end">{{ input_rfc_transmisor.value?.length || 0 }}/13</mat-hint>
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.transmisor }}" appearance="fill" formGroupName="transmisor">
               <mat-label>Persona Física o Moral</mat-label>
               <mat-icon matPrefix class="no-public">person</mat-icon>
-              <mat-select formControlName="tipoPersona">
+              <mat-select formControlName="tipoPersona" required>
                 <mat-option value="FISICA"> Física </mat-option>
                 <mat-option value="MORAL"> Moral </mat-option>
               </mat-select>
@@ -296,7 +317,13 @@
             >
               <mat-label>Descripción general del bien</mat-label>
               <mat-icon matPrefix>speaker_notes</mat-icon>
-              <input matInput type="text" formControlName="descripcionGeneralBien" />
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                type="text"
+                formControlName="descripcionGeneralBien"
+                required
+              />
             </mat-form-field>
           </div>
 
@@ -308,7 +335,14 @@
             >
               <mat-label>Valor de Adquisición del mueble</mat-label>
               <mat-icon matPrefix>credit_card</mat-icon>
-              <input matInput type="number" formControlName="valor" min="0" />
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                type="number"
+                formControlName="valor"
+                min="0"
+                required
+              />
             </mat-form-field>
             <mat-form-field
               matTooltip="{{ tooltipData.tipoMoneda }}"
@@ -317,7 +351,7 @@
             >
               <mat-label>Tipo de Moneda</mat-label>
               <mat-icon matPrefix>call_merge</mat-icon>
-              <mat-select formControlName="moneda">
+              <mat-select formControlName="moneda" required>
                 <mat-option *ngFor="let m of monedasCatalogo" [value]="m.clave">
                   {{ m.clave }} - {{ m.valor }}
                 </mat-option>
@@ -325,7 +359,13 @@
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.fechaAdquisicion }}" appearance="fill">
               <mat-label>Fecha de Adquisición del Inmueble</mat-label>
-              <input matInput [matDatepicker]="pickerAdquisicion" formControlName="fechaAdquisicion" />
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                [matDatepicker]="pickerAdquisicion"
+                formControlName="fechaAdquisicion"
+                required
+              />
               <mat-hint>dd/mm/yyyy</mat-hint>
               <mat-datepicker-toggle matPrefix [for]="pickerAdquisicion"> </mat-datepicker-toggle>
               <mat-datepicker #pickerAdquisicion></mat-datepicker>
@@ -344,12 +384,17 @@
       <div class="" *ngIf="aclaraciones">
         <div class="flex">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
         </div>
 
         <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+          <textarea
+            [errorStateMatcher]="errorMatcher"
+            matInput
+            formControlName="aclaracionesObservaciones"
+            rows="10"
+          ></textarea>
         </mat-form-field>
       </div>
 

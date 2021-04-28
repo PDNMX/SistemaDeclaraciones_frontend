@@ -21,6 +21,8 @@ import { Beneficio, BeneficiosPrivados, DeclaracionOutput } from '@models/declar
 
 import { findOption } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-beneficios-privados',
   templateUrl: './beneficios-privados.component.html',
@@ -44,6 +46,7 @@ export class BeneficiosPrivadosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

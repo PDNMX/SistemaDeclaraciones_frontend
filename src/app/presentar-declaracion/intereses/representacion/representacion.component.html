@@ -149,7 +149,7 @@
           <mat-form-field matTooltip="{{ tooltipData.declaranteParejaDependiente }}" appearance="fill">
             <mat-label>Representación</mat-label>
             <mat-icon matPrefix>person</mat-icon>
-            <mat-select formControlName="tipoRelacion">
+            <mat-select formControlName="tipoRelacion" required>
               <mat-option *ngFor="let relacion of relacionCatalogo" value="{{ relacion }}">
                 {{ relacion | replace: '_':' ' }}
               </mat-option>
@@ -158,7 +158,7 @@
           <mat-form-field matTooltip="{{ tooltipData.tipoRepresentacion }}" appearance="fill">
             <mat-label>Tipo de representación</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="tipoRepresentacion">
+            <mat-select formControlName="tipoRepresentacion" required>
               <mat-option *ngFor="let representacion of representacionCatalogo" value="{{ representacionCatalogo[0] }}">
                 {{ representacion }}
               </mat-option>
@@ -179,12 +179,26 @@
           <mat-form-field matTooltip="{{ tooltipData.nombreRazonSocial }}" appearance="fill">
             <mat-label>Nombre o razón social del representante/representado</mat-label>
             <mat-icon matPrefix class="no-public">person</mat-icon>
-            <input matInput type="text" formControlName="nombreRazonSocial" />
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              type="text"
+              formControlName="nombreRazonSocial"
+              required
+            />
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.rfc }}" appearance="fill">
             <mat-label>RFC</mat-label>
             <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-            <input matInput #input_rfc_tercero type="text" maxlength="13" formControlName="rfc" />
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              #input_rfc_tercero
+              type="text"
+              maxlength="13"
+              formControlName="rfc"
+              required
+            />
             <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
           </mat-form-field>
 
@@ -204,11 +218,17 @@
           >
             <mat-label>Monto mensual neto de su representación</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <input matInput type="number" formControlName="valor" min="0" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" required />
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.fechaInicioRepresentacion }}" appearance="fill">
             <mat-label>Fecha de inicio de la representación</mat-label>
-            <input matInput [matDatepicker]="pickerRepresentacion" formControlName="fechaInicioRepresentacion" />
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              [matDatepicker]="pickerRepresentacion"
+              formControlName="fechaInicioRepresentacion"
+              required
+            />
             <mat-hint>dd/mm/yyyy</mat-hint>
             <mat-datepicker-toggle matPrefix [for]="pickerRepresentacion"></mat-datepicker-toggle>
             <mat-datepicker #pickerRepresentacion></mat-datepicker>
@@ -219,7 +239,7 @@
           <mat-form-field matTooltip="{{ tooltipData.lugarUbicacion }}" appearance="fill">
             <mat-label>Lugar donde se ubica</mat-label>
             <mat-icon matPrefix>public</mat-icon>
-            <mat-select (selectionChange)="locationChanged($event.value)">
+            <mat-select (selectionChange)="locationChanged($event.value)" required>
               <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
               <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
             </mat-select>
@@ -228,7 +248,7 @@
           <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'MEXICO'">
             <mat-label>Entidad Federativa</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="entidadFederativa">
+            <mat-select formControlName="entidadFederativa" required>
               <mat-option *ngFor="let estados of estadosCatalogo" [value]="estados">
                 {{ estados.valor }}
               </mat-option>
@@ -238,7 +258,7 @@
           <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'EXTRANJERO'">
             <mat-label>País </mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="pais">
+            <mat-select formControlName="pais" required>
               <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
                 {{ opt.valor }}
               </mat-option>
@@ -250,7 +270,7 @@
           <mat-form-field matTooltip="{{ tooltipData.sectorProductivo }}" appearance="fill">
             <mat-label>Sector productivo al que pertenece</mat-label>
             <mat-icon matPrefix>credit_card</mat-icon>
-            <mat-select formControlName="sector">
+            <mat-select formControlName="sector" required>
               <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
                 {{ sector.valor }}
               </mat-option>
@@ -259,7 +279,7 @@
           <mat-form-field appearance="fill" *ngIf="representacionForm.value.representacion.sector?.clave === 'OTRO'">
             <mat-label>Especifique</mat-label>
             <mat-icon matPrefix class="no-public">credit_card</mat-icon>
-            <input matInput type="text" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" />
           </mat-form-field>
         </div>
       </div>
@@ -274,12 +294,17 @@
       <div *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
         </div>
 
         <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+          <textarea
+            [errorStateMatcher]="errorMatcher"
+            matInput
+            formControlName="aclaracionesObservaciones"
+            rows="10"
+          ></textarea>
         </mat-form-field>
       </div>
 

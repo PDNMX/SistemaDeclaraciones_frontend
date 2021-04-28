@@ -23,6 +23,8 @@ import { Catalogo, DeclaracionOutput, Prestamo, PrestamoComodato } from '@models
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-prestamos-terceros',
   templateUrl: './prestamos-terceros.component.html',
@@ -53,6 +55,7 @@ export class PrestamosTercerosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

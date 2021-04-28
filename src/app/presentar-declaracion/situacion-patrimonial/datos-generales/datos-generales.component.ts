@@ -1,28 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
 
-import { datosGeneralesQuery, declaracionMutation } from '@api/declaracion';
-
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { datosGeneralesQuery, declaracionMutation } from '@api/declaracion';
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+import { UntilDestroy, untilDestroyed } from '@core';
+import { DatosGenerales, DeclaracionOutput } from '@models/declaracion';
 import Nacionalidades from '@static/catalogos/nacionalidades.json';
 import Paises from '@static/catalogos/paises.json';
 import SituacionPersonalEstadoCivil from '@static/catalogos/situacionPersonalEstadoCivil.json';
 import RegimenMatrimonial from '@static/catalogos/regimenMatrimonial.json';
-
 import { tooltipData } from '@static/tooltips/datos-generales';
-
 import { findOption } from '@utils/utils';
 
-import { DatosGenerales, DeclaracionOutput } from '@models/declaracion';
-
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-
+@UntilDestroy()
 @Component({
   selector: 'app-datos-generales',
   templateUrl: './datos-generales.component.html',
@@ -32,7 +29,8 @@ export class DatosGeneralesComponent implements OnInit {
   aclaraciones = false;
   datosGeneralesForm: FormGroup;
   isLoading = false;
-  others = {};
+
+  @ViewChild('otroRegimenMatrimonial') otroRegimenMatrimonial: ElementRef;
 
   nacionalidadesCatalogo = Nacionalidades;
   paisesCatalogo = Paises;
@@ -111,18 +109,18 @@ export class DatosGeneralesComponent implements OnInit {
         casa: [null, [Validators.pattern(/^\d{10}$/)]],
         celularPersonal: [null, [Validators.required, Validators.pattern(/^\d{10}$/)]],
       }),
-      situacionPersonalEstadoCivil: [null, Validators.required],
-      regimenMatrimonial: [{ disabled: true, value: null }, Validators.required],
-      paisNacimiento: [null, Validators.required],
+      situacionPersonalEstadoCivil: [null, [Validators.required]],
+      regimenMatrimonial: [{ disabled: true, value: null }, [Validators.required]],
+      paisNacimiento: [null, [Validators.required]],
       nacionalidad: [null, [Validators.required, Validators.pattern(/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/i)]], //solo letras, incluyendo acentos
       aclaracionesObservaciones: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
     });
 
     const situacionPersonal = this.datosGeneralesForm.get('situacionPersonalEstadoCivil');
-    situacionPersonal.valueChanges.subscribe((value) => {
+    situacionPersonal.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
       const regimenMatrimonial = this.datosGeneralesForm.get('regimenMatrimonial');
 
-      if (value && value.clave === 'CAS') {
+      if (value?.clave === 'CAS') {
         regimenMatrimonial.enable();
       } else {
         regimenMatrimonial.disable();
@@ -138,12 +136,16 @@ export class DatosGeneralesComponent implements OnInit {
       this.toggleAclaraciones(true);
     }
 
+    if (datosGenerales?.regimenMatrimonial?.clave === 'OTR') {
+      this.otroRegimenMatrimonial.nativeElement.value = datosGenerales?.regimenMatrimonial?.valor;
+    }
+
     this.setSelectedOptions();
   }
 
   async getUserInfo() {
     try {
-      const { data } = await this.apollo
+      const { data, errors } = await this.apollo
         .query<DeclaracionOutput>({
           query: datosGeneralesQuery,
           variables: {
@@ -153,12 +155,34 @@ export class DatosGeneralesComponent implements OnInit {
         })
         .toPromise();
 
-      this.declaracionId = data.declaracion._id;
-      this.fillForm(data.declaracion.datosGenerales);
+      if (errors) {
+        throw errors;
+      }
+
+      this.declaracionId = data?.declaracion._id;
+      this.fillForm(data?.declaracion.datosGenerales);
     } catch (error) {
       console.log(error);
-      this.openSnackBar('Ha ocurrido un error', 'Aceptar');
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
+  }
+
+  get finalForm() {
+    const form = JSON.parse(JSON.stringify(this.datosGeneralesForm.value)); // Deep copy
+
+    if (form.regimenMatrimonial?.clave === 'OTR') {
+      form.regimenMatrimonial.valor = this.otroRegimenMatrimonial.nativeElement.value;
+    }
+
+    return form;
+  }
+
+  inputsAreValid(): boolean {
+    if (this.datosGeneralesForm.value.regimenMatrimonial?.clave === 'OTR') {
+      return this.otroRegimenMatrimonial.nativeElement.value?.match(/^\S.*$/);
+    }
+
+    return true;
   }
 
   ngOnInit(): void {}
@@ -174,10 +198,10 @@ export class DatosGeneralesComponent implements OnInit {
       this.isLoading = true;
 
       const declaracion = {
-        datosGenerales: this.datosGeneralesForm.value,
+        datosGenerales: this.finalForm,
       };
 
-      const result = await this.apollo
+      const { errors } = await this.apollo
         .mutate({
           mutation: declaracionMutation,
           variables: {
@@ -186,25 +210,16 @@ export class DatosGeneralesComponent implements OnInit {
           },
         })
         .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
       this.isLoading = false;
-      this.openSnackBar(result.errors ? 'ERROR: No se guardaron los cambios' : 'Información actualizada', 'Aceptar');
+      this.openSnackBar('Información actualizada', 'Aceptar');
     } catch (error) {
       console.log(error);
-      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
-    }
-  }
-
-  setOtherValue(path: string, { value }: any) {
-    const parts = path.split('.');
-    let tmp;
-    for (let i = 0; i < parts.length; i++) {
-      tmp = this.others[parts[i]];
-      if (value !== undefined && i == parts.length - 1) {
-        tmp = this.others[parts[i]] = value;
-      } else if (tmp === undefined) {
-        tmp = this.others[parts[i]] = {};
-      }
-      this.others = tmp;
+      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
     }
   }
 

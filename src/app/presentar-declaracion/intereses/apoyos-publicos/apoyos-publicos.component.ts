@@ -20,6 +20,8 @@ import RecepcionApoyo from '@static/catalogos/formaRecepcion.json';
 import { tooltipData } from '@static/tooltips/intereses/apoyos';
 import { apoyosQuery, apoyosMutation } from '@api/declaracion';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-apoyos-publicos',
   templateUrl: './apoyos-publicos.component.html',
@@ -43,6 +45,7 @@ export class ApoyosPublicosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

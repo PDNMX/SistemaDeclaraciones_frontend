@@ -25,6 +25,8 @@ import { tooltipData } from '@static/tooltips/inversiones';
 import { DeclaracionOutput, Inversion, InversionesCuentasValores } from '@models/declaracion';
 import { findOption, ifExistEnableFields } from '@utils/utils';
 
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+
 @Component({
   selector: 'app-inversiones',
   templateUrl: './inversiones.component.html',
@@ -55,6 +57,7 @@ export class InversionesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

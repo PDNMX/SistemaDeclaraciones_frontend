@@ -3,25 +3,24 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { datosEmpleoCargoComisionQuery, declaracionMutation } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Catalogo, DatosEmpleoCargoComision } from '@models/declaracion';
-
-import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
+import { datosEmpleoCargoComisionQuery, declaracionMutation } from '@api/declaracion';
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+import { Catalogo, DatosEmpleoCargoComision, DeclaracionOutput } from '@models/declaracion';
 import AmbitoPublico from '@static/catalogos/ambitoPublico.json';
 import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
+import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import Paises from '@static/catalogos/countries.json';
-
 import { tooltipData } from '@static/tooltips/datos-empleo';
-
 import { findOption } from '@utils/utils';
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+import { UntilDestroy, untilDestroyed } from '@app/@core';
 
+@UntilDestroy()
 @Component({
   selector: 'app-datos-empleo',
   templateUrl: './datos-empleo.component.html',
@@ -82,44 +81,51 @@ export class DatosEmpleoComponent implements OnInit {
 
   createForm() {
     this.datosEmpleoCargoComisionForm = this.formBuilder.group({
-      nivelOrdenGobierno: ['', Validators.required],
-      ambitoPublico: ['', Validators.required],
-      nombreEntePublico: ['', [Validators.pattern(/^\S.*\S?$/)]],
-      areaAdscripcion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-      empleoCargoComision: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-      contratadoPorHonorarios: ['', Validators.required],
-      nivelEmpleoCargoComision: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-      funcionPrincipal: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-      fechaTomaPosesion: ['', [Validators.required]],
+      nivelOrdenGobierno: [null, [Validators.required]],
+      ambitoPublico: [null, [Validators.required]],
+      nombreEntePublico: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      areaAdscripcion: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      empleoCargoComision: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      contratadoPorHonorarios: [null, [Validators.required]],
+      nivelEmpleoCargoComision: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      funcionPrincipal: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      fechaTomaPosesion: [null, [Validators.required]],
       telefonoOficina: this.formBuilder.group({
-        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-        extension: [''],
+        telefono: [null, [Validators.pattern(/^\d{10}$/)]],
+        extension: [null, [Validators.pattern(/^\d{1,10}$/)]],
       }),
       domicilioMexico: this.formBuilder.group({
-        calle: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroExterior: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
-        coloniaLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        municipioAlcaldia: [{ disabled: true, value: { clave: '', valor: '' } }, Validators.required],
-        entidadFederativa: [{ clave: '', valor: '' }, Validators.required],
-        codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/i)]],
+        calle: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
+        coloniaLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        municipioAlcaldia: [{ disabled: true, value: null }, [Validators.required]],
+        entidadFederativa: [null, [Validators.required]],
+        codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
       }),
       domicilioExtranjero: this.formBuilder.group({
-        calle: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroExterior: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
-        ciudadLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        estadoProvincia: ['', Validators.required],
-        pais: ['', Validators.required],
-        codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/i)]],
+        calle: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        numeroInterior: [null, [Validators.pattern(/^\S.*\S$/)]],
+        ciudadLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        estadoProvincia: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        pais: [null, [Validators.required]],
+        codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
       }),
-      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      aclaracionesObservaciones: [
+        { disabled: true, value: '' },
+        [Validators.required, Validators.pattern(/^\S.*\S?$/)],
+      ],
+      cuentaConOtroCargoPublico: [
+        { disabled: true || this.tipoDeclaracion !== 'modificacion', value: null },
+        [Validators.required],
+      ],
     });
 
     this.datosEmpleoCargoComisionForm.get('domicilioExtranjero').disable();
 
     const estado = this.datosEmpleoCargoComisionForm.get('domicilioMexico').get('entidadFederativa');
-    estado.valueChanges.subscribe((value) => {
+    estado.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
       const municipio = this.datosEmpleoCargoComisionForm.get('domicilioMexico').get('municipioAlcaldia');
 
       if (value) {
@@ -133,7 +139,7 @@ export class DatosEmpleoComponent implements OnInit {
   }
 
   fillForm(datosEmpleoCargoComision: DatosEmpleoCargoComision) {
-    this.datosEmpleoCargoComisionForm.patchValue(datosEmpleoCargoComision);
+    this.datosEmpleoCargoComisionForm.patchValue(datosEmpleoCargoComision || {});
 
     if (datosEmpleoCargoComision.aclaracionesObservaciones) {
       this.toggleAclaraciones(true);
@@ -143,8 +149,8 @@ export class DatosEmpleoComponent implements OnInit {
 
   async getUserInfo() {
     try {
-      const { data }: any = await this.apollo
-        .query({
+      const { data, errors } = await this.apollo
+        .query<DeclaracionOutput>({
           query: datosEmpleoCargoComisionQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
@@ -153,10 +159,15 @@ export class DatosEmpleoComponent implements OnInit {
         })
         .toPromise();
 
-      this.declaracionId = data.declaracion._id;
-      this.fillForm(data.declaracion.datosEmpleoCargoComision || {});
+      if (errors) {
+        throw errors;
+      }
+
+      this.declaracionId = data?.declaracion._id;
+      this.fillForm(data?.declaracion.datosEmpleoCargoComision);
     } catch (error) {
       console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -175,7 +186,7 @@ export class DatosEmpleoComponent implements OnInit {
         datosEmpleoCargoComision: this.datosEmpleoCargoComisionForm.value,
       };
 
-      const result = await this.apollo
+      const { errors } = await this.apollo
         .mutate({
           mutation: declaracionMutation,
           variables: {
@@ -184,11 +195,16 @@ export class DatosEmpleoComponent implements OnInit {
           },
         })
         .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
       this.isLoading = false;
       this.openSnackBar('Información actualizada', 'Aceptar');
     } catch (error) {
       console.log(error);
-      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
+      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
     }
   }
 

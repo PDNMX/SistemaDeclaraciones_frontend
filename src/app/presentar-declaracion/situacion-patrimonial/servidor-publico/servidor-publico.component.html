@@ -46,14 +46,24 @@
           <div class="grid-2-col fecha-publico">
             <mat-form-field matTooltip="{{ tooltipData.fechaInicio }}" appearance="fill">
               <mat-label>Fecha de inicio</mat-label>
-              <input matInput [matDatepicker]="pickerInicio" formControlName="fechaIngreso" />
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                [matDatepicker]="pickerInicio"
+                formControlName="fechaIngreso"
+              />
               <mat-hint>dd/mm/yyyy</mat-hint>
               <mat-datepicker-toggle matPrefix [for]="pickerInicio"></mat-datepicker-toggle>
               <mat-datepicker #pickerInicio></mat-datepicker>
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.fechaConclusion }}" appearance="fill">
               <mat-label>Fecha de fin</mat-label>
-              <input matInput [matDatepicker]="pickerFin" formControlName="fechaConclusion" />
+              <input
+                [errorStateMatcher]="errorMatcher"
+                matInput
+                [matDatepicker]="pickerFin"
+                formControlName="fechaConclusion"
+              />
               <mat-hint>dd/mm/yyyy</mat-hint>
               <mat-datepicker-toggle matPrefix [for]="pickerFin"></mat-datepicker-toggle>
               <mat-datepicker #pickerFin></mat-datepicker>
@@ -70,7 +80,7 @@
           <div class="grid-2-col">
             <mat-form-field matTooltip="{{ tooltipData.remuneracionNetaDeclarante }}" appearance="fill">
               <mat-label>Monto</mat-label>
-              <input matInput type="number" formControlName="valor" min="0" />
+              <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
               <mat-icon matPrefix>attach_money</mat-icon>
             </mat-form-field>
           </div>
@@ -99,7 +109,7 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input matInput type="number" formControlName="valor" min="0" />
+                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field
@@ -107,12 +117,12 @@
                   appearance="fill"
                 >
                   <mat-label>Nombre o razón social</mat-label>
-                  <input matInput type="text" formControlName="nombreRazonSocial" />
+                  <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombreRazonSocial" />
                   <mat-icon matPrefix>dns</mat-icon>
                 </mat-form-field>
                 <mat-form-field matTooltip="{{ tooltipData.otrosIngresosDeclarante.tipoNegocio }}" appearance="fill">
                   <mat-label>Tipo de Negocio</mat-label>
-                  <input matInput type="text" formControlName="tipoNegocio" />
+                  <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="tipoNegocio" />
                   <mat-icon matPrefix>aspect_ratio</mat-icon>
                 </mat-form-field>
               </div>
@@ -146,7 +156,7 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input matInput type="number" formControlName="valor" min="0" />
+                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field
@@ -194,13 +204,13 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input matInput type="number" formControlName="valor" min="0" />
+                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field matTooltip="{{ tooltipData.otrosIngresosDeclarante.tipoServicio }}" appearance="fill">
                   <mat-label>Tipo de servicio prestado</mat-label>
                   <mat-icon matPrefix>wb_iridescent</mat-icon>
-                  <input matInput type="text" formControlName="tipoServicio" />
+                  <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="tipoServicio" />
                 </mat-form-field>
               </div>
               <button
@@ -233,7 +243,7 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input matInput type="number" formControlName="valor" min="0" />
+                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
@@ -279,13 +289,13 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input matInput type="number" formControlName="valor" min="0" />
+                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field matTooltip="{{ tooltipData.otrosIngresosDeclarante.tipoIngreso }}" appearance="fill">
                   <mat-label>Especificar tipo de ingreso (arrendamiento, regalías, sorteos, etc.)</mat-label>
                   <mat-icon matPrefix>wb_iridescent</mat-icon>
-                  <input matInput type="text" formControlName="tipoIngreso" />
+                  <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="tipoIngreso" />
                 </mat-form-field>
               </div>
               <button
@@ -326,7 +336,7 @@
               class="grid-item"
             >
               <mat-label>Monto</mat-label>
-              <input matInput type="number" formControlName="valor" min="0" />
+              <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
               <mat-icon matPrefix class="no-public">attach_money</mat-icon>
             </mat-form-field>
           </div>
@@ -353,12 +363,17 @@
       <div *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
         </div>
 
         <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
+          <textarea
+            [errorStateMatcher]="errorMatcher"
+            matInput
+            formControlName="aclaracionesObservaciones"
+            rows="10"
+          ></textarea>
         </mat-form-field>
       </div>
 

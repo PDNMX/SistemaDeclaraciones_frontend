@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import Relacion from '@static/catalogos/relacionConDeclarante.json';
+import Relacion from '@static/catalogos/tipoRelacion.json';
 import TipoParticipacion from '@static/catalogos/tipoParticipacion.json';
 import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
@@ -21,6 +21,8 @@ import { tooltipData } from '@static/tooltips/intereses/participacion-empresa';
 import { DeclaracionOutput, Participacion, Participaciones } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
+
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
 @Component({
   selector: 'app-participacion-empresa',
@@ -48,6 +50,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
+  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,

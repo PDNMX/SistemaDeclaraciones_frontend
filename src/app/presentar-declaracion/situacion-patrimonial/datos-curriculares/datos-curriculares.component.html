@@ -15,20 +15,19 @@
 
     <mat-divider></mat-divider>
 
-    <p>
+    <p class="vertical-margin-25">
       Todos los campos * son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
-      resaltados <span class="no-public-inline"></span> no serán públicos.<br />
-      Información relativa a las instituciones educativas hasta los
-      <span class="negritas">cinco últimos grados de escolaridad</span>, iniciando con la más reciente.
+      resaltados <span class="no-public-inline"></span> no serán públicos. Podrá llenar la información relativa a las
+      instituciones educativas hasta los <b>cinco últimos grados de escolaridad</b>, iniciando con la más reciente.
     </p>
 
     <mat-card class="info" *ngFor="let e of escolaridad; let i = index">
       <mat-card-content>
         <div class="flex">
-          <div class="left paragraph-flex">
+          <div class="left resaltar paragraph-flex">
             <mat-icon matPrefix class="icon">star</mat-icon>
             <p>
-              {{ e?.nivel.valor }}
+              <span class="negritas">{{ e.nivel?.valor }}</span>
             </p>
           </div>
           <div class="right paragraph-flex">
@@ -37,10 +36,10 @@
               {{ e.documentoObtenido }}
             </p>
           </div>
-          <div class="left resaltar paragraph-flex">
+          <div class="left paragraph-flex">
             <mat-icon matPrefix class="icon">wb_iridescent</mat-icon>
             <p>
-              <span class="negritas">{{ e.carreraAreaConocimiento }}</span>
+              {{ e.carreraAreaConocimiento || 'SIN INFORMACIÓN' }}
             </p>
           </div>
           <div class="right paragraph-flex">
@@ -58,7 +57,7 @@
           <div class="right paragraph-flex">
             <mat-icon matPrefix class="icon">public</mat-icon>
             <p>
-              {{ e.institucionEducativa.ubicacion === 'MX' ? 'En México' : 'En el extranjero' }}
+              {{ e.institucionEducativa.ubicacion === 'MX' ? 'EN MÉXICO' : 'EN EL EXTRANJERO' }}
             </p>
           </div>
           <div class="left paragraph-flex">
@@ -68,19 +67,6 @@
             </p>
           </div>
         </div>
-
-        <!--<mat-divider></mat-divider>
-        <div class="paragraph-flex">
-          <span class="no-public-inline"></span>
-          <mat-icon matPrefix class="icon">insert_comment</mat-icon>
-          <p class="aclaraciones">Aclaraciones/Observaciones</p>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum optio illo inventore vitae incidunt amet,
-          magnam enim consequuntur totam nam ducimus error facilis expedita quibusdam iusto aliquam doloremque in!
-          Error?
-        </p>-->
-
         <mat-divider></mat-divider>
       </mat-card-content>
       <mat-card-actions>
@@ -89,19 +75,26 @@
       </mat-card-actions>
     </mat-card>
 
+    <div *ngIf="!editMode && aclaracionesText">
+      <div class="paragraph-flex aclaraciones">
+        <mat-icon matPrefix class="icon card-no-public">insert_comment</mat-icon>
+        <p>Aclaraciones / Observaciones</p>
+      </div>
+      <p class="vertical-margin-25">{{ aclaracionesText }}</p>
+    </div>
+
     <div class="boton-agregar" *ngIf="escolaridad.length && !editMode">
       <button mat-raised-button color="primary" (click)="addItem()">AGREGAR ESCOLARIDAD</button>
     </div>
 
     <form (ngSubmit)="saveItem()" [formGroup]="datosCurricularesDeclaranteForm" *ngIf="editMode">
-      <div class="padding-agregar" formGroupName="escolaridad">
-        <mat-divider></mat-divider>
-        <p>Agregar escolaridad</p>
+      <div formGroupName="escolaridad">
+        <p class="vertical-margin-25">Agregar escolaridad</p>
         <div class="grid-2-col">
           <mat-form-field matTooltip="{{ tooltipData.nivel }}" appearance="fill">
-            <mat-label>* Nivel</mat-label>
+            <mat-label>Nivel</mat-label>
             <mat-icon matPrefix>star</mat-icon>
-            <mat-select formControlName="nivel">
+            <mat-select formControlName="nivel" required>
               <mat-option *ngFor="let opt of nivelCatalogo" [value]="opt">
                 {{ opt.valor }}
               </mat-option>
@@ -112,15 +105,15 @@
             appearance="fill"
             formGroupName="institucionEducativa"
           >
-            <mat-label>* Institución Educativa</mat-label>
+            <mat-label>Institución Educativa</mat-label>
             <mat-icon matPrefix>school</mat-icon>
-            <input matInput type="text" formControlName="nombre" [errorStateMatcher]="errorMatcher" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombre" required />
           </mat-form-field>
 
           <mat-form-field matTooltip="{{ tooltipData.estatus }}" appearance="fill">
-            <mat-label>* Estatus</mat-label>
+            <mat-label>Estatus</mat-label>
             <mat-icon matPrefix>timelapse</mat-icon>
-            <mat-select formControlName="estatus">
+            <mat-select formControlName="estatus" required>
               <mat-option *ngFor="let opt of estatusCatalogo" value="{{ opt }}">
                 {{ opt }}
               </mat-option>
@@ -129,26 +122,27 @@
           <mat-form-field matTooltip="{{ tooltipData.carreraArea }}" appearance="fill">
             <mat-label>Carrera o Área de conocimiento</mat-label>
             <mat-icon matPrefix>wb_iridescent</mat-icon>
-            <input matInput type="text" formControlName="carreraAreaConocimiento" [errorStateMatcher]="errorMatcher" />
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="carreraAreaConocimiento" />
           </mat-form-field>
         </div>
         <div class="grid-3-col grid-margin">
           <mat-form-field matTooltip="{{ tooltipData.documentoObtenido }}" appearance="fill">
-            <mat-label>* Documento Obtenido</mat-label>
+            <mat-label>Documento Obtenido</mat-label>
             <mat-icon matPrefix>insert_drive_file</mat-icon>
-            <mat-select formControlName="documentoObtenido">
+            <mat-select formControlName="documentoObtenido" required>
               <mat-option *ngFor="let opt of documentoObtenidoCatalogo" [value]="opt">
                 {{ opt }}
               </mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.fechaObtencionDocumento }}" appearance="fill">
-            <mat-label>* Fecha de obtención de documento</mat-label>
+            <mat-label>Fecha de obtención de documento</mat-label>
             <input
+              [errorStateMatcher]="errorMatcher"
               matInput
               [matDatepicker]="picker"
               formControlName="fechaObtencion"
-              [errorStateMatcher]="errorMatcher"
+              required
             />
             <mat-hint>dd/mm/yyyy</mat-hint>
             <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
@@ -159,9 +153,9 @@
             appearance="fill"
             formGroupName="institucionEducativa"
           >
-            <mat-label>* Lugar dónde se ubica la Institución Educativa</mat-label>
+            <mat-label>Lugar dónde se ubica la Institución Educativa</mat-label>
             <mat-icon matPrefix>public</mat-icon>
-            <mat-select formControlName="ubicacion">
+            <mat-select formControlName="ubicacion" required>
               <mat-option value="MX"> MÉXICO </mat-option>
               <mat-option value="EX"> EN EL EXTRANJERO </mat-option>
             </mat-select>
@@ -169,29 +163,30 @@
         </div>
       </div>
 
-      <div class="boton" *ngIf="!aclaraciones">
-        <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
-          AGREGAR ACLARACIONES / OBSERVACIONES
-        </button>
-      </div>
+      <mat-grid-list *ngIf="!aclaraciones" cols="15" rowHeight="100px">
+        <mat-grid-tile class="content-left" colspan="15">
+          <button mat-raised-button type="button" class="text-primary" (click)="toggleAclaraciones(true)">
+            AGREGAR ACLARACIONES / OBSERVACIONES
+          </button>
+        </mat-grid-tile>
+      </mat-grid-list>
+
       <div *ngIf="aclaraciones">
-        <div class="flex">
+        <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
         </div>
 
         <mat-form-field appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
           <textarea
+            [errorStateMatcher]="errorMatcher"
             matInput
             formControlName="aclaracionesObservaciones"
             rows="10"
-            [errorStateMatcher]="errorMatcher"
           ></textarea>
         </mat-form-field>
       </div>
-
-      <mat-divider></mat-divider>
 
       <div class="boton text-right">
         <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
@@ -212,6 +207,7 @@
         </button>
       </div>
     </form>
+
     <mat-divider></mat-divider>
 
     <div class="boton center">
