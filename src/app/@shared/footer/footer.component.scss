@@ -1,5 +1,5 @@
 .info-section {
-  background-color: var(--accent-darker-color);
+  background-color: var(--blue-color);
   color: #ffffff;
   font-size: 14px;
   height: 420px;
@@ -17,7 +17,7 @@
       position: relative;
     }
     .pdn-img {
-      max-width: 85px;
+      height: auto;
     }
     .pdn-text {
       display: block;
