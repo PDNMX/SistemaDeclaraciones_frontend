@@ -17,7 +17,7 @@ import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import ParentescoRelacion from '@static/catalogos/parentescoRelacion.json';
 
-import { tooltipData } from '@static/tooltips/prestamo-terceros';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/prestamo-terceros';
 
 import { Catalogo, DeclaracionOutput, Prestamo, PrestamoComodato } from '@models/declaracion';
 

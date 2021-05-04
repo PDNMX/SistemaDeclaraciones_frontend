@@ -20,7 +20,7 @@ import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { tooltipData } from '@static/tooltips/vehiculos';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/vehiculos';
 
 import { DeclaracionOutput, Vehiculo, Vehiculos } from '@models/declaracion';
 

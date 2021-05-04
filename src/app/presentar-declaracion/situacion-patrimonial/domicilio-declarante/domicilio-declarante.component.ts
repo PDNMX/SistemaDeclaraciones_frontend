@@ -98,9 +98,9 @@ export class DomicilioDeclaranteComponent implements OnInit {
 
     this.domicilioDeclaranteForm.get('domicilioExtranjero').disable();
 
-    const estado = this.domicilioDeclaranteForm.get('domicilioMexico').get('entidadFederativa');
+    const estado = this.domicilioDeclaranteForm.get('domicilioMexico.entidadFederativa');
     estado.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
-      const municipio = this.domicilioDeclaranteForm.get('domicilioMexico').get('municipioAlcaldia');
+      const municipio = this.domicilioDeclaranteForm.get('domicilioMexico.municipioAlcaldia');
 
       if (value) {
         municipio.enable();

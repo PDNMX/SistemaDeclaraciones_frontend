@@ -1,28 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
 
-import { beneficiosPrivadosQuery, beneficiosPrivadosMutation } from '@api/declaracion';
-
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import TipoBeneficio from '@static/catalogos/tipoBeneficio.json';
+import { beneficiosPrivadosQuery, beneficiosPrivadosMutation } from '@api/declaracion';
+import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+import { UntilDestroy, untilDestroyed } from '@core';
+import { Beneficio, BeneficiosPrivados, Catalogo, DeclaracionOutput } from '@models/declaracion';
 import beneficiario from '@static/catalogos/beneficiariosPrograma.json';
 import FormaRecepcion from '@static/catalogos/formaRecepcion.json';
+import Monedas from '@static/catalogos/monedas.json';
 import Sector from '@static/catalogos/sector.json';
-
+import TipoBeneficio from '@static/catalogos/tipoBeneficio.json';
+import tipoOperacion from '@static/catalogos/tipoOperacion.json';
 import { tooltipData } from '@static/tooltips/intereses/beneficios';
-
-import { Beneficio, BeneficiosPrivados, DeclaracionOutput } from '@models/declaracion';
-
 import { findOption } from '@utils/utils';
 
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-
+@UntilDestroy()
 @Component({
   selector: 'app-beneficios-privados',
   templateUrl: './beneficios-privados.component.html',
@@ -30,16 +29,22 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class BeneficiosPrivadosComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   beneficio: Beneficio[] = [];
   beneficiosPrivadosForm: FormGroup;
   editMode = false;
   editIndex: number = null;
   isLoading = false;
 
-  tipoBeneficioCatalogo = TipoBeneficio;
+  @ViewChild('otroSector') otroSector: ElementRef;
+  @ViewChild('otroTipoBeneficio') otroTipoBeneficio: ElementRef;
+
   beneficiarioCatalogo = beneficiario;
   recepcionCatalogo = FormaRecepcion;
+  monedasCatalogo = Monedas;
   sectorCatalogo = Sector;
+  tipoBeneficioCatalogo = TipoBeneficio;
+  tipoOperacionCatalogo = tipoOperacion;
 
   tipoDeclaracion: string = null;
 
@@ -62,6 +67,7 @@ export class BeneficiosPrivadosComponent implements OnInit {
 
   addItem() {
     this.beneficiosPrivadosForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -75,15 +81,14 @@ export class BeneficiosPrivadosComponent implements OnInit {
     this.beneficiosPrivadosForm = this.formBuilder.group({
       ninguno: [false],
       beneficio: this.formBuilder.group({
-        //tipoOperacion: ['', Validators.required],
-        tipoPersona: [''],
-        tipoBeneficio: ['', [Validators.required]], //
-        beneficiario: ['', [Validators.required]],
+        tipoOperacion: [null, [Validators.required]],
+        tipoBeneficio: [null, [Validators.required]], //
+        beneficiario: [null, [Validators.required]],
         otorgante: this.formBuilder.group({
-          tipoPersona: ['', [Validators.required]],
-          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          tipoPersona: [false, [Validators.required]],
+          nombreRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
           rfc: [
-            '',
+            null,
             [
               Validators.required,
               Validators.pattern(
@@ -92,15 +97,28 @@ export class BeneficiosPrivadosComponent implements OnInit {
             ],
           ],
         }),
-        formaRecepcion: ['', Validators.required],
-        especifiqueBeneficio: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+        formaRecepcion: [null, [Validators.required]],
+        especifiqueBeneficio: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
         montoMensualAproximado: this.formBuilder.group({
-          valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
-          moneda: ['MXN', [Validators.pattern(/^\S.*\S?$/)]],
+          valor: [0, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)]],
+          moneda: [null, [Validators.required]],
         }),
-        sector: ['', [Validators.required]],
+        sector: [null, [Validators.required]],
       }),
-      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      aclaracionesObservaciones: [
+        { disabled: true, value: null },
+        [Validators.required, Validators.pattern(/^\S.*\S$/)],
+      ],
+    });
+
+    const formaRecepcion = this.beneficiosPrivadosForm.get('beneficio.formaRecepcion');
+
+    formaRecepcion.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
+      if (value === 'ESPECIE') {
+        this.beneficiosPrivadosForm.get('beneficio.especifiqueBeneficio').enable();
+      } else {
+        this.beneficiosPrivadosForm.get('beneficio.especifiqueBeneficio').disable();
+      }
     });
   }
 
@@ -110,17 +128,39 @@ export class BeneficiosPrivadosComponent implements OnInit {
     this.editIndex = index;
   }
 
-  fillForm(beneficios: any) {
-    Object.keys(beneficios)
-      .filter((field) => beneficios[field] !== null)
-      .forEach((field) => this.beneficiosPrivadosForm.get(`beneficio.${field}`).patchValue(beneficios[field]));
+  fillForm(beneficio: Beneficio) {
+    const beneficioForm = this.beneficiosPrivadosForm.get('beneficio');
+    beneficioForm.patchValue(beneficio || {});
 
+    if (beneficio.tipoBeneficio?.clave === 'O') {
+      this.otroTipoBeneficio.nativeElement.value = beneficio.tipoBeneficio?.valor;
+    }
+
+    if (beneficio.sector?.clave === 'OTRO') {
+      this.otroSector.nativeElement.value = beneficio.sector?.valor;
+    }
+
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
+  }
+
+  get finalBeneficioForm() {
+    const form = JSON.parse(JSON.stringify(this.beneficiosPrivadosForm.value.beneficio)); // Deep copy
+
+    if (form.tipoBeneficio?.clave === 'O') {
+      form.tipoBeneficio.valor = this.otroTipoBeneficio.nativeElement.value;
+    }
+
+    if (form.sector?.clave === 'OTRO') {
+      form.sector.valor = this.otroSector.nativeElement.value;
+    }
+
+    return form;
   }
 
   async getUserInfo() {
     try {
-      const { data } = await this.apollo
+      const { data, errors } = await this.apollo
         .query<DeclaracionOutput>({
           query: beneficiosPrivadosQuery,
           variables: {
@@ -128,13 +168,32 @@ export class BeneficiosPrivadosComponent implements OnInit {
           },
         })
         .toPromise();
-      this.declaracionId = data.declaracion._id;
-      if (data.declaracion.beneficiosPrivados) {
-        this.setupForm(data.declaracion.beneficiosPrivados);
+
+      if (errors) {
+        throw errors;
       }
+
+      this.declaracionId = data?.declaracion._id;
+      this.setupForm(data?.declaracion.beneficiosPrivados);
     } catch (error) {
       console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
+  }
+
+  inputsAreValid(): boolean {
+    let result = true;
+    const beneficio = this.beneficiosPrivadosForm.value.beneficio;
+
+    if (beneficio.tipoBeneficio?.clave === 'O') {
+      result = result && this.otroTipoBeneficio.nativeElement.value?.match(/^\S.*\S$/);
+    }
+
+    if (beneficio.sector?.clave === 'OTRO') {
+      result = result && this.otroSector.nativeElement.value?.match(/^\S.*\S$/);
+    }
+
+    return result;
   }
 
   ngOnInit(): void {}
@@ -187,7 +246,7 @@ export class BeneficiosPrivadosComponent implements OnInit {
         beneficiosPrivados: form,
       };
 
-      const { data } = await this.apollo
+      const { data, errors } = await this.apollo
         .mutate<DeclaracionOutput>({
           mutation: beneficiosPrivadosMutation,
           variables: {
@@ -197,6 +256,10 @@ export class BeneficiosPrivadosComponent implements OnInit {
         })
         .toPromise();
 
+      if (errors) {
+        throw errors;
+      }
+
       this.editMode = false;
       if (data.declaracion.beneficiosPrivados) {
         this.setupForm(data.declaracion.beneficiosPrivados);
@@ -204,14 +267,14 @@ export class BeneficiosPrivadosComponent implements OnInit {
       this.presentSuccessAlert();
     } catch (error) {
       console.log(error);
-      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
+      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
     }
   }
 
   saveItem() {
     let beneficio = [...this.beneficio];
     const aclaracionesObservaciones = this.beneficiosPrivadosForm.value.aclaracionesObservaciones;
-    const newItem = this.beneficiosPrivadosForm.value.beneficio;
+    const newItem = this.finalBeneficioForm;
 
     if (this.editIndex === null) {
       beneficio = [...beneficio, newItem];
@@ -229,6 +292,12 @@ export class BeneficiosPrivadosComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.beneficiosPrivadosForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.beneficiosPrivadosForm.reset();
     this.editMode = true;
@@ -241,13 +310,13 @@ export class BeneficiosPrivadosComponent implements OnInit {
     if (tipoBeneficio) {
       this.beneficiosPrivadosForm
         .get('beneficio.tipoBeneficio')
-        .setValue(findOption(this.tipoBeneficioCatalogo, tipoBeneficio));
+        .setValue(findOption(this.tipoBeneficioCatalogo, tipoBeneficio.clave));
     }
 
     if (beneficiario) {
       this.beneficiosPrivadosForm
         .get('beneficio.beneficiario')
-        .setValue(findOption(this.beneficiarioCatalogo, beneficiario[0]));
+        .setValue(beneficiario.map((b: Catalogo) => findOption(this.beneficiarioCatalogo, b.clave)));
     }
 
     if (sector) {
@@ -255,21 +324,17 @@ export class BeneficiosPrivadosComponent implements OnInit {
     }
   }
 
-  setupForm(beneficios: BeneficiosPrivados) {
-    if (!beneficios) return;
-    this.beneficio = beneficios.beneficio || [];
-    const aclaraciones = beneficios.aclaracionesObservaciones;
+  setupForm(beneficios: BeneficiosPrivados | undefined) {
+    this.beneficio = beneficios?.beneficio || [];
+    const aclaraciones = beneficios?.aclaracionesObservaciones;
 
-    if (beneficios.ninguno) {
+    if (beneficios?.ninguno) {
       this.beneficiosPrivadosForm.get('ninguno').patchValue(true);
     }
 
     if (aclaraciones) {
-      this.beneficiosPrivadosForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
-
-    /// his.editMode = !!!this.beneficios.length;
   }
 
   toggleAclaraciones(value: boolean) {

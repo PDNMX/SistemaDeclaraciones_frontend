@@ -4,7 +4,8 @@ const tooltipData = {
   tipoFideicomiso: 'Seleccionar si es público, privado o mixto.',
   tipoParticipacion:
     'Seleccionar su participación como fideicomitente, fiduciario, fideicomisario o dentro del Comité Técnico.',
-  rfcFideicomiso: 'Proporcionar los trece dígitos.',
+  rfcFideicomiso:
+    'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del fideicomiso.',
   fideicomitente: 'Seleccionar si es persona física o persona moral.',
   nombreRazonSocialFideicomitente: 'Proporcionar nombre completo.',
   rfcFideicomitente: 'Proporcionar los trece dígitos.',

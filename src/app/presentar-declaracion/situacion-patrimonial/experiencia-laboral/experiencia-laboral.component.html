@@ -101,7 +101,7 @@
             </div>
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">fingerprint</mat-icon>
-              <p>RFC: {{ e.rfc }}</p>
+              <p>RFC: {{ e.rfc || 'SIN INFORMACIÓN' }}</p>
             </div>
 
             <div class="paragraph-flex">
@@ -159,17 +159,6 @@
               <p>{{ e.ubicacion === 'MX' ? 'EN MÉXICO' : 'EN EL EXTRANJERO' }}</p>
             </div>
           </div>
-          <!--<mat-divider></mat-divider>
-          <div class="padding-card-section">
-            <div class="paragraph-flex aclaraciones">
-              <span class="no-public-inline no-public-inline-margin"></span>
-              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
-              <p>Aclaraciones/Observaciones</p>
-            </div>
-            <p>
-              {{ e.aclaracionesObservaciones }}
-            </p>
-          </div>-->
           <mat-divider></mat-divider>
         </mat-card-content>
         <mat-card-actions>
@@ -325,7 +314,6 @@
               type="text"
               formControlName="rfc"
               maxlength="12"
-              required
             />
             <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/12</mat-hint>
           </mat-form-field>

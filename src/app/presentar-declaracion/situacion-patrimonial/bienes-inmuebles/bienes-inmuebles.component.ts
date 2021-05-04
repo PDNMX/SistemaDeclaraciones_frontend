@@ -20,7 +20,7 @@ import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { tooltipData } from '@static/tooltips/bien-inmueble';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/bien-inmueble';
 
 import { BienInmueble, BienesInmuebles, Catalogo, DeclaracionOutput } from '@models/declaracion';
 

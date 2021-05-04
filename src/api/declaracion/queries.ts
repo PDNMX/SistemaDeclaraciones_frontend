@@ -976,7 +976,6 @@ export const beneficiosPrivadosQuery = gql`
         ninguno
         beneficio {
           tipoOperacion
-          tipoPersona
           tipoBeneficio {
             clave
             valor

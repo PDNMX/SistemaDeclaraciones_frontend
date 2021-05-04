@@ -18,7 +18,7 @@ import AmbitoSector from '@static/catalogos/ambitoSector.json';
 import Extranjero from '@static/catalogos/extranjero.json';
 import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import Sector from '@static/catalogos/sector.json';
-import { tooltipData } from '@static/tooltips/experiencia-laboral';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/experiencia-laboral';
 import { findOption } from '@utils/utils';
 
 @UntilDestroy()
@@ -151,7 +151,6 @@ export class ExperienciaLaboralComponent implements OnInit {
         rfc: [
           null,
           [
-            Validators.required,
             Validators.pattern(
               /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
             ),

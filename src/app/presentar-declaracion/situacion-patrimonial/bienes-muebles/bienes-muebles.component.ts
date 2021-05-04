@@ -17,7 +17,7 @@ import ParentescoRelacion from '@static/catalogos/parentescoRelacion.json';
 import ValorConformeA from '@static/catalogos/valorConformeA.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { tooltipData } from '@static/tooltips/bienes-muebles';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/bienes-muebles';
 
 import { BienMueble, BienesMuebles, DeclaracionOutput } from '@models/declaracion';
 

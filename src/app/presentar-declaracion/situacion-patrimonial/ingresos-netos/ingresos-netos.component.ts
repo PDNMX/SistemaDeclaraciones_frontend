@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import TipoInstrumento from '@static/catalogos/tipoInstrumento.json';
 
-import { tooltipData } from '@static/tooltips/ingresos-netos';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/ingresos-netos';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 

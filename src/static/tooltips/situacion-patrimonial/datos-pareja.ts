@@ -2,7 +2,7 @@ const tooltipData = {
   nombre:
     'Escribir el nombre o los nombres completos, así como los apellidos completos, sin abreviaturas, sin acentos, ni signos especiales. Si se tiene un solo apellido deberá colocarse en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco.',
   fechaNacimiento: 'Señalar la fecha de nacimiento de la Pareja en el formato de día, mes y año.',
-  rfc: 'Escribir los diez caracteres básicos',
+  rfc: 'Escribir los diez caracteres básicos con los tres caracteres de la homoclave.',
   relacionDeclarante:
     'Seleccionar el tipo de relación entre las siguientes opciones: cónyuge, concubina/concubinario/unión libre o sociedad de convivencia.',
   ciudadanoExtranjero: 'Deberá indicar sí o no, según el caso.',
@@ -24,14 +24,15 @@ const tooltipData = {
       'Especificar el nombre de la Unidad Administrativa u homóloga superior inmediata en la que estuvo adscrito. (Superior jerárquico).',
     empleoCargoComision:
       'Señalar el nombre del empleo, cargo o comisión que se estableció en su recibo de nómina, nombramiento, contrato u oficio de comisión.',
-    especifiqueFuncionPrincipal: 'Señalar cual es la función o actividad principal que desempeñó.',
+    especifiqueFuncionPrincipal: 'Señalar cual es la función o actividad principal que desempeña su Pareja.',
     salarioMensualNeto: 'Deberá especificar el monto mensual neto, sin centavos, que percibe el cónyuge o Pareja.',
     fechaIngreso: 'Señalar la fecha en que inició empleo, cargo o comisión.',
   },
   sectorPrivado: {
-    nombreEmpresaSociedadAsociacion: 'Proporcionar el nombre de la empresa, sociedad o asociación en la que laboró.',
+    nombreEmpresaSociedadAsociacion: 'Proporcionar el nombre de la empresa, sociedad o asociación en la que labora.',
     empleoCargoComision: 'Proporcionar el nombre del puesto que desempeña.',
-    rfc: 'Proporcionar los 12 dígitos de la empresa en que laboró.',
+    rfc:
+      'Proporcionar los 12 dígitos de la empresa en que labora su cónyuge, concubina/concubinario o sociedad de convivencia.',
     fechaIngreso: 'Señalar la fecha en que inició empleo, cargo o comisión.',
     sectorPertenece:
       'Elegir el sector al que pertenece la empresa, sociedad o asociación. En caso de señalar otros, especifique.',

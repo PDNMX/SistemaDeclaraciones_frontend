@@ -16,7 +16,7 @@ import Nacionalidades from '@static/catalogos/nacionalidades.json';
 import Paises from '@static/catalogos/paises.json';
 import SituacionPersonalEstadoCivil from '@static/catalogos/situacionPersonalEstadoCivil.json';
 import RegimenMatrimonial from '@static/catalogos/regimenMatrimonial.json';
-import { tooltipData } from '@static/tooltips/datos-generales';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-generales';
 import { findOption } from '@utils/utils';
 
 @UntilDestroy()

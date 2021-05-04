@@ -12,18 +12,17 @@
       <label class="step-title"> 6. Beneficios privados (hasta los últimos dos años)</label>
     </mat-toolbar>
 
-    <p>
-      En la contribución monetaria o en especie que otorga una persona física o moral con recursos privados al
+    <mat-divider></mat-divider>
+
+    <p class="vertical-margin-25">
+      Todos los campos * son obligatorios. Los campos resaltados <span class="no-public-inline"></span> no serán
+      públicos. Es la contribución monetaria o en especie que otorga una persona física o moral con recursos privados al
       Declarante o alguna de las personas señaladas en el catálogo. El apoyo en especie refiere a cualquier
       contribución, utilizando bienes o beneficios de naturaleza diferente al dinero. Deberá reportar hasta los últimos
       dos años.
     </p>
 
     <mat-divider></mat-divider>
-
-    <p class="grid-margin">
-      Todos los campos son obligatorios. Los campos resaltados <span class="no-public-inline"></span> no serán públicos.
-    </p>
 
     <!-- Botones iniciales -->
     <div class="" *ngIf="!beneficio?.length && !editMode && !beneficiosPrivadosForm.value.ninguno">
@@ -43,8 +42,8 @@
 
     <!-- card de información -->
     <div class="">
-      <mat-card class="info" *ngIf="beneficiosPrivadosForm.value.ninguno">
-        <p>Ningún Beneficio Privado</p>
+      <mat-card class="info text-center" *ngIf="beneficiosPrivadosForm.value.ninguno">
+        <h3 class="vertical-padding-50">Ningún Beneficio Privado</h3>
       </mat-card>
 
       <mat-card class="info" *ngFor="let b of beneficio; let i = index">
@@ -58,7 +57,9 @@
           <div class="grid-3fr-1fr">
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
-              <p>Beneficiario: {{ b?.beneficiario.valor }}</p>
+              <p>
+                Beneficiario: <span *ngFor="let benef of b?.beneficiario">{{ benef.valor }} </span>
+              </p>
             </div>
             <div class="paragraph-flex size-20">
               <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
@@ -100,17 +101,6 @@
           </div>
 
           <mat-divider></mat-divider>
-          <!-- <div class="padding-card-section">
-            <div class="paragraph-flex aclaraciones">
-              <span class="no-public-inline no-public-inline-margin"></span>
-              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
-              <p>Aclaraciones/Observaciones</p>
-            </div>
-            <p>
-              {{ b.aclaracionesObservaciones }}
-            </p>
-          </div>
-          <mat-divider></mat-divider> -->
         </mat-card-content>
         <mat-card-actions>
           <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
@@ -118,18 +108,37 @@
         </mat-card-actions>
       </mat-card>
 
+      <div *ngIf="!editMode && aclaracionesText">
+        <div class="paragraph-flex aclaraciones">
+          <mat-icon matPrefix class="icon card-no-public">insert_comment</mat-icon>
+          <p>Aclaraciones / Observaciones</p>
+        </div>
+        <p class="vertical-margin-25">{{ aclaracionesText }}</p>
+      </div>
+
       <div class="boton-agregar" *ngIf="(beneficio.length && !editMode) || beneficiosPrivadosForm.value.ninguno">
         <button mat-raised-button color="primary" (click)="addItem()">AGREGAR BENEFICIO</button>
       </div>
     </div>
 
     <!-- Formulario -->
-    <form (ngSubmit)="saveItem()" [formGroup]="beneficiosPrivadosForm" *ngIf="editMode">
+    <form (ngSubmit)="saveItem()" [formGroup]="beneficiosPrivadosForm" [ngClass]="{ hidden: !editMode }">
       <!-- Agregar -->
       <div class="padding-agregar" formGroupName="beneficio">
-        <mat-divider></mat-divider>
         <p>Agregar beneficio privado</p>
+
         <!-- Datos -->
+        <div class="grid-3-col grid-margin">
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de Operacion</mat-label>
+            <mat-icon matPrefix>beenhere</mat-icon>
+            <mat-select formControlName="tipoOperacion" required>
+              <mat-option *ngFor="let tipoOperacion of tipoOperacionCatalogo" [value]="tipoOperacion">
+                {{ tipoOperacion | replace: '_':' ' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
         <div class="grid-2-col grid-margin">
           <mat-form-field matTooltip="{{ tooltipData.tipoBeneficio }}" appearance="fill">
@@ -141,15 +150,18 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill" *ngIf="beneficiosPrivadosForm.value.beneficio.tipoBeneficio?.clave === 'O'">
+          <mat-form-field
+            appearance="fill"
+            [ngClass]="{ hidden: beneficiosPrivadosForm.value.beneficio.tipoBeneficio?.clave !== 'O' }"
+          >
             <mat-label>Especifique</mat-label>
             <mat-icon matPrefix class="no-public">beenhere</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="text" required />
+            <input [errorStateMatcher]="errorMatcher" #otroTipoBeneficio matInput type="text" required />
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.beneficiario }}" appearance="fill">
             <mat-label>Beneficiario</mat-label>
             <mat-icon matPrefix class="no-public">person</mat-icon>
-            <mat-select formControlName="beneficiario" required>
+            <mat-select formControlName="beneficiario" required multiple>
               <mat-option *ngFor="let beneficiario of beneficiarioCatalogo" [value]="beneficiario">
                 {{ beneficiario.valor }}
               </mat-option>
@@ -186,11 +198,12 @@
               matInput
               #input_rfc
               type="text"
+              maxlength="12"
               maxlength="13"
               formControlName="rfc"
               required
             />
-            <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/13</mat-hint>
+            <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/12-13</mat-hint>
           </mat-form-field>
         </div>
 
@@ -226,7 +239,11 @@
           <mat-form-field matTooltip="{{ tooltipData.tipoMoneda }}" appearance="fill">
             <mat-label>Tipo de moneda</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="moneda" required />
+            <mat-select formControlName="moneda" required>
+              <mat-option *ngFor="let m of monedasCatalogo" [value]="m.clave">
+                {{ m.clave }} - {{ m.valor }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
 
@@ -240,15 +257,16 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill" *ngIf="beneficiosPrivadosForm.value.beneficio.sector?.clave === 'OTRO'">
+          <mat-form-field
+            appearance="fill"
+            [ngClass]="{ hidden: beneficiosPrivadosForm.value.beneficio.sector?.clave !== 'OTRO' }"
+          >
             <mat-label>Especifique</mat-label>
             <mat-icon matPrefix class="no-public">public</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="text" required />
+            <input [errorStateMatcher]="errorMatcher" matInput type="text" #otroSector required />
           </mat-form-field>
         </div>
       </div>
-
-      <mat-divider></mat-divider>
 
       <div class="boton" *ngIf="!aclaraciones">
         <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
@@ -282,7 +300,11 @@
         <button mat-raised-button color="primary" type="button" (click)="beneficiosPrivadosForm.reset()">
           LIMPIAR FORMULARIO
         </button>
-        <button mat-raised-button color="primary" [disabled]="beneficiosPrivadosForm.invalid || isLoading">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="beneficiosPrivadosForm.invalid || !inputsAreValid() || isLoading"
+        >
           GUARDAR CAMBIOS
         </button>
       </div>

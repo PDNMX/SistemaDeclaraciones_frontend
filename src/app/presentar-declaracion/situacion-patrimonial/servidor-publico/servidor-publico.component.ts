@@ -24,7 +24,7 @@ import {
 import TipoBienEnajenado from '@static/catalogos/tipoBienEnajenacionBienes.json';
 import TipoInstrumento from '@static/catalogos/tipoInstrumento.json';
 
-import { tooltipData } from '@static/tooltips/anio-anterior';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/anio-anterior';
 
 @Component({
   selector: 'app-servidor-publico',
