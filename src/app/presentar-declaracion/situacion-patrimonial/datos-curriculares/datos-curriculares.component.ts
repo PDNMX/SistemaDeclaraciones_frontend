@@ -14,7 +14,7 @@ import { DatosCurricularesDeclarante, DeclaracionOutput, Escolaridad } from '@mo
 import DocumentoObtenido from '@static/catalogos/documentoObtenido.json';
 import Estatus from '@static/catalogos/estatus.json';
 import Nivel from '@static/catalogos/nivel.json';
-import { tooltipData } from '@static/tooltips/datos-curriculares';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-curriculares';
 import { findOption } from '@utils/utils';
 
 @Component({

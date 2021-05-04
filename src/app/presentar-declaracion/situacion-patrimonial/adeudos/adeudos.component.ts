@@ -21,7 +21,7 @@ import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { tooltipData } from '@static/tooltips/adeudos';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/adeudos';
 
 import { findOption } from '@utils/utils';
 

@@ -16,7 +16,7 @@ import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import Paises from '@static/catalogos/countries.json';
-import { tooltipData } from '@static/tooltips/datos-empleo';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-empleo';
 import { findOption } from '@utils/utils';
 import { UntilDestroy, untilDestroyed } from '@app/@core';
 

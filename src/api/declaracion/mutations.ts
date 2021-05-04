@@ -648,7 +648,6 @@ export const beneficiosPrivadosMutation = gql`
         ninguno
         beneficio {
           tipoOperacion
-          tipoPersona
           tipoBeneficio {
             clave
             valor

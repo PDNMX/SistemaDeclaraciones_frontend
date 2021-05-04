@@ -20,7 +20,7 @@ import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { tooltipData } from '@static/tooltips/inversiones';
+import { tooltipData } from '@static/tooltips/situacion-patrimonial/inversiones';
 
 import { DeclaracionOutput, Inversion, InversionesCuentasValores } from '@models/declaracion';
 import { findOption, ifExistEnableFields } from '@utils/utils';
