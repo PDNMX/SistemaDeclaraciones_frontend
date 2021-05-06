@@ -12,22 +12,35 @@
     <mat-toolbar class="background-white">
       <label class="step-title">
         {{ declaracionSimplificada ? '6.' : '8.' }} Ingresos netos del declarante, pareja y/o dependiente económicos
-        (situación actual)</label
-      >
+        <span *ngIf="tipoDeclaracion === 'inicial'">(situación actual)</span>
+        <span *ngIf="tipoDeclaracion === 'modificacion'"
+          >(entre el 1 de enero y 31 de diciembre del año inmediato anterior)</span
+        >
+        <span *ngIf="tipoDeclaracion === 'conclusion'">(del año en curso a la fecha de conclusión del empleo)</span>
+      </label>
     </mat-toolbar>
 
     <mat-divider></mat-divider>
 
-    <p>
-      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
-      resaltados <span class="no-public-inline"></span> no serán públicos.<br />
-      Capturar
-      <span class="negritas"
-        >cantidades libres de impuestos, sin comas, sin puntos, sin centavos y sin ceros a la izquierda.</span
+    <p class="vertical-margin-25">
+      Todos los campos * son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      resaltados <span class="no-public-inline"></span> no serán públicos.
+      <span *ngIf="tipoDeclaracion === 'inicial'">
+        Para la declaración de inicio los ingresos a reportar son mensuales.</span
       >
+      <span *ngIf="tipoDeclaracion === 'modificacion'">
+        Para la declaración de modificación los ingresos a reportar son los del año inmediato anterior.</span
+      >
+      <span *ngIf="tipoDeclaracion === 'conclusion'">
+        Para la declaración de conclusión los ingresos a reportar son los que recibió durante el año hasta la fecha de
+        la conclusión del empleo, cargo o comisión.</span
+      >
+      <br />
+      Es necesario capturar cantidades después de impuestos, <b>EN PESOS MEXICANOS</b>, sin comas, sin puntos, sin
+      centavos y sin ceros a la izquierda.
     </p>
 
-    <form (ngSubmit)="confirmSaveInfo()" [formGroup]="ingresosForm" class="">
+    <form (ngSubmit)="confirmSaveInfo()" [formGroup]="ingresosForm">
       <div class="bloque">
         <h3>
           I.Remuneración mensual neta del declarante por su cargo público (por Concepto de sueldos, honorarios,
@@ -50,7 +63,7 @@
       <mat-divider></mat-divider>
 
       <div class="bloque">
-        <h3>II. Otros ingresos mensuales del declarante(suma del II.1 al II.4)</h3>
+        <h3>II. Otros ingresos mensuales del declarante (suma del II.1 al II.4)</h3>
         <p class="total">{{ otrosIngresosDeclarante | currency }}</p>
       </div>
 
@@ -107,7 +120,7 @@
       <mat-divider></mat-divider>
 
       <div class="bloque text-right" formGroupName="actividadFinanciera">
-        <h3 class="text-left">II.2. Por actividad financiera (rendimientos o ganancias)(después de impuestos)</h3>
+        <h3 class="text-left">II.2. Por actividad financiera (rendimientos o ganancias) (después de impuestos)</h3>
         <div formArrayName="actividades">
           <div *ngFor="let actividad of actividadFinanciera.controls; let i = index">
             <div class="grid-2-col" [formGroupName]="i">
@@ -236,7 +249,7 @@
       <mat-divider></mat-divider>
 
       <div class="bloque">
-        <h3>A. Ingreso mensual neto del declarante(suma del numeral I y II).</h3>
+        <h3>A. Ingreso mensual neto del declarante (suma del numeral I y II).</h3>
         <p class="total">{{ ingresoNetoDeclarante | currency }}</p>
       </div>
 
@@ -290,8 +303,6 @@
           ></textarea>
         </mat-form-field>
       </div>
-
-      <mat-divider></mat-divider>
 
       <div class="boton text-right">
         <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>

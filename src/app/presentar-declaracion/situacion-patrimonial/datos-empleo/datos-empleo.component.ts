@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { MatSelect } from '@angular/material/select';
 import { Apollo } from 'apollo-angular';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -15,7 +16,7 @@ import AmbitoPublico from '@static/catalogos/ambitoPublico.json';
 import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
-import Paises from '@static/catalogos/countries.json';
+import Paises from '@static/catalogos/paises.json';
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-empleo';
 import { findOption } from '@utils/utils';
 import { UntilDestroy, untilDestroyed } from '@app/@core';
@@ -32,6 +33,8 @@ export class DatosEmpleoComponent implements OnInit {
   estado: Catalogo = null;
   isLoading = false;
 
+  @ViewChild('tipoDomicilioInput') tipoDomicilioInput: MatSelect;
+
   nivelOrdenGobiernoCatalogo = NivelOrdenGobierno;
   ambitoPublicoCatalogo = AmbitoPublico;
   estadosCatalogo = Estados;
@@ -40,7 +43,7 @@ export class DatosEmpleoComponent implements OnInit {
 
   declaracionSimplificada = false;
   tipoDeclaracion: string = null;
-  tipoDomicilio = 'MEXICO';
+  tipoDomicilio: string = null;
 
   declaracionId: string = null;
 
@@ -95,20 +98,20 @@ export class DatosEmpleoComponent implements OnInit {
         extension: [null, [Validators.pattern(/^\d{1,10}$/)]],
       }),
       domicilioMexico: this.formBuilder.group({
-        calle: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+        numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
-        coloniaLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        coloniaLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         municipioAlcaldia: [{ disabled: true, value: null }, [Validators.required]],
         entidadFederativa: [null, [Validators.required]],
         codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
       }),
       domicilioExtranjero: this.formBuilder.group({
-        calle: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        numeroInterior: [null, [Validators.pattern(/^\S.*\S$/)]],
-        ciudadLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        estadoProvincia: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+        numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+        numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
+        ciudadLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+        estadoProvincia: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         pais: [null, [Validators.required]],
         codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
       }),
@@ -117,12 +120,12 @@ export class DatosEmpleoComponent implements OnInit {
         [Validators.required, Validators.pattern(/^\S.*\S?$/)],
       ],
       cuentaConOtroCargoPublico: [
-        { disabled: true || this.tipoDeclaracion !== 'modificacion', value: null },
+        { disabled: this.tipoDeclaracion !== 'modificacion', value: null },
         [Validators.required],
       ],
     });
 
-    this.datosEmpleoCargoComisionForm.get('domicilioExtranjero').disable();
+    // this.datosEmpleoCargoComisionForm.get('domicilioExtranjero').disable();
 
     const estado = this.datosEmpleoCargoComisionForm.get('domicilioMexico').get('entidadFederativa');
     estado.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
@@ -138,13 +141,13 @@ export class DatosEmpleoComponent implements OnInit {
     });
   }
 
-  fillForm(datosEmpleoCargoComision: DatosEmpleoCargoComision) {
+  fillForm(datosEmpleoCargoComision: DatosEmpleoCargoComision | undefined) {
     this.datosEmpleoCargoComisionForm.patchValue(datosEmpleoCargoComision || {});
 
-    if (datosEmpleoCargoComision.aclaracionesObservaciones) {
+    if (datosEmpleoCargoComision?.aclaracionesObservaciones) {
       this.toggleAclaraciones(true);
     }
-    this.setSelectedOptions();
+    this.setSelectedOptions(datosEmpleoCargoComision);
   }
 
   async getUserInfo() {
@@ -208,25 +211,27 @@ export class DatosEmpleoComponent implements OnInit {
     }
   }
 
-  setSelectedOptions() {
-    const { domicilioMexico } = this.datosEmpleoCargoComisionForm.value;
+  setSelectedOptions(datosEmpleoCargoComision: DatosEmpleoCargoComision) {
+    const { domicilioExtranjero, domicilioMexico } = datosEmpleoCargoComision ?? {};
 
     if (domicilioMexico) {
       this.datosEmpleoCargoComisionForm
         .get('domicilioMexico.entidadFederativa')
-        .setValue(findOption(this.estadosCatalogo, domicilioMexico.entidadFederativa.clave));
+        .setValue(findOption(this.estadosCatalogo, domicilioMexico.entidadFederativa?.clave));
       this.datosEmpleoCargoComisionForm
         .get('domicilioMexico.municipioAlcaldia')
         .setValue(
           findOption(this.municipiosCatalogo[this.estado?.clave] || [], domicilioMexico.municipioAlcaldia?.clave)
         );
-      this.tipoDomicilio = 'MEXICO';
-    } else {
-      this.tipoDomicilio = 'EXTRANJERO';
+      this.tipoDomicilioInput.writeValue('MEXICO');
+      this.tipoDomicilioChanged('MEXICO');
+    } else if (domicilioExtranjero) {
+      this.tipoDomicilioInput.writeValue('EXTRANJERO');
+      this.tipoDomicilioChanged('EXTRANJERO');
     }
   }
 
-  tipoDomicilioChanged(value: any) {
+  tipoDomicilioChanged(value: string) {
     this.tipoDomicilio = value;
     const notSelectedType = this.tipoDomicilio === 'MEXICO' ? 'domicilioExtranjero' : 'domicilioMexico';
     const selectedType = this.tipoDomicilio === 'EXTRANJERO' ? 'domicilioExtranjero' : 'domicilioMexico';

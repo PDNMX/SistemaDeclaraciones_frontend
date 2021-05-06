@@ -29,7 +29,7 @@ export class ShellComponent implements OnInit {
     { text: 'Datos de la pareja', url: '/situacion-patrimonial/datos-pareja' },
     { text: 'Datos del dependiente económico', url: '/situacion-patrimonial/datos-dependiente' },
     {
-      text: 'Ingresos netos del declarante, pareja y/o dependientes económicos (situación actual)',
+      text: 'Ingresos netos del declarante, pareja y/o dependientes económicos',
       url: '/situacion-patrimonial/ingresos-netos',
       simplificada: true,
     },
@@ -38,15 +38,15 @@ export class ShellComponent implements OnInit {
       url: '/situacion-patrimonial/servidor-publico',
       simplificada: true,
     },
-    { text: 'Bienes inmuebles (situación actual)', url: '/situacion-patrimonial/bienes-inmuebles' },
-    { text: 'Vehículos (situación actual)', url: '/situacion-patrimonial/vehiculos' },
-    { text: 'Bienes muebles (situación actual)', url: '/situacion-patrimonial/bienes-muebles' },
+    { text: 'Bienes inmuebles', url: '/situacion-patrimonial/bienes-inmuebles' },
+    { text: 'Vehículos', url: '/situacion-patrimonial/vehiculos' },
+    { text: 'Bienes muebles', url: '/situacion-patrimonial/bienes-muebles' },
     {
-      text: 'Inversiones, cuentas bancarias u otro tipo de valores / activos (situación actual)',
+      text: 'Inversiones, cuentas bancarias u otro tipo de valores / activos',
       url: '/situacion-patrimonial/inversiones',
     },
-    { text: 'Adeudos / pasivos (situación actual)', url: '/situacion-patrimonial/adeudos' },
-    { text: 'Préstamo o comodato por terceros (situación actual)', url: '/situacion-patrimonial/prestamos-terceros' },
+    { text: 'Adeudos / pasivos', url: '/situacion-patrimonial/adeudos' },
+    { text: 'Préstamo o comodato por terceros', url: '/situacion-patrimonial/prestamos-terceros' },
   ];
 
   interesesOptions = [
