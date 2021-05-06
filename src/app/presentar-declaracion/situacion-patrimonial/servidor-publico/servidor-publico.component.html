@@ -24,8 +24,11 @@
     </p>
 
     <p *ngIf="tipoDeclaracion !== 'modificacion'">
-      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+      Todos los campos * son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
       resaltados <span class="no-public-inline"></span> no serán públicos.
+      <br />
+      Es necesario capturar cantidades después de impuestos, <b>EN PESOS MEXICANOS</b>, sin comas, sin puntos, sin
+      centavos y sin ceros a la izquierda.
     </p>
 
     <form
@@ -376,8 +379,6 @@
           ></textarea>
         </mat-form-field>
       </div>
-
-      <mat-divider></mat-divider>
 
       <div class="boton text-right">
         <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>

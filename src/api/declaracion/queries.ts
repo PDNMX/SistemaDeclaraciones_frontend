@@ -489,6 +489,7 @@ export const datosEmpleoCargoComisionQuery = gql`
           codigoPostal
         }
         aclaracionesObservaciones
+        cuentaConOtroCargoPublico
       }
     }
   }
@@ -927,6 +928,10 @@ export const vehiculosQuery = gql`
             moneda
           }
           fechaAdquisicion
+          motivoBaja {
+            clave
+            valor
+          }
         }
         aclaracionesObservaciones
       }

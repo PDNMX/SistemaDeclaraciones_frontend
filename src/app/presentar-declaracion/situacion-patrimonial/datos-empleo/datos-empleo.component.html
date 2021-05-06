@@ -286,7 +286,7 @@
             <mat-form-field appearance="fill">
               <mat-label>País</mat-label>
               <mat-icon matPrefix>public</mat-icon>
-              <mat-select value="MEXICO" (selectionChange)="tipoDomicilioChanged($event.value)" required>
+              <mat-select #tipoDomicilioInput (selectionChange)="tipoDomicilioChanged($event.value)" required>
                 <mat-option value="MEXICO"> MÉXICO </mat-option>
                 <mat-option value="EXTRANJERO"> EN EL EXTRANJERO </mat-option>
               </mat-select>
@@ -445,8 +445,8 @@
               <mat-label>País</mat-label>
               <mat-icon matPrefix>location_city</mat-icon>
               <mat-select formControlName="pais" required>
-                <mat-option *ngFor="let opt of paisesCatalogo" value="{{ opt.alpha2 }}">
-                  {{ opt.name }}
+                <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
+                  {{ opt.valor }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
