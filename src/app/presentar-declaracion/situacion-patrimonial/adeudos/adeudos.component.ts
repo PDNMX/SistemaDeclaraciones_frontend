@@ -94,9 +94,9 @@ export class AdeudosComponent implements OnInit {
       ninguno: [false],
       adeudo: this.formBuilder.group({
         titular: [[], Validators.required],
-        tipoAdeudo: [{ clave: '', valor: '' }, Validators.required],
+        tipoAdeudo: [null, Validators.required],
         numeroCuentaContrato: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-        fechaAdquisicion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+        fechaAdquisicion: [null, [Validators.required]],
         montoOriginal: this.formBuilder.group({
           valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/)]],
           moneda: ['MXN', [Validators.pattern(/^\S.*\S?$/)]],
@@ -106,12 +106,11 @@ export class AdeudosComponent implements OnInit {
           moneda: ['MXN', [Validators.pattern(/^\S.*\S?$/)]],
         }),
         tercero: this.formBuilder.group({
-          tipoPersona: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          tipoPersona: [null, [Validators.pattern(/^\S.*$/)]],
+          nombreRazonSocial: [null, [Validators.pattern(/^\S.*$/)]],
           rfc: [
-            '',
+            null,
             [
-              Validators.required,
               Validators.pattern(
                 /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
               ),
@@ -119,10 +118,10 @@ export class AdeudosComponent implements OnInit {
           ],
         }),
         otorganteCredito: this.formBuilder.group({
-          tipoPersona: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-          nombreInstitucion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          tipoPersona: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          nombreInstitucion: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
           rfc: [
-            '',
+            null,
             [
               Validators.required,
               Validators.pattern(
@@ -135,7 +134,10 @@ export class AdeudosComponent implements OnInit {
           pais: ['MX', [Validators.required]],
         }),
       }),
-      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      aclaracionesObservaciones: [
+        { disabled: true, value: null },
+        [Validators.required, Validators.pattern(/^\S.*\S$/)],
+      ],
     });
   }
 

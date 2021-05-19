@@ -23,7 +23,7 @@ import Monedas from '@static/catalogos/monedas.json';
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/inversiones';
 
 import { DeclaracionOutput, Inversion, InversionesCuentasValores } from '@models/declaracion';
-import { findOption, ifExistEnableFields } from '@utils/utils';
+import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -100,28 +100,27 @@ export class InversionesComponent implements OnInit {
     this.inversionesCuentasValoresForm = this.formBuilder.group({
       ninguno: [false],
       inversion: this.formBuilder.group({
-        tipoInversion: ['', Validators.required],
-        subTipoInversion: ['', Validators.required],
-        titular: ['', Validators.required],
+        tipoInversion: [null, [Validators.required]],
+        subTipoInversion: [null, [Validators.required]],
+        titular: [null, [Validators.required]],
         tercero: this.formBuilder.group({
-          tipoPersona: ['', [Validators.required]],
-          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          tipoPersona: [null],
+          nombreRazonSocial: [null, [Validators.pattern(/^\S.*\S?$/)]],
           rfc: [
-            '',
+            null,
             [
-              Validators.required,
               Validators.pattern(
                 /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
               ),
             ],
           ],
         }),
-        numeroCuentaContrato: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+        numeroCuentaContrato: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
         localizacionInversion: this.formBuilder.group({
-          pais: ['', [Validators.required]],
-          institucionRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          pais: [null, [Validators.required]],
+          institucionRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
           rfc: [
-            '',
+            null,
             [
               Validators.required,
               Validators.pattern(
@@ -135,7 +134,10 @@ export class InversionesComponent implements OnInit {
           moneda: ['MXN'],
         }),
       }),
-      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      aclaracionesObservaciones: [
+        { disabled: true, value: null },
+        [Validators.required, Validators.pattern(/^\S.*\S$/)],
+      ],
     });
   }
 
@@ -151,7 +153,7 @@ export class InversionesComponent implements OnInit {
       .forEach((field) => this.inversionesCuentasValoresForm.get(`inversion.${field}`).patchValue(inversion[field]));
     this.inversionesCuentasValoresForm.get(`inversion.tercero`).patchValue(inversion.tercero[0]);
 
-    ifExistEnableFields(
+    ifExistsEnableFields(
       inversion.localizacionInversion.rfc,
       this.inversionesCuentasValoresForm,
       'inversion.localizacionInversion.rfc'
@@ -159,7 +161,7 @@ export class InversionesComponent implements OnInit {
     if (inversion.localizacionInversion.rfc) {
       this.tipoDomicilio = 'MEXICO';
     }
-    ifExistEnableFields(
+    ifExistsEnableFields(
       inversion.localizacionInversion.pais,
       this.inversionesCuentasValoresForm,
       'inversion.localizacionInversion.pais'

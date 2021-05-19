@@ -20,7 +20,7 @@ import { tooltipData } from '@static/tooltips/intereses/participacion-empresa';
 
 import { DeclaracionOutput, Participacion, Participaciones } from '@models/declaracion';
 
-import { findOption, ifExistEnableFields } from '@utils/utils';
+import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -146,7 +146,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
     Object.keys(participacion)
       .filter((field) => participacion[field] !== null)
       .forEach((field) => this.participacionForm.get(`participacion.${field}`).patchValue(participacion[field]));
-    ifExistEnableFields(
+    ifExistsEnableFields(
       participacion.ubicacion.entidadFederativa,
       this.participacionForm,
       'participacion.ubicacion.entidadFederativa'
@@ -155,7 +155,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
       this.tipoDomicilio = 'MEXICO';
     }
 
-    ifExistEnableFields(participacion.ubicacion.pais, this.participacionForm, 'participacion.ubicacion.pais');
+    ifExistsEnableFields(participacion.ubicacion.pais, this.participacionForm, 'participacion.ubicacion.pais');
     if (participacion.ubicacion.pais) {
       this.tipoDomicilio = 'EXTRANJERO';
     }
