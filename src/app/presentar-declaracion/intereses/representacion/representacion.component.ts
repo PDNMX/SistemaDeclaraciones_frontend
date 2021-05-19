@@ -20,7 +20,7 @@ import { tooltipData } from '@static/tooltips/intereses/representacion';
 
 import { DeclaracionOutput, Representacion, Representaciones } from '@models/declaracion';
 
-import { findOption, ifExistEnableFields } from '@utils/utils';
+import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -146,7 +146,7 @@ export class RepresentacionComponent implements OnInit {
       .filter((field) => representacion[field] !== null)
       .forEach((field) => this.representacionForm.get(`representacion.${field}`).patchValue(representacion[field]));
 
-    ifExistEnableFields(
+    ifExistsEnableFields(
       representacion.ubicacion.entidadFederativa,
       this.representacionForm,
       'representacion.ubicacion.entidadFederativa'
@@ -155,7 +155,7 @@ export class RepresentacionComponent implements OnInit {
       this.tipoDomicilio = 'MEXICO';
     }
 
-    ifExistEnableFields(representacion.ubicacion.pais, this.representacionForm, 'representacion.ubicacion.pais');
+    ifExistsEnableFields(representacion.ubicacion.pais, this.representacionForm, 'representacion.ubicacion.pais');
     if (representacion.ubicacion.pais) {
       this.tipoDomicilio = 'EXTRANJERO';
     }

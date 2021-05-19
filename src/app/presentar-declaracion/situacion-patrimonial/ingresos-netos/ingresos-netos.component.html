@@ -43,8 +43,8 @@
     <form (ngSubmit)="confirmSaveInfo()" [formGroup]="ingresosForm">
       <div class="bloque">
         <h3>
-          I.Remuneración mensual neta del declarante por su cargo público (por Concepto de sueldos, honorarios,
-          compensaciones, bonos y otras Prestaciones) (cantidades netas después de impuestos)
+          I.Remuneración neta del declarante por su cargo público (por Concepto de sueldos, honorarios, compensaciones,
+          bonos y otras Prestaciones) (cantidades netas después de impuestos)
         </h3>
         <div class="grid-2-col">
           <mat-form-field
@@ -63,7 +63,7 @@
       <mat-divider></mat-divider>
 
       <div class="bloque">
-        <h3>II. Otros ingresos mensuales del declarante (suma del II.1 al II.4)</h3>
+        <h3>II. Otros ingresos del declarante (suma del II.1 al II.4)</h3>
         <p class="total">{{ otrosIngresosDeclarante | currency }}</p>
       </div>
 
@@ -249,14 +249,14 @@
       <mat-divider></mat-divider>
 
       <div class="bloque">
-        <h3>A. Ingreso mensual neto del declarante (suma del numeral I y II).</h3>
+        <h3>A. Ingreso neto del declarante (suma del numeral I y II).</h3>
         <p class="total">{{ ingresoNetoDeclarante | currency }}</p>
       </div>
 
       <mat-divider></mat-divider>
 
       <div class="bloque" formGroupName="ingresoMensualNetoParejaDependiente">
-        <h3>B. Ingreso mensual neto de la pareja y/o dependientes económicos (después de impuestos)</h3>
+        <h3>B. Ingreso neto de la pareja y/o dependientes económicos (después de impuestos)</h3>
         <div class="grid-2-col">
           <mat-form-field
             matTooltip="{{ tooltipData.ingresoNetoParejaDependientes }}"
@@ -274,8 +274,8 @@
 
       <div class="bloque">
         <h3>
-          C.-Total de ingresos mensuales netos percibidos por el declarante, pareja y/o dependientes económicos (suma de
-          Apartados A y B)
+          C.-Total de ingresos netos percibidos por el declarante, pareja y/o dependientes económicos (suma de Apartados
+          A y B)
         </h3>
         <p class="total">{{ ingresosTotales | currency }}</p>
       </div>

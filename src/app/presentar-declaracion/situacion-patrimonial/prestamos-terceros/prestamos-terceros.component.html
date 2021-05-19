@@ -6,15 +6,39 @@
     <mat-divider></mat-divider>
 
     <mat-toolbar class="background-white">
-      <label class="step-title"> 15. Préstamos o comodato por terceros (situación actual)</label>
+      <label class="step-title">
+        15. Préstamos o comodato por terceros
+        <span *ngIf="tipoDeclaracion === 'inicial'"> (situación actual)</span>
+        <span *ngIf="tipoDeclaracion === 'modificacion'">
+          (entre el 1 de enero y 31 de diciembre del año inmediato anterior)</span
+        >
+        <span *ngIf="tipoDeclaracion === 'conclusion'"> (del año en curso a la fecha de conclusión del empleo)</span>
+      </label>
     </mat-toolbar>
 
     <mat-divider></mat-divider>
 
     <p>
-      Todos los campos son obligatorios. Para la declración de inicio reportar la situación de préstamo o comodato por
+      Todos los campos * son obligatorios. Para la declración de inicio reportar la situación de préstamo o comodato por
       terceros a la fecha de ingreso al empleo, cargo o comisión y los campos resaltados
       <span class="no-public-inline"></span> no serán públicos.
+
+      <br />
+      <span *ngIf="tipoDeclaracion === 'inicial'">
+        Para la declaración de inicio reportar la situación de préstamo o comodato por terceros a la fecha de ingreso al
+        empleo, cargo o comisión.
+      </span>
+      <span *ngIf="tipoDeclaracion === 'modificacion'">
+        Para la declaración de modificación reportar la situación de préstamo o comodato por terceros del año inmediato
+        anterior.
+      </span>
+      <span *ngIf="tipoDeclaracion === 'conclusion'">
+        Para la declaración de conclusión reportar la situación de préstamo o comodato por terceros a la fecha de
+        conclusión del empleo, cargo o comisión.
+      </span>
+      <br />
+      En este apartado se deberá indicar si existe algún bien (inmueble, vehículo) prestado por un tercero y que el
+      Declarante use.
     </p>
 
     <!-- Botones iniciales -->

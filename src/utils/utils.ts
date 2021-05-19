@@ -12,7 +12,7 @@ export const findOption = (list: Catalogo[], clave: string): Catalogo | null => 
   return element || null;
 };
 
-export const ifExistEnableFields = function (value: any, form: any, formRoute: string) {
+export const ifExistsEnableFields = (value: any, form: any, formRoute: string): void => {
   if (value) {
     form.get(formRoute).enable();
   } else {

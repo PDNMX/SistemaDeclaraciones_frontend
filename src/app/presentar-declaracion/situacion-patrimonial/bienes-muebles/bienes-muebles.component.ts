@@ -82,12 +82,12 @@ export class BienesMueblesComponent implements OnInit {
       ninguno: [false],
       bienMueble: this.formBuilder.group({
         titular: [[], Validators.required],
-        tipoBien: [{ clave: '', valor: '' }, Validators.required],
+        tipoBien: [null, [Validators.required]],
         transmisor: this.formBuilder.group({
-          tipoPersona: ['', [Validators.required]],
-          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+          tipoPersona: [null, [Validators.required]],
+          nombreRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
           rfc: [
-            '',
+            null,
             [
               Validators.required,
               Validators.pattern(
@@ -95,32 +95,34 @@ export class BienesMueblesComponent implements OnInit {
               ),
             ],
           ],
-          relacion: ['', Validators.required],
+          relacion: [null, [Validators.required]],
         }),
         tercero: this.formBuilder.group({
-          tipoPersona: ['', [Validators.required]],
-          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+          tipoPersona: [null],
+          nombreRazonSocial: [null, [Validators.pattern(/^\S.*$/)]],
           rfc: [
-            '',
+            null,
             [
-              Validators.required,
               Validators.pattern(
                 /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
               ),
             ],
           ],
         }),
-        descripcionGeneralBien: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-        formaAdquisicion: [{ clave: '', valor: '' }, Validators.required],
-        formaPago: ['', [Validators.required]],
+        descripcionGeneralBien: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+        formaAdquisicion: [null, [Validators.required]],
+        formaPago: [null, [Validators.required]],
         valorAdquisicion: this.formBuilder.group({
           valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
           moneda: ['MXN', [Validators.required]],
         }),
-        fechaAdquisicion: ['', [Validators.required]],
-        motivoBaja: { disabled: true, value: '' },
+        fechaAdquisicion: [null, [Validators.required]],
+        motivoBaja: null,
       }),
-      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      aclaracionesObservaciones: [
+        { disabled: true, value: null },
+        [Validators.required, Validators.pattern(/^\S.*\S$/)],
+      ],
     });
   }
 

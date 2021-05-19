@@ -170,11 +170,7 @@
         </div>
 
         <div class="grid-3-col grid-margin" formGroupName="otorgante">
-          <mat-radio-group
-            matTooltip="{{ tooltipData.otorgante }}"
-            class="checkbox checkbox-height"
-            formControlName="tipoPersona"
-          >
+          <mat-radio-group matTooltip="{{ tooltipData.otorgante }}" class="checkbox" formControlName="tipoPersona">
             <label class="question">Otorgante</label>
             <mat-radio-button value="FISICA"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
             <mat-radio-button value="MORAL">Persona Moral</mat-radio-button>

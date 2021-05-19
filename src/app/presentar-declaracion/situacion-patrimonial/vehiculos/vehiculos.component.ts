@@ -24,7 +24,7 @@ import { tooltipData } from '@static/tooltips/situacion-patrimonial/vehiculos';
 
 import { DeclaracionOutput, Vehiculo, Vehiculos } from '@models/declaracion';
 
-import { findOption, ifExistEnableFields } from '@utils/utils';
+import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -105,13 +105,13 @@ export class VehiculosComponent implements OnInit {
     this.vehiculosForm = this.formBuilder.group({
       ninguno: [false],
       vehiculo: this.formBuilder.group({
-        tipoVehiculo: ['', Validators.required],
-        titular: ['', Validators.required],
+        tipoVehiculo: [null, [Validators.required]],
+        titular: [null, [Validators.required]],
         transmisor: this.formBuilder.group({
-          tipoPersona: ['', [Validators.required]],
-          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+          tipoPersona: [null, [Validators.required]],
+          nombreRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
           rfc: [
-            '',
+            null,
             [
               Validators.required,
               Validators.pattern(
@@ -119,19 +119,18 @@ export class VehiculosComponent implements OnInit {
               ),
             ],
           ],
-          relacion: ['', Validators.required],
+          relacion: [null, [Validators.required]],
         }),
-        marca: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        modelo: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        anio: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-        numeroSerieRegistro: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        marca: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        modelo: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        anio: [null, [Validators.required, Validators.pattern(/^\d{4}$/)]],
+        numeroSerieRegistro: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
         tercero: this.formBuilder.group({
-          tipoPersona: ['', [Validators.required]],
-          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+          tipoPersona: [null],
+          nombreRazonSocial: [null, [Validators.pattern(/^\S.*\S$/)]],
           rfc: [
-            '',
+            null,
             [
-              Validators.required,
               Validators.pattern(
                 /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
               ),
@@ -139,16 +138,16 @@ export class VehiculosComponent implements OnInit {
           ],
         }),
         lugarRegistro: this.formBuilder.group({
-          pais: ['', [Validators.required]],
-          entidadFederativa: ['', Validators.required],
+          pais: [null, [Validators.required]],
+          entidadFederativa: [null, [Validators.required]],
         }),
-        formaAdquisicion: ['', Validators.required],
-        formaPago: ['', [Validators.required]],
+        formaAdquisicion: [null, [Validators.required]],
+        formaPago: [null, [Validators.required]],
         valorAdquisicion: this.formBuilder.group({
           valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
           moneda: ['MXN', [Validators.required]],
         }),
-        fechaAdquisicion: ['', [Validators.required]],
+        fechaAdquisicion: [null, [Validators.required]],
       }),
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
@@ -167,7 +166,7 @@ export class VehiculosComponent implements OnInit {
     this.vehiculosForm.get(`vehiculo.tercero`).patchValue(vehiculo.tercero[0]);
     this.vehiculosForm.get(`vehiculo.transmisor`).patchValue(vehiculo.transmisor[0]);
 
-    ifExistEnableFields(
+    ifExistsEnableFields(
       vehiculo.lugarRegistro.entidadFederativa,
       this.vehiculosForm,
       'vehiculo.lugarRegistro.entidadFederativa'
@@ -175,7 +174,7 @@ export class VehiculosComponent implements OnInit {
     if (vehiculo.lugarRegistro.entidadFederativa) {
       this.tipoDomicilio = 'MEXICO';
     }
-    ifExistEnableFields(vehiculo.lugarRegistro.pais, this.vehiculosForm, 'vehiculo.lugarRegistro.pais');
+    ifExistsEnableFields(vehiculo.lugarRegistro.pais, this.vehiculosForm, 'vehiculo.lugarRegistro.pais');
     if (vehiculo.lugarRegistro.pais) {
       this.tipoDomicilio = 'EXTRANJERO';
     }

@@ -24,7 +24,7 @@ import { tooltipData } from '@static/tooltips/situacion-patrimonial/bien-inmuebl
 
 import { BienInmueble, BienesInmuebles, Catalogo, DeclaracionOutput } from '@models/declaracion';
 
-import { findOption, ifExistEnableFields } from '@utils/utils';
+import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -89,8 +89,8 @@ export class BienesInmueblesComponent implements OnInit {
     this.bienesInmueblesForm = this.formBuilder.group({
       ninguno: [false],
       bienInmueble: this.formBuilder.group({
-        tipoInmueble: [{ clave: '', valor: '' }, Validators.required],
-        titular: [[], Validators.required],
+        tipoInmueble: [null, [Validators.required]],
+        titular: [[], [Validators.required]],
         porcentajePropiedad: [
           0,
           [Validators.required, Validators.pattern(/^\d+\.?\d{0,4}$/), Validators.min(0), Validators.max(100)],
@@ -104,12 +104,11 @@ export class BienesInmueblesComponent implements OnInit {
           unidad: ['m'],
         }),
         tercero: this.formBuilder.group({
-          tipoPersona: ['', Validators.required],
-          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          tipoPersona: [null],
+          nombreRazonSocial: [null, [Validators.pattern(/^\S.*\S?$/)]],
           rfc: [
-            '',
+            null,
             [
-              Validators.required,
               Validators.pattern(
                 /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
               ),
@@ -117,10 +116,10 @@ export class BienesInmueblesComponent implements OnInit {
           ],
         }),
         transmisor: this.formBuilder.group({
-          tipoPersona: ['', Validators.required],
-          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          tipoPersona: [null, [Validators.required]],
+          nombreRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
           rfc: [
-            '',
+            null,
             [
               Validators.required,
               Validators.pattern(
@@ -128,34 +127,34 @@ export class BienesInmueblesComponent implements OnInit {
               ),
             ],
           ],
-          relacion: [{ clave: '', valor: '' }, Validators.required],
+          relacion: [null, [Validators.required]],
         }),
-        formaAdquisicion: [{ clave: '', valor: '' }, Validators.required],
-        formaPago: ['', [Validators.required]],
+        formaAdquisicion: [null, [Validators.required]],
+        formaPago: [null, [Validators.required]],
         valorAdquisicion: this.formBuilder.group({
           valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
           moneda: ['MXN', [Validators.required]],
         }),
-        fechaAdquisicion: ['', [Validators.required]],
-        datoIdentificacion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-        valorConformeA: ['', [Validators.required]],
+        fechaAdquisicion: [null, [Validators.required]],
+        datoIdentificacion: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+        valorConformeA: [null, [Validators.required]],
         domicilioMexico: this.formBuilder.group({
-          calle: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-          numeroExterior: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-          numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
-          coloniaLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-          municipioAlcaldia: [{ disabled: true, value: { clave: '', valor: '' } }, Validators.required],
-          entidadFederativa: [{ clave: '', valor: '' }, Validators.required],
-          codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/i)]],
+          calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+          numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+          numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
+          coloniaLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+          municipioAlcaldia: [{ disabled: true, value: null }, [Validators.required]],
+          entidadFederativa: [null, [Validators.required]],
+          codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
         }),
         domicilioExtranjero: this.formBuilder.group({
-          calle: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-          numeroExterior: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-          numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
-          ciudadLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-          estadoProvincia: ['', Validators.required],
-          pais: [{ clave: '', valor: '' }, Validators.required],
-          codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/i)]],
+          calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+          numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+          numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
+          ciudadLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+          estadoProvincia: [null, [Validators.required]],
+          pais: [null, [Validators.required]],
+          codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
         }),
       }),
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
@@ -191,11 +190,15 @@ export class BienesInmueblesComponent implements OnInit {
     this.bienesInmueblesForm.get(`bienInmueble.tercero`).patchValue(bienInmueble.tercero[0]);
     this.bienesInmueblesForm.get(`bienInmueble.transmisor`).patchValue(bienInmueble.transmisor[0]);
 
-    ifExistEnableFields(bienInmueble.domicilioMexico, this.bienesInmueblesForm, 'bienInmueble.domicilioMexico');
+    ifExistsEnableFields(bienInmueble.domicilioMexico, this.bienesInmueblesForm, 'bienInmueble.domicilioMexico');
     if (bienInmueble.domicilioMexico) {
       this.tipoDomicilio = 'MEXICO';
     }
-    ifExistEnableFields(bienInmueble.domicilioExtranjero, this.bienesInmueblesForm, 'bienInmueble.domicilioExtranjero');
+    ifExistsEnableFields(
+      bienInmueble.domicilioExtranjero,
+      this.bienesInmueblesForm,
+      'bienInmueble.domicilioExtranjero'
+    );
     if (bienInmueble.domicilioExtranjero) {
       this.tipoDomicilio = 'EXTRANJERO';
     }

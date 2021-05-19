@@ -19,7 +19,7 @@ import { tooltipData } from '@static/tooltips/intereses/toma-descisiones';
 
 import { DeclaracionOutput, ParticipacionTD, ParticipacionTomaDecisiones } from '@models/declaracion';
 
-import { findOption, ifExistEnableFields } from '@utils/utils';
+import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -145,7 +145,7 @@ export class TomaDecisionesComponent implements OnInit {
         this.participacionTomaDecisionesForm.get(`participacion.${field}`).patchValue(participacion[field])
       );
 
-    ifExistEnableFields(
+    ifExistsEnableFields(
       participacion.ubicacion.entidadFederativa,
       this.participacionTomaDecisionesForm,
       'participacion.ubicacion.entidadFederativa'
@@ -155,7 +155,7 @@ export class TomaDecisionesComponent implements OnInit {
       this.tipoDomicilio = 'MEXICO';
     }
 
-    ifExistEnableFields(
+    ifExistsEnableFields(
       participacion.ubicacion.pais,
       this.participacionTomaDecisionesForm,
       'participacion.ubicacion.pais'
