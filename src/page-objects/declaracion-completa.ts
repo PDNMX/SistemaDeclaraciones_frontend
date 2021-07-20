@@ -1,0 +1,104 @@
+import { Selector, t } from 'testcafe';
+import adeudos from './situacion-patrimonial/adeudos.page';
+import apoyos from './intereses/apoyos.page';
+import beneficio from './intereses/beneficios-privados.page';
+import bienesInmuebles from './situacion-patrimonial/bienes-inmuebles.page';
+import bienesMuebles from './situacion-patrimonial/bienes-muebles.page';
+import clientesPrincipales from './intereses/clientes-principales.page';
+import datosCurriculares from './situacion-patrimonial/datos-curriculares.page';
+import datosDependiente from './situacion-patrimonial/datos-dependiente.page';
+import datosEmpleo from './situacion-patrimonial/datos-empleo.page';
+import datosGenerales from './situacion-patrimonial/datos-generales.page';
+import datosPareja from './situacion-patrimonial/datos-pareja.page';
+import domicilio from './situacion-patrimonial/domicilio-declarante.page';
+import experienciaLaboral from './situacion-patrimonial/experiencia-laboral.page';
+import fideicomiso from './intereses/fideicomisos.page';
+import ingresosNetos from './situacion-patrimonial/ingresos-netos.page';
+import inversiones from './situacion-patrimonial/inversiones.page';
+import loginPage from './login.page';
+import participacionEmpresa from './intereses/participacion-empresa.page';
+import prestamos from './situacion-patrimonial/prestamos-terceros.page';
+import representaciones from './intereses/representaciones.page';
+import servidorPublico from './situacion-patrimonial/servidor-publico.page';
+import tomaDecisiones from './intereses/toma-decisiones.page';
+import vehiculos from './situacion-patrimonial/vehiculos.page';
+class Declaracion {
+  constructor() {}
+  async clickButton(buttonText: string) {
+    await t.click(Selector('button > span').withText(buttonText));
+  }
+  async fill() {
+    await t.setTestSpeed(0.95);
+    await datosGenerales.fill();
+    await t.wait(5000);
+    await this.clickButton('CONTINUAR 2 DE 15');
+    await domicilio.fill();
+    await t.wait(5000);
+    await this.clickButton('CONTINUAR 3 DE 15');
+    await datosCurriculares.newSchool();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 4 DE 15');
+    await datosEmpleo.fill();
+    await t.wait(5000);
+    await this.clickButton('CONTINUAR 5 DE 15');
+    await experienciaLaboral.sectorPublico();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 6 DE 15');
+    await datosPareja.fill();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 7 DE 15');
+    await datosDependiente.fill();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 8 DE 15');
+    await ingresosNetos.fill();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 9 DE 15');
+    await servidorPublico.fill();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 10 DE 15');
+    await bienesInmuebles.newProperty();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 11 DE 15');
+    await vehiculos.newVehicle();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 12 DE 15');
+    await bienesMuebles.newProperty();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 13 DE 15');
+    await inversiones.newProperty();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 14 DE 15');
+    await adeudos.newLiability();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 15 DE 15');
+    await prestamos.newDebt();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 1 DE 7');
+    await participacionEmpresa.newParticipation();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 2 DE 7');
+    await tomaDecisiones.newParticipation();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 3 DE 7');
+    await apoyos.newSupport();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 4 DE 7');
+    await representaciones.newRepresentation();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 5 DE 7');
+    await clientesPrincipales.newCustomer();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 6 DE 7');
+    await beneficio.newProfit();
+    await this.clickButton('Aceptar');
+    await this.clickButton('CONTINUAR 7 DE 7');
+    await fideicomiso.newTrust();
+    await this.clickButton('Aceptar');
+    await t.wait(3000);
+  }
+  async login() {
+    await loginPage.submitForm('prueba7@yopmail.com', '0123456789');
+  }
+}
+const declaracion = new Declaracion();
+export default declaracion;
