@@ -37,7 +37,7 @@ export class AcuseService {
     }
   }
 
-  downloadAcuse(id: string) {
+  downloadAcuse(id: string, publicVersion: boolean = false) {
     const token = this.credentialsService.token;
 
     const headers = new HttpHeaders({
@@ -46,7 +46,10 @@ export class AcuseService {
     });
 
     return new Promise((resolve, reject) => {
-      this.http.get(`${environment.serverUrl}/declaracion-preview/${id}`, { headers, responseType: 'blob' }).subscribe(
+      const url = publicVersion
+        ? `${environment.serverUrl}/declaracion-preview/${id}?publico=true`
+        : `${environment.serverUrl}/declaracion-preview/${id}`;
+      this.http.get(url, { headers, responseType: 'blob' }).subscribe(
         (data) => {
           resolve(data ? data : null);
         },

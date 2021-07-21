@@ -22,6 +22,7 @@ export interface SignupContext {
   curp: string;
   rfc: string;
   contrasena: string;
+  institucion?: any;
 }
 
 /**
@@ -84,6 +85,7 @@ export class AuthenticationService {
       segundoApellido: context.segundoApellido || '',
       curp: context.curp,
       rfc: context.rfc,
+      institucion: context.institucion ?? null,
     };
 
     return from(

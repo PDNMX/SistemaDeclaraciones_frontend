@@ -18,6 +18,10 @@ export const login = gql`
         curp
         rfc
         roles
+        institucion {
+          clave
+          valor
+        }
         createdAt
       }
       refreshJwtToken
@@ -37,6 +41,10 @@ export const userProfileQuery = gql`
       curp
       rfc
       roles
+      institucion {
+        clave
+        valor
+      }
       createdAt
       updatedAt
     }
@@ -93,6 +101,10 @@ export const users = gql`
         curp
         rfc
         roles
+        institucion {
+          clave
+          valor
+        }
         createdAt
       }
     }

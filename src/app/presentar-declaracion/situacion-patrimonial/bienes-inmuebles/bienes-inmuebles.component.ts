@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { UntilDestroy, untilDestroyed } from '@core';
+
 import TipoInmueble from '@static/catalogos/tipoInmueble.json';
 import FormaAdquisicion from '@static/catalogos/formaAdquisicion.json';
 import TitularBien from '@static/catalogos/titularBien.json';
@@ -28,6 +30,7 @@ import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
+@UntilDestroy()
 @Component({
   selector: 'app-bienes-inmuebles',
   templateUrl: './bienes-inmuebles.component.html',
@@ -164,7 +167,7 @@ export class BienesInmueblesComponent implements OnInit {
 
     const domicilioMexico = this.bienesInmueblesForm.get('bienInmueble').get('domicilioMexico');
     const estado = domicilioMexico.get('entidadFederativa');
-    estado.valueChanges.subscribe((value) => {
+    estado.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
       const municipio = domicilioMexico.get('municipioAlcaldia');
 
       if (value) {

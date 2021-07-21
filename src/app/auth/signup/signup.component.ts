@@ -9,6 +9,8 @@ import { AuthenticationService } from '../authentication.service';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import InstitucionesCatalogo from '@static/custom/instituciones.json';
+
 const log = new Logger('Signup');
 
 @UntilDestroy()
@@ -23,6 +25,8 @@ export class SignupComponent implements OnInit, OnDestroy {
   signupForm!: FormGroup;
   isLoading = false;
 
+  institucionesCatalogo = InstitucionesCatalogo;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -31,6 +35,9 @@ export class SignupComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar
   ) {
     this.createForm();
+    if (this.institucionesCatalogo?.length) {
+      this.signupForm.get('institucion').enable();
+    }
   }
 
   ngOnInit() {}
@@ -39,7 +46,16 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   signup() {
     this.isLoading = true;
-    const signup$ = this.authenticationService.signup(this.signupForm.value);
+
+    const signupForm = this.signupForm.value;
+    if (this.institucionesCatalogo?.length) {
+      signupForm.institucion = {
+        clave: signupForm.institucion.clave,
+        valor: signupForm.institucion.ente_publico,
+      };
+    }
+
+    const signup$ = this.authenticationService.signup(signupForm);
     signup$
       .pipe(
         finalize(() => {
@@ -106,6 +122,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       ],
       contrasena: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
       confirmarContrasena: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
+      institucion: [{ disabled: true, value: null }, [Validators.required]],
     });
   }
 }

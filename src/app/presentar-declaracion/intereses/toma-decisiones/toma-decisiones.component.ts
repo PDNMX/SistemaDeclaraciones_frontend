@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { UntilDestroy, untilDestroyed } from '@core';
+
 import Relacion from '@static/catalogos/tipoRelacion.json';
 import Institucion from '@static/catalogos/tipoInstitucion.json';
 import Extranjero from '@static/catalogos/extranjero.json';
@@ -23,6 +25,7 @@ import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
+@UntilDestroy()
 @Component({
   selector: 'app-toma-decisiones',
   templateUrl: './toma-decisiones.component.html',
@@ -127,7 +130,8 @@ export class TomaDecisionesComponent implements OnInit {
     this.participacionTomaDecisionesForm
       .get('participacion')
       .get('recibeRemuneracion')
-      .valueChanges.subscribe((x) => {
+      .valueChanges.pipe(untilDestroyed(this))
+      .subscribe((x) => {
         x ? montoMensual.enable() : montoMensual.disable();
       });
   }

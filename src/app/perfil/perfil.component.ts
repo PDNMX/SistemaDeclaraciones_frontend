@@ -12,6 +12,8 @@ import { changePassword, updateUserProfile, userProfileQuery } from '@api/user';
 
 import { AuthenticationService } from '../auth/authentication.service';
 
+import InstitucionesCatalogo from '@static/custom/instituciones.json';
+
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.component.html',
@@ -26,6 +28,8 @@ export class PerfilComponent implements OnInit {
 
   user: any = null;
 
+  institucionesCatalogo = InstitucionesCatalogo;
+
   constructor(
     private apollo: Apollo,
     private authenticationService: AuthenticationService,
@@ -36,6 +40,9 @@ export class PerfilComponent implements OnInit {
   ) {
     this.createForms();
     this.getUserInfo();
+    if (this.institucionesCatalogo?.length) {
+      this.profileForm.get('institucion').enable();
+    }
   }
 
   confirmChangePassword() {
@@ -95,6 +102,7 @@ export class PerfilComponent implements OnInit {
           ),
         ],
       ],
+      institucion: [{ disabled: true, value: null }, [Validators.required]],
     });
 
     this.changePasswordForm = this.formBuilder.group({
@@ -154,6 +162,14 @@ export class PerfilComponent implements OnInit {
 
   async saveInfoProfile() {
     const profile = this.profileForm.value;
+
+    if (this.institucionesCatalogo?.length) {
+      profile.institucion = {
+        clave: profile.institucion.clave,
+        valor: profile.institucion.ente_publico,
+      };
+    }
+
     try {
       this.isLoading = true;
 
