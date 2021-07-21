@@ -144,6 +144,19 @@
               <span translate>RFC requerido</span>
             </mat-error>
           </mat-form-field>
+
+          <mat-form-field *ngIf="institucionesCatalogo.length" [hideRequiredMarker]="true" appearance="fill" fxFlex>
+            <mat-label>Institución</mat-label>
+            <mat-icon matPrefix>account_balance</mat-icon>
+            <mat-select formControlName="institucion" required>
+              <mat-option *ngFor="let institucion of institucionesCatalogo" [value]="institucion">
+                {{ institucion.ente_publico }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="signupForm.controls.institucion.invalid && signupForm.controls.institucion.touched">
+              <span translate>Institución requerida</span>
+            </mat-error>
+          </mat-form-field>
         </div>
         <button
           mat-raised-button

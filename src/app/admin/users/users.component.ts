@@ -7,6 +7,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { Apollo } from 'apollo-angular';
 import { search, users } from '@api/user';
+import { UntilDestroy, untilDestroyed } from '@core';
 import { User, UsersPage } from '@models/user';
 import { ROLES } from '@utils/constants';
 
@@ -21,6 +22,7 @@ interface Response {
   };
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -174,12 +176,13 @@ export class UsersComponent implements AfterViewInit {
           return observableOf([]);
         })
       )
+      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.dataSearch = data));
   }
 
   setUserTable() {
     // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.subscribe(() => (this.usersPaginator.pageIndex = 0));
+    this.sort.sortChange.pipe(untilDestroyed(this)).subscribe(() => (this.usersPaginator.pageIndex = 0));
 
     merge(this.sort.sortChange, this.usersPaginator.page)
       .pipe(
@@ -210,6 +213,7 @@ export class UsersComponent implements AfterViewInit {
           return observableOf([]);
         })
       )
+      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.data = data));
   }
 

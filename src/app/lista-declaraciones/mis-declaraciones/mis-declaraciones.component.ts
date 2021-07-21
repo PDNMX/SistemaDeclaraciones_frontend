@@ -112,10 +112,11 @@ export class MisDeclaracionesComponent implements OnInit {
     });
   }
 
-  previewDeclaration(id: string) {
+  previewDeclaration(id: string, publicVersion: boolean = false) {
     const dialogRef = this.dialog.open(PreviewDeclarationComponent, {
       data: {
         id,
+        publicVersion,
       },
     });
 
