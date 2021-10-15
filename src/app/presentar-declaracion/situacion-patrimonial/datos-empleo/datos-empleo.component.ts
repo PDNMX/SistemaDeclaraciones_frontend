@@ -17,6 +17,7 @@ import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import Paises from '@static/catalogos/paises.json';
+import entePublico from '@static/catalogos/entePublico.json';
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-empleo';
 import { findOption } from '@utils/utils';
 import { UntilDestroy, untilDestroyed } from '@app/@core';
@@ -32,6 +33,7 @@ export class DatosEmpleoComponent implements OnInit {
   datosEmpleoCargoComisionForm: FormGroup;
   estado: Catalogo = null;
   isLoading = false;
+  entePublicoCatalogo = entePublico;
 
   @ViewChild('tipoDomicilioInput') tipoDomicilioInput: MatSelect;
 
@@ -49,6 +51,14 @@ export class DatosEmpleoComponent implements OnInit {
 
   tooltipData = tooltipData;
   errorMatcher = new DeclarationErrorStateMatcher();
+
+
+  minDate=new Date(2000,1,1);
+  anio: number = new Date().getFullYear();
+  mes: number = new Date().getMonth()+1;
+  dia: number = new Date().getDate();
+  maxDate=new Date(this.anio,this.mes,this.dia);
+  
 
   constructor(
     private apollo: Apollo,

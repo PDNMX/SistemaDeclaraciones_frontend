@@ -172,14 +172,20 @@
           <mat-form-field matTooltip="{{ tooltipData.nombreEntePublico }}" appearance="fill">
             <mat-label>Nombre del Ente Público</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
-            <input
+            <mat-select formControlName="nombreEntePublico" required>
+              <mat-option *ngFor="let entePublico of entePublicoCatalogo" [value]="entePublico.valor">
+                {{ entePublico.valor }}
+              </mat-option>
+            </mat-select>
+           <!-- <input
               [errorStateMatcher]="errorMatcher"
               matInput
               type="text"
               formControlName="nombreEntePublico"
               required
-            />
+            />-->
           </mat-form-field>
+          
           <mat-form-field matTooltip="{{ tooltipData.areaAdscripcion }}" appearance="fill">
             <mat-label>Área de Adscripción</mat-label>
             <mat-icon matPrefix>wb_iridescent</mat-icon>
@@ -234,6 +240,8 @@
               [errorStateMatcher]="errorMatcher"
               matInput
               [matDatepicker]="picker"
+              [min]="minDate"
+              [max]="maxDate"
               formControlName="fechaTomaPosesion"
               required
             />
@@ -257,6 +265,7 @@
                 #input_telefono_oficina
                 formControlName="telefono"
                 maxlength="10"
+                required
               />
               <mat-hint align="end">{{ input_telefono_oficina.value?.length || 0 }}/10</mat-hint>
             </mat-form-field>
@@ -273,7 +282,8 @@
                 matInput
                 type="text"
                 formControlName="extension"
-                maxlength="10"
+                maxlength="5"
+                required
               />
             </mat-form-field>
           </div>

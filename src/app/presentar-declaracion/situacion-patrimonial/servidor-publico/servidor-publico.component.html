@@ -53,6 +53,8 @@
                 [errorStateMatcher]="errorMatcher"
                 matInput
                 [matDatepicker]="pickerInicio"
+                [min]="minDate"
+                [max]="maxDate"
                 formControlName="fechaIngreso"
               />
               <mat-hint>dd/mm/yyyy</mat-hint>
@@ -65,6 +67,8 @@
                 [errorStateMatcher]="errorMatcher"
                 matInput
                 [matDatepicker]="pickerFin"
+                [min]="minDate"
+                [max]="maxDate"
                 formControlName="fechaConclusion"
               />
               <mat-hint>dd/mm/yyyy</mat-hint>

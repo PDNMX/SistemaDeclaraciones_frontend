@@ -137,10 +137,13 @@
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.fechaObtencionDocumento }}" appearance="fill">
             <mat-label>Fecha de obtención de documento</mat-label>
-            <input
+	    <!--<input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="fechaObtencion" />-->
+            <input 
               [errorStateMatcher]="errorMatcher"
               matInput
               [matDatepicker]="picker"
+              [min]="minDate"
+              [max]="maxDate"
               formControlName="fechaObtencion"
               required
             />

@@ -61,6 +61,14 @@ export class BienesInmueblesComponent implements OnInit {
   tooltipData = tooltipData;
   errorMatcher = new DeclarationErrorStateMatcher();
 
+
+  minDate=new Date(1950,1,1);
+  anio: number = new Date().getFullYear();
+  mes: number = new Date().getMonth();
+  dia: number = new Date().getDate();
+  maxDate=new Date(this.anio, this.mes, this.dia);
+
+
   constructor(
     private apollo: Apollo,
     private dialog: MatDialog,

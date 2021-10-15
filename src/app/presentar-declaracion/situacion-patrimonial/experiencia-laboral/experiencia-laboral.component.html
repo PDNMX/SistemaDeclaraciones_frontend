@@ -314,6 +314,7 @@
               type="text"
               formControlName="rfc"
               maxlength="12"
+              required
             />
             <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/12</mat-hint>
           </mat-form-field>
@@ -354,6 +355,8 @@
               matInput
               formControlName="fechaIngreso"
               [matDatepicker]="pickerOtroIngreso"
+              [min]="minDate"
+              [max]="maxDate"
               required
             />
             <mat-hint>dd/mm/yyyy</mat-hint>
@@ -367,6 +370,8 @@
               matInput
               formControlName="fechaEgreso"
               [matDatepicker]="pickerOtroEgreso"
+              [min]="minDate"
+              [max]="maxDate"
               required
             />
             <mat-hint>dd/mm/yyyy</mat-hint>

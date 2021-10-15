@@ -474,6 +474,8 @@
                 matInput
                 formControlName="fechaAdquisicion"
                 [matDatepicker]="pickerAdquisicion"
+                [min]="minDate"
+                [max]="maxDate"
                 required
               />
               <mat-hint>dd/mm/yyyy</mat-hint>

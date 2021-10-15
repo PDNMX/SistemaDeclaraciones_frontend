@@ -311,6 +311,8 @@
                 [errorStateMatcher]="errorMatcher"
                 matInput
                 [matDatepicker]="pickerNacimiento"
+                [min]="minDate"
+                [max]="maxDate"
                 formControlName="fechaNacimiento"
                 required
               />
@@ -353,6 +355,7 @@
                 minlength="10"
                 maxlength="13"
                 formControlName="rfc"
+                required
               />
               <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/10-13</mat-hint>
             </mat-form-field>
@@ -376,6 +379,7 @@
                 type="text"
                 maxlength="18"
                 formControlName="curp"
+                required
               />
               <mat-hint align="end">{{ input_curp.value?.length || 0 }}/18</mat-hint>
             </mat-form-field>
@@ -714,6 +718,8 @@
                 [errorStateMatcher]="errorMatcher"
                 matInput
                 [matDatepicker]="pickerPublicIngreso"
+                [min]="minDate"
+                [max]="maxDate"
                 formControlName="fechaIngreso"
                 required
               />
@@ -816,6 +822,8 @@
                 [errorStateMatcher]="errorMatcher"
                 matInput
                 [matDatepicker]="pickerOtroIngreso"
+                [min]="minDate"
+                [max]="maxDate"
                 formControlName="fechaIngreso"
                 required
               />
