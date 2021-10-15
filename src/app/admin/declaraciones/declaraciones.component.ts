@@ -7,6 +7,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { Apollo } from 'apollo-angular';
 
 import { declaracionesMetadata, stats } from '@api/declaracion';
+import { UntilDestroy, untilDestroyed } from '@core';
 import { DeclaracionMetadata, DeclaracionMetadataPage } from '@models/declaracion';
 
 import { CredentialsService } from '@app/auth/credentials.service';
@@ -14,6 +15,7 @@ import { CredentialsService } from '@app/auth/credentials.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PreviewDeclarationComponent } from '@shared/preview-declaration/preview-declaration.component';
 
+@UntilDestroy()
 @Component({
   selector: 'app-declaraciones',
   templateUrl: './declaraciones.component.html',
@@ -89,17 +91,15 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
     await this.getCount();
   }
 
-  previewDeclaration(id: string) {
+  previewDeclaration(id: string, publicVersion: boolean = false) {
     const dialogRef = this.dialog.open(PreviewDeclarationComponent, {
       data: {
         id,
+        publicVersion,
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-      }
-    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   setInicialTable() {
@@ -133,6 +133,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
           return observableOf([]);
         })
       )
+      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.dataInicial = data));
   }
 
@@ -167,6 +168,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
           return observableOf([]);
         })
       )
+      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.dataModificacion = data));
   }
 
@@ -201,6 +203,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
           return observableOf([]);
         })
       )
+      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.dataConclusion = data));
   }
 
@@ -232,6 +235,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
           return observableOf([]);
         })
       )
+      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.data = data));
   }
 }

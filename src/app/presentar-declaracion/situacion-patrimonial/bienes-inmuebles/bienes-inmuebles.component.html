@@ -516,7 +516,12 @@
             <mat-form-field matTooltip="{{ tooltipData.ubicacionInmueble }}" appearance="fill">
               <mat-label>Ubicación del inmueble</mat-label>
               <mat-icon matPrefix class="no-public">public</mat-icon>
-              <mat-select value="MEXICO" (selectionChange)="tipoDomicilioChanged($event.value)" required>
+              <mat-select
+                value="MEXICO"
+                (selectionChange)="tipoDomicilioChanged($event.value)"
+                required
+                data-test="ubicacion"
+              >
                 <mat-option value="MEXICO"> México </mat-option>
                 <mat-option value="EXTRANJERO"> En el extranjero </mat-option>
               </mat-select>

@@ -10,6 +10,7 @@ export const environment = {
   production: true,
   version: env.npm_package_version,
   serverUrl: 'http://0.0.0.0:3000',
+  pageUrl: 'http://localhost:4200/',
   defaultLanguage: 'es-ES',
   supportedLanguages: ['es-ES'],
 };
