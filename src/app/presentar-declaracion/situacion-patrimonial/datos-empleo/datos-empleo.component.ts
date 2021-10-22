@@ -53,11 +53,11 @@ export class DatosEmpleoComponent implements OnInit {
   errorMatcher = new DeclarationErrorStateMatcher();
 
 
-  minDate=new Date(2000,1,1);
+  minDate = new Date(1980, 1, 1);
   anio: number = new Date().getFullYear();
   mes: number = new Date().getMonth()+1;
   dia: number = new Date().getDate();
-  maxDate=new Date(this.anio,this.mes,this.dia);
+  maxDate = new Date(this.anio, this.mes, this.dia);
   
 
   constructor(

@@ -54,6 +54,14 @@ export class TomaDecisionesComponent implements OnInit {
   tooltipData = tooltipData;
   errorMatcher = new DeclarationErrorStateMatcher();
 
+
+  minDate = new Date(1960, 1, 1);
+  anio: number = new Date().getFullYear();
+  mes: number = new Date().getMonth()+1;
+  dia: number = new Date().getDate();
+  maxDate = new Date(this.anio, this.mes, this.dia);
+
+
   constructor(
     private apollo: Apollo,
     private dialog: MatDialog,

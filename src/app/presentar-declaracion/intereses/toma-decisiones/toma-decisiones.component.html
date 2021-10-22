@@ -211,12 +211,15 @@
             <input
               [errorStateMatcher]="errorMatcher"
               matInput
-              type="text"
-              placeholder="DD/MM/AAAA"
+              [matDatepicker]="pickerInicioParticipacion"
+              [min]="minDate"
+              [max]="maxDate"
               formControlName="fechaInicioParticipacion"
               required
             />
             <mat-hint>dd/mm/yyyy</mat-hint>
+            <mat-datepicker-toggle matPrefix [for]="pickerInicioParticipacion"></mat-datepicker-toggle>
+            <mat-datepicker #pickerInicioParticipacion></mat-datepicker>
           </mat-form-field>
         </div>
 

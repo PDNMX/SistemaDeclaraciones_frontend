@@ -61,7 +61,7 @@ export class ServidorPublicoComponent implements OnInit {
   errorMatcher = new DeclarationErrorStateMatcher();
 
 
-  minDate=new Date(2010,1,1);
+  minDate = new Date(2010, 1, 1);
   anio: number = new Date().getFullYear();
   mes: number = new Date().getMonth()+1;
   dia: number = new Date().getDate();

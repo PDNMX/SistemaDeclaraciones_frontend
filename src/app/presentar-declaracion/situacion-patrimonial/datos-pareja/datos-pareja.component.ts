@@ -64,8 +64,8 @@ export class DatosParejaComponent implements OnInit {
   errorMatcher = new DeclarationErrorStateMatcher();
 
 
-  minDatePareja = new Date(1940,1,1);
-  minDate= new Date(1980,1,1)
+  minDatePareja = new Date(1940, 1, 1);
+  minDate = new Date(1960, 1, 1)
   anio: number = new Date().getFullYear();
   mes: number = new Date().getMonth();
   dia: number = new Date().getDate();
