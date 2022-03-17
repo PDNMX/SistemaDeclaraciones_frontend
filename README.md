@@ -1,4 +1,4 @@
-# declaraciones patrimoniales
+# Sistema de Declaraciones - Frontend
 
 ## ⚠️ Precauciones
 
