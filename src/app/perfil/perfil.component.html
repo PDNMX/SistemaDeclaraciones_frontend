@@ -140,7 +140,6 @@
         <input matInput type="password" value="********" disabled />
       </mat-form-field>
     </div>
-    >
 
     <div class="center">
       <button mat-raised-button color="primary" class="btn-guardar" type="button" (click)="editMode = false">
@@ -167,7 +166,7 @@
     <form class="contenedor" (ngSubmit)="confirmChangePassword()" [formGroup]="changePasswordForm">
       <div class="grid-3-col grid-margin">
         <mat-form-field appearance="fill">
-          <mat-label>Anterior Contraseña</mat-label>
+          <mat-label>Contraseña actual</mat-label>
           <input matInput type="password" formControlName="oldPassword" />
         </mat-form-field>
         <mat-form-field appearance="fill">
