@@ -28,7 +28,7 @@
           </mat-form-field>
 
           <mat-form-field [hideRequiredMarker]="true" appearance="fill">
-            <mat-label>Apellido paterno</mat-label>
+            <mat-label>Primer apellido</mat-label>
             <mat-icon matPrefix>person</mat-icon>
             <input
               type="text"
@@ -39,12 +39,12 @@
               required
             />
             <mat-error *ngIf="signupForm.controls.primerApellido.invalid && signupForm.controls.primerApellido.touched">
-              <span translate>Apellido paterno requerido</span>
+              <span translate>Primer apellido requerido</span>
             </mat-error>
           </mat-form-field>
 
           <mat-form-field [hideRequiredMarker]="true" appearance="fill">
-            <mat-label>Apellido materno</mat-label>
+            <mat-label>Segundo apellido</mat-label>
             <mat-icon matPrefix>person</mat-icon>
             <input
               type="text"
@@ -56,7 +56,7 @@
             <mat-error
               *ngIf="signupForm.controls.segundoApellido.invalid && signupForm.controls.segundoApellido.touched"
             >
-              <span translate>Apellido materno requerido</span>
+              <span translate>Segundo apellido requerido</span>
             </mat-error>
           </mat-form-field>
 
