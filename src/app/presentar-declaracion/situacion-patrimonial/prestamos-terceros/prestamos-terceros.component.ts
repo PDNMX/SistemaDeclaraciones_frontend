@@ -297,6 +297,26 @@ export class PrestamosTercerosComponent implements OnInit {
     }
   }
 
+  formHasChanges() {
+    let isDirty = this.prestamoComodatoForm.dirty;
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/participacion-empresa']);
+      });
+    } else {
+      this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/participacion-empresa']);
+    }
+  }
+
   ngOnInit(): void {}
 
   noLoans() {

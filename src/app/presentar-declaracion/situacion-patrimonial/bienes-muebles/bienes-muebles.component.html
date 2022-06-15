@@ -445,11 +445,7 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button
-        mat-raised-button
-        color="primary"
-        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/inversiones'"
-      >
+      <button mat-raised-button color="primary" (click)="formHasChanges()">
         CONTINUAR 13 DE 15
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

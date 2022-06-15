@@ -207,6 +207,26 @@ export class ClientesPrincipalesComponent implements OnInit {
     }
   }
 
+  formHasChanges() {
+    let isDirty = this.clientesPrincipalesForm.dirty;
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/beneficios-privados']);
+      });
+    } else {
+      this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/beneficios-privados']);
+    }
+  }
+
   ngOnInit(): void {}
 
   noClients() {

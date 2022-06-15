@@ -362,6 +362,26 @@ export class DatosDependienteComponent implements OnInit {
     this.tipoDomicilio = value;
   }
 
+  formHasChanges() {
+    let isDirty = this.datosDependientesEconomicosForm.dirty;
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/ingresos-netos']);
+      });
+    } else {
+      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/ingresos-netos']);
+    }
+  }
+
   ngOnInit(): void {}
 
   noDependent() {

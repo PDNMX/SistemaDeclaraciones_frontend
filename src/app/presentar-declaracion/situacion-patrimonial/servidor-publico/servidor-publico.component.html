@@ -392,12 +392,7 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button
-        *ngIf="!declaracionSimplificada"
-        mat-raised-button
-        color="primary"
-        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/bienes-inmuebles'"
-      >
+      <button *ngIf="!declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
         CONTINUAR 10 DE 15
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

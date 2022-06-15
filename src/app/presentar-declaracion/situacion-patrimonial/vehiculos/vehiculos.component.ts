@@ -201,6 +201,26 @@ export class VehiculosComponent implements OnInit {
     }
   }
 
+  formHasChanges() {
+    let isDirty = this.vehiculosForm.dirty;
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/bienes-muebles']);
+      });
+    } else {
+      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/bienes-muebles']);
+    }
+  }
+
   ngOnInit(): void {}
 
   noVehicle() {

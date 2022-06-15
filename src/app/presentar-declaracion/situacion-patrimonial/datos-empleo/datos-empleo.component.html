@@ -536,7 +536,7 @@
         mat-raised-button
         color="primary"
         type="button"
-        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/experiencia-laboral'"
+        (click)="formHasChanges()"
       >
         CONTINUAR 5 DE 15
         <mat-icon matSofix>arrow_forward</mat-icon>
@@ -547,7 +547,7 @@
         mat-raised-button
         color="primary"
         type="button"
-        [routerLink]="'/' + tipoDeclaracion + '/simplificada/situacion-patrimonial/experiencia-laboral'"
+        (click)="formHasChanges()"
       >
         CONTINUAR 5 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>

@@ -245,6 +245,33 @@ export class ExperienciaLaboralComponent implements OnInit {
     return result;
   }
 
+  formHasChanges() {
+    let url = '/' + this.tipoDeclaracion;
+    if (this.declaracionSimplificada) url += '/simplificada';
+    url += '/situacion-patrimonial';
+    if (this.declaracionSimplificada) url += '/ingresos-netos';
+    else url += '/datos-pareja';
+    let isDirty = this.experienciaLaboralForm.dirty;
+    console.log(isDirty);
+
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate([url]);
+      });
+    } else {
+      this.router.navigate([url]);
+    }
+  }
+
   ngOnInit(): void {}
 
   noExperience() {

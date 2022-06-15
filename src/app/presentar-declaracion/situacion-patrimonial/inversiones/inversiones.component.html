@@ -492,7 +492,7 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/adeudos'">
+      <button mat-raised-button color="primary" (click)="formHasChanges()">
         CONTINUAR 14 DE 15
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

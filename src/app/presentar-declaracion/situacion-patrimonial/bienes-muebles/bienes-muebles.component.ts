@@ -162,6 +162,26 @@ export class BienesMueblesComponent implements OnInit {
     }
   }
 
+  formHasChanges() {
+    let isDirty = this.bienesMueblesForm.dirty;
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/inversiones']);
+      });
+    } else {
+      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/inversiones']);
+    }
+  }
+
   ngOnInit(): void {}
 
   noPossessions() {

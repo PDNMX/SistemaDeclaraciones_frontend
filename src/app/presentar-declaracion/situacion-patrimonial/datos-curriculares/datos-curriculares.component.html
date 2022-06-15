@@ -212,22 +212,12 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button
-        *ngIf="!declaracionSimplificada"
-        mat-raised-button
-        color="primary"
-        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/datos-empleo'"
-      >
+      <button *ngIf="!declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
         CONTINUAR 4 DE 15
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
 
-      <button
-        *ngIf="declaracionSimplificada"
-        mat-raised-button
-        color="primary"
-        [routerLink]="'/' + tipoDeclaracion + '/simplificada/situacion-patrimonial/datos-empleo'"
-      >
+      <button *ngIf="declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
         CONTINUAR 4 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

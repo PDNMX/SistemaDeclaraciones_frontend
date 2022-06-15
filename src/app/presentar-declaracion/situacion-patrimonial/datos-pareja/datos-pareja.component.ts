@@ -314,6 +314,26 @@ export class DatosParejaComponent implements OnInit {
     return result;
   }
 
+  formHasChanges() {
+    let isDirty = this.datosParejaForm.dirty;
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/datos-dependiente']);
+      });
+    } else {
+      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/datos-dependiente']);
+    }
+  }
+
   lugarDondeResideChanged(value?: string) {
     const domicilioMexico = this.datosParejaForm.get('domicilioMexico');
     const domicilioExtranjero = this.datosParejaForm.get('domicilioExtranjero');

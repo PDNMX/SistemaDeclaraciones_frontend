@@ -496,6 +496,26 @@ export class ServidorPublicoComponent implements OnInit {
     }
   }
 
+  formHasChanges() {
+    let isDirty = this.actividadAnualAnteriorForm.dirty;
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/bienes-inmuebles']);
+      });
+    } else {
+      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/bienes-inmuebles']);
+    }
+  }
+
   ngOnInit(): void {}
 
   openSnackBar(message: string, action: string = null) {
