@@ -178,6 +178,26 @@ export class AdeudosComponent implements OnInit {
     }
   }
 
+  formHasChanges() {
+    let isDirty = this.adeudosPasivosForm.dirty;
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/prestamos-terceros']);
+      });
+    } else {
+      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/prestamos-terceros']);
+    }
+  }
+
   ngOnInit(): void {}
 
   noDebts() {

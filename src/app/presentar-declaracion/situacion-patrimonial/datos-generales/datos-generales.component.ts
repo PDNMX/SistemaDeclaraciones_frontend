@@ -185,6 +185,29 @@ export class DatosGeneralesComponent implements OnInit {
     return true;
   }
 
+  formHasChanges() {
+    let url = '/' + this.tipoDeclaracion;
+    if (this.declaracionSimplificada) url += '/simplificada';
+    let isDirty = this.datosGeneralesForm.dirty;
+
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate([url + '/situacion-patrimonial/domicilio-declarante']);
+      });
+    } else {
+      this.router.navigate([url + '/situacion-patrimonial/domicilio-declarante']);
+    }
+  }
+
   ngOnInit(): void {}
 
   openSnackBar(message: string, action: string = null) {

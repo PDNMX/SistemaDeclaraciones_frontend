@@ -250,7 +250,7 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" [routerLink]="'/' + tipoDeclaracion + '/intereses/representacion'">
+      <button mat-raised-button color="primary" (click)="formHasChanges()">
         CONTINUAR 4 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

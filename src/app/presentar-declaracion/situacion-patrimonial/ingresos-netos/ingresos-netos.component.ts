@@ -389,6 +389,30 @@ export class IngresosNetosComponent implements OnInit {
     }
   }
 
+  formHasChanges() {
+    let url = '/' + this.tipoDeclaracion;
+    if (this.declaracionSimplificada) url += '/simplificada';
+    let isDirty = this.ingresosForm.dirty;
+    console.log(isDirty);
+
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate([url + '/situacion-patrimonial/servidor-publico']);
+      });
+    } else {
+      this.router.navigate([url + '/situacion-patrimonial/servidor-publico']);
+    }
+  }
+
   ngOnInit(): void {}
 
   openSnackBar(message: string, action: string = null) {

@@ -174,6 +174,30 @@ export class DatosEmpleoComponent implements OnInit {
     }
   }
 
+  formHasChanges() {
+    let url = '/' + this.tipoDeclaracion;
+    if (this.declaracionSimplificada) url += '/simplificada';
+    let isDirty = this.datosEmpleoCargoComisionForm.dirty;
+    console.log(isDirty);
+
+    if (isDirty) {
+      const dialogRef = this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Tienes cambios sin guardar',
+          message: '¿Deseas continuar?',
+          falseText: 'Cancelar',
+          trueText: 'Continuar',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) this.router.navigate([url + '/situacion-patrimonial/experiencia-laboral']);
+      });
+    } else {
+      this.router.navigate([url + '/situacion-patrimonial/experiencia-laboral']);
+    }
+  }
+
   ngOnInit(): void {}
 
   openSnackBar(message: string, action: string = null) {
