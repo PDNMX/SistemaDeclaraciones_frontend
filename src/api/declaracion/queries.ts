@@ -499,6 +499,7 @@ export const datosGeneralesQuery = gql`
   query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
     declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
+      anioEjercicio
       datosGenerales {
         nombre
         primerApellido
