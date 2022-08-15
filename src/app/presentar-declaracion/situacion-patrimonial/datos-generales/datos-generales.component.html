@@ -20,8 +20,23 @@
       resaltados <span class="no-public-inline"></span> no serán públicos.
     </p>
 
+    <div class="grid-3-col">
+      <mat-form-field appearance="fill">
+        <mat-label>Año del ejercicio</mat-label>
+        <mat-icon matPrefix>date_range</mat-icon>
+        <input
+          [errorStateMatcher]="errorMatcher"
+          matInput
+          type="number"
+          [(ngModel)]="anio_ejercicio"
+          min="0"
+          max="{{ currentYear }}"
+          placeholder="{{ currentYear }}"
+        />
+      </mat-form-field>
+    </div>
     <form (ngSubmit)="confirmSaveInfo()" [formGroup]="datosGeneralesForm">
-      <div class="grid-3-col">
+      <div class="grid-3-col grid-margin">
         <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
           <mat-label>Nombre</mat-label>
           <mat-icon matPrefix>person</mat-icon>
