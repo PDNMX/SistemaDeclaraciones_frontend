@@ -166,16 +166,8 @@
           <mat-form-field appearance="fill">
             <mat-label>RFC</mat-label>
             <mat-icon matPrefix>fingerprint</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_rfc_tercero
-              type="text"
-              maxlength="13"
-              formControlName="rfc"
-              required
-            />
-            <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
+            <input matInput #input_rfc_tercero type="text" maxlength="13" formControlName="rfc" />
+            <!-- <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint> -->
           </mat-form-field>
         </div>
 
@@ -314,7 +306,10 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
+      <button mat-raised-button color="primary"
+      [disabled]="!(participacion?.length > 0 || participacionForm.value.ninguno)"
+      [routerLink]="'/' + tipoDeclaracion + '/intereses/toma-decisiones'">
+
         CONTINUAR 2 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

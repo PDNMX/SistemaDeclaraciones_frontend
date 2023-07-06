@@ -7,13 +7,8 @@
 
     <mat-toolbar class="background-white">
       <label class="step-title">
-        11. Vehículos
-        <span *ngIf="tipoDeclaracion === 'inicial'"> (situación actual)</span>
-        <span *ngIf="tipoDeclaracion === 'modificacion'">
-          (entre el 1 de enero y 31 de diciembre del año inmediato anterior)</span
-        >
-        <span *ngIf="tipoDeclaracion === 'conclusion'"> (del año en curso a la fecha de conclusión del empleo)</span>
-      </label>
+        {{ tipoDeclaracion == 'modificacion' ? '10' : '11' }}
+        Vehículos</label>
     </mat-toolbar>
 
     <mat-divider></mat-divider>
@@ -171,7 +166,7 @@
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">date_range</mat-icon>
               <p>
-                Fecha de adquisición del inmueble: <span class="resaltar">{{ v.formaAdquisicion.valor }}</span>
+                Fecha de adquisición del vehículo: <span class="resaltar">{{ v.fechaAdquisicion.valor | date }}</span>
               </p>
             </div>
             <div class="paragraph-flex">
@@ -262,7 +257,11 @@
           </div>
 
           <!-- Tercero -->
-          <div class="grid-3-col grid-margin" formGroupName="tercero">
+          <div
+            class="grid-3-col grid-margin"
+            formGroupName="tercero"
+            *ngIf="vehiculosForm.value.vehiculo?.titular?.clave != 'DEC'"
+          >
             <mat-radio-group matTooltip="{{ tooltipData.tercero }}" class="checkbox" formControlName="tipoPersona">
               <p class="question double-col">Tercero</p>
               <mat-radio-button value="FISICA"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
@@ -276,15 +275,8 @@
             <mat-form-field matTooltip="{{ tooltipData.rfcTercero }}" appearance="fill">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix>fingerprint</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                #input_rfc_tercero
-                formControlName="rfc"
-                type="text"
-                maxlength="13"
-              />
-              <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
+              <input matInput #input_rfc_tercero formControlName="rfc" type="text" maxlength="13" />
+              <!-- <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint> -->
             </mat-form-field>
           </div>
 
@@ -316,16 +308,8 @@
             <mat-form-field matTooltip="{{ tooltipData.rfcTransmisor }}" appearance="fill" formGroupName="transmisor">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                #input_rfc_transmisor
-                formControlName="rfc"
-                type="text"
-                maxlength="13"
-                required
-              />
-              <mat-hint align="end">{{ input_rfc_transmisor.value?.length || 0 }}/13</mat-hint>
+              <input matInput #input_rfc_transmisor formControlName="rfc" type="text" maxlength="13" />
+              <!-- <mat-hint align="end">{{ input_rfc_transmisor.value?.length || 0 }}/13</mat-hint> -->
             </mat-form-field>
 
             <mat-form-field
@@ -531,8 +515,16 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 12 DE 15
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/bienes-muebles'"
+        [disabled]="!(vehiculo?.length > 0 || vehiculosForm.value.ninguno)"
+      >
+      CONTINUAR
+      {{ tipoDeclaracion == 'modificacion' ? '11' : '12'}}
+      DE
+      {{ tipoDeclaracion == 'modificacion' ? '14' : '15'}}
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
     </div>

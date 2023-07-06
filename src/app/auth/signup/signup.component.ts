@@ -8,6 +8,7 @@ import { Logger, UntilDestroy, untilDestroyed } from '@core';
 import { AuthenticationService } from '../authentication.service';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ERROR_COMPONENT_TYPE } from '@angular/compiler';
 
 import InstitucionesCatalogo from '@static/custom/instituciones.json';
 
@@ -24,9 +25,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   error: string | undefined;
   signupForm!: FormGroup;
   isLoading = false;
-
-  institucionesCatalogo = InstitucionesCatalogo;
-
+tmpError: any;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -46,16 +45,10 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   signup() {
     this.isLoading = true;
-
-    const signupForm = this.signupForm.value;
-    if (this.institucionesCatalogo?.length) {
-      signupForm.institucion = {
-        clave: signupForm.institucion.clave,
-        valor: signupForm.institucion.ente_publico,
-      };
-    }
-
-    const signup$ = this.authenticationService.signup(signupForm);
+    const formVal = this.signupForm.value;
+    if(formVal.primerApellido == null || formVal.primerApellido == "")
+      formVal.primerApellido = " ";
+    const signup$ = this.authenticationService.signup(formVal);
     signup$
       .pipe(
         finalize(() => {
@@ -66,12 +59,22 @@ export class SignupComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         (success) => {
-          if (success) {
+          if (success === true) {
             log.debug(`successfully signed up`);
             this.openSnackBar('Usuario registrado exitosamente', 'Aceptar');
             this.router.navigate([this.route.snapshot.queryParams.redirect || '/'], { replaceUrl: true });
           } else {
-            this.openSnackBar('No se pudo completar el registro', 'Aceptar');
+            this.tmpError = success;
+            var error = success.graphQLErrors[0].message;
+
+            if(error.indexOf("curp"))
+              error = "La CURP ya está registrada en el sistema";
+            else if(error.indexOf("rfc"))
+              error = "El RFC ya está registrada en el sistema";
+            else
+              error = "El correo electrónico ya está registrada en el sistema";
+
+            this.openSnackBar(error, 'Aceptar');
           }
         },
         (error) => {
@@ -91,7 +94,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   private createForm() {
     this.signupForm = this.formBuilder.group({
       nombre: ['', Validators.required],
-      primerApellido: ['', Validators.required],
+      primerApellido: [''],
       segundoApellido: [''],
       username: [
         '',

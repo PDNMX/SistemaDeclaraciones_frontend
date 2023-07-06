@@ -1,0 +1,15 @@
+ultima modificacion: 19-04-2021.1
+
+19-04-2021.1
+* Corrección de errores al guardar el punto 10
+* Quitar que haya un tercero forzosamente en bienes inmuebles, vehiculos, inversiones, etc.
+
+#  21-04-2021.1
+* Cambio de imagen para ajustarlo a Veracruz
+* Corrección de bugs en la declaración de intereses
+
+#  21-04-2021.2
+* Corregida la navegación en la declaración simplificada
+
+#  21-04-2021.3
+* Corregido punto 3 de intereses, en el pago si es en especie o monetario

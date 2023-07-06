@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
@@ -259,6 +259,11 @@ export class DatosParejaComponent implements OnInit {
     }
 
     this.setSelectedOptions();
+
+
+    this.actividadLaboralChanged(
+      this.datosParejaForm.get('actividadLaboral').value
+    );
   }
 
   async getUserInfo() {
@@ -431,6 +436,9 @@ export class DatosParejaComponent implements OnInit {
       console.log(error);
       this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
     }
+    finally{
+      this.isLoading = false;
+    }
   }
 
   setSelectedOptions() {
@@ -489,4 +497,5 @@ export class DatosParejaComponent implements OnInit {
     }
     this.aclaraciones = value;
   }
+
 }

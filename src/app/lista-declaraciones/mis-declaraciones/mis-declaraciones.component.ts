@@ -5,10 +5,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { PreviewDeclarationComponent } from '@shared/preview-declaration/preview-declaration.component';
 
-import { declaracionesMetadata, deleteDeclaracion } from '@api/declaracion';
-import { DeclaracionMetadata, TipoDeclaracion } from '@models/declaracion';
+import { declaracionesMetadata, declaracionMutation, deleteDeclaracion } from '@api/declaracion';
+import { Declaracion, DeclaracionMetadata, TipoDeclaracion } from '@models/declaracion';
 
 import { Apollo } from 'apollo-angular';
+
+import { autorizarPublica } from '@api/declaracion';
 
 @Component({
   selector: 'app-mis-declaraciones',
@@ -69,10 +71,12 @@ export class MisDeclaracionesComponent implements OnInit {
 
   async getList(tipoDeclaracion: TipoDeclaracion = null) {
     try {
+      const username = sessionStorage.getItem("username");
       const { data }: any = await this.apollo
         .query({
           query: declaracionesMetadata,
           variables: {
+            userID: username,
             filter: {
               tipoDeclaracion,
             },
@@ -124,5 +128,56 @@ export class MisDeclaracionesComponent implements OnInit {
       if (result) {
       }
     });
+  }
+
+  autorizarPublica(d: Declaracion) {
+    var s = `
+    De conformidad con los artículos 29 de la Ley General de Responsabilidades Administrativas artículo 70, fracción XII de la Ley General de Transparencia y Acceso a la Información Pública así como el artículo 15, fracción XII de la Ley de Transparencia 
+    y Acceso a la Información Pública para el Estado de Veracruz de Ignacio de la Llave, acepto se publique mi declaración de Situación Patrimonial y de Intereses
+    en la versión pública que genera este sistema en cumplimiento a lo previsto por las leyes anteriormente referidas.`;
+
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        title: 'Confirmar operación',
+        message: s,
+        trueText: 'Aceptar',
+        falseText: 'Cancelar',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        try {
+          this.apollo.mutate({
+            mutation: autorizarPublica,
+            variables: {
+              id: d._id,
+              autoriza: true
+            }
+          })
+          .toPromise()
+          this.presentAlert('Datos guardados', 'Tu declaración ha sido marcada como autorizada para ser publicada');
+          d.autorizaPublica = true;
+        }
+        catch(ex) {
+          console.log(ex);
+          this.presentAlert('Error', JSON.stringify(ex));
+        }
+      }
+    });
+
+    // .then(d=>{
+    //   alert("Datos guardados")
+    // })
+    // .catch((e)=> {
+    //   alert("Error :" + e);
+    //   console.error("Error al autorizar");
+    //   console.error(e);
+    // })
+    // ;
+  }
+
+  siguienteClicked(num:any) {
+    console.log(num);
   }
 }

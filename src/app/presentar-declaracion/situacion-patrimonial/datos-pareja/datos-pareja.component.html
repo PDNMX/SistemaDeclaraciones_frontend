@@ -96,42 +96,29 @@
           <div class="padding-card-section">
             <h3>Domicilio</h3>
 
-            <div class="card-grid-3-col">
-              <div class="paragraph-flex">
-                <mat-icon matPrefix class="icon">public</mat-icon>
-                <p>Lugar donde reside</p>
-              </div>
-              <div class="paragraph-flex">
-                <mat-icon matPrefix class="icon">streetview</mat-icon>
-                <p>Habita en el domicilio del declarante</p>
-              </div>
-
-              <div class="paragraph-flex">
-                <mat-icon matPrefix class="icon">location_city</mat-icon>
-                <p>Domicilio de la pareja</p>
-              </div>
-              <div class="">
-                <p>{{ (pareja.lugarDondeReside | replace: '_':' ') || 'MISMO QUE EL DEL DECLARANTE' }}</p>
-              </div>
-              <div class="">
-                <p>{{ pareja.habitaDomicilioDeclarante ? 'SÍ' : 'NO' }}</p>
-              </div>
-              <div class="paragraph-flex">
-                <p *ngIf="pareja.lugarDondeReside === 'MEXICO'">
-                  {{ pareja.domicilioMexico.calle }} {{ pareja.domicilioMexico.numeroExterior }}
-                  {{ pareja.domicilioMexico.numeroInterior }}, {{ pareja.domicilioMexico.coloniaLocalidad }},
-                  {{ pareja.domicilioMexico.municipioAlcaldia.valor }},
-                  {{ pareja.domicilioMexico.entidadFederativa.valor }}, {{ pareja.domicilioMexico.codigoPostal }}, MX.
-                </p>
-                <p *ngIf="pareja.lugarDondeReside === 'EXTRANJERO'">
-                  {{ pareja.domicilioExtranjero.calle }} {{ pareja.domicilioExtranjero.numeroExterior }}
-                  {{ pareja.domicilioExtranjero.numeroInterior }}, {{ pareja.domicilioExtranjero.ciudadLocalidad }},
-                  {{ pareja.domicilioExtranjero.estadoProvincia }}, {{ pareja.domicilioExtranjero.codigoPostal }},
-                  {{ pareja.domicilioExtranjero.pais }}.
-                </p>
-                <p *ngIf="pareja.lugarDondeReside === 'SE_DESCONOCE'">SE DESCONOCE</p>
-                <p *ngIf="!pareja.lugarDondeReside">MISMO QUE EL DEL DECLARANTE</p>
-              </div>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">location_city</mat-icon>
+              <p>Domicilio de la pareja</p>
+            </div>
+            <div class="">
+              <p>{{ pareja.lugarDondeReside }}</p>
+            </div>
+            <div class="">
+              <p>{{ pareja.habitaDomicilioDeclarante ? 'SI' : 'NO' }}</p>
+            </div>
+            <div class="paragraph-flex">
+              <p *ngIf="pareja.lugarDondeReside === 'MEXICO'">
+                {{ pareja.domicilioMexico.calle }} {{ pareja.domicilioMexico.numeroExterior }}
+                {{ pareja.domicilioMexico.numeroInterior }}, {{ pareja.domicilioMexico.coloniaLocalidad }},
+                {{ pareja.domicilioMexico.municipioAlcaldia.valor }},
+                {{ pareja.domicilioMexico.entidadFederativa.valor }}, {{ pareja.domicilioMexico.codigoPostal }}, MX.
+              </p>
+              <p *ngIf="pareja.lugarDondeReside === 'EXTRANJERO'">
+                {{ pareja.domicilioExtranjero.calle }} {{ pareja.domicilioExtranjero.numeroExterior }}
+                {{ pareja.domicilioExtranjero.numeroInterior }}, {{ pareja.domicilioExtranjero.ciudadLocalidad }},
+                {{ pareja.domicilioExtranjero.estadoProvincia }}, {{ pareja.domicilioExtranjero.codigoPostal }},
+                {{ pareja.domicilioExtranjero.pais }}.
+              </p>
             </div>
           </div>
           <mat-divider></mat-divider>
@@ -256,9 +243,7 @@
                 <mat-icon matPrefix class="icon">account_balance_wallet</mat-icon>
                 <p>Salario Mensual Neto</p>
               </div>
-              <div class="">
-                {{ pareja.actividadLaboralSectorPrivadoOtro?.proveedorContratistaGobierno ? 'SÍ' : 'NO' }}
-              </div>
+              <div class="">{{ pareja.actividadLaboralSectorPrivadoOtro?.proveedorContratistaGobierno == true  ? 'SI' : 'NO'}}</div>
               <div>
                 {{ pareja.actividadLaboralSectorPrivadoOtro?.salarioMensualNeto?.valor | currency }}
                 {{ pareja.actividadLaboralSectorPrivadoOtro?.salarioMensualNeto?.moneda }}
@@ -925,11 +910,19 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/datos-dependiente'"
+        [disabled]="!datosParejaForm.value.ninguno && !pareja"
+      >
         CONTINUAR 7 DE 15
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
+
     </div>
+
+
 
     <section-footer [declaracionId]="declaracionId"></section-footer>
   </mat-card>

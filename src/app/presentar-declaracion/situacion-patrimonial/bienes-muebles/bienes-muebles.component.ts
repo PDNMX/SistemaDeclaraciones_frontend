@@ -22,6 +22,7 @@ import { tooltipData } from '@static/tooltips/situacion-patrimonial/bienes-muebl
 import { BienMueble, BienesMuebles, DeclaracionOutput } from '@models/declaracion';
 
 import { findOption } from '@utils/utils';
+import { Constantes } from '@app/@shared/constantes';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -66,7 +67,8 @@ export class BienesMueblesComponent implements OnInit {
   }
 
   addItem() {
-    this.bienesMueblesForm.reset();
+    //this.bienesMueblesForm.reset();
+    this.createForm();
     this.bienesMueblesForm.get('ninguno').setValue(false);
     this.editMode = true;
     this.editIndex = null;
@@ -84,30 +86,15 @@ export class BienesMueblesComponent implements OnInit {
         titular: [[], Validators.required],
         tipoBien: [null, [Validators.required]],
         transmisor: this.formBuilder.group({
-          tipoPersona: [null, [Validators.required]],
-          nombreRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
-          rfc: [
-            null,
-            [
-              Validators.required,
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
-          relacion: [null, [Validators.required]],
+          tipoPersona: ['', [Validators.required]],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
+          relacion: ['', Validators.required],
         }),
         tercero: this.formBuilder.group({
-          tipoPersona: [null],
-          nombreRazonSocial: [null, [Validators.pattern(/^\S.*$/)]],
-          rfc: [
-            null,
-            [
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
+          tipoPersona: ['FISICA', [Validators.required]],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],  //cambio de validacion de rfc
         }),
         descripcionGeneralBien: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         formaAdquisicion: [null, [Validators.required]],
@@ -123,6 +110,33 @@ export class BienesMueblesComponent implements OnInit {
         { disabled: true, value: null },
         [Validators.required, Validators.pattern(/^\S.*\S$/)],
       ],
+    });
+
+    /////////////////////////////
+    this.bienesMueblesForm.get('bienMueble.titular').valueChanges.subscribe((val) => {
+      if (!val) return;
+
+      const razonSocial = this.bienesMueblesForm.get('bienMueble.tercero').get('nombreRazonSocial');
+      const tipoPersona = this.bienesMueblesForm.get('bienMueble.tercero').get('tipoPersona');
+      const rfc = this.bienesMueblesForm.get('bienMueble.tercero').get('rfc');
+
+      if (val.clave === 'DEC') {
+        razonSocial.clearValidators();
+        tipoPersona.clearValidators();
+        rfc.clearValidators();
+
+        razonSocial.setValue('');
+        rfc.setValue('');
+        tipoPersona.setValue('FISICA');
+      } else {
+        tipoPersona.setValidators([Validators.required]);
+        razonSocial.setValidators([Validators.required]);
+        rfc.setValidators([Validators.pattern(Constantes.VALIDACION_RFC), Validators.required]);
+      }
+
+      razonSocial.updateValueAndValidity();
+      rfc.updateValueAndValidity();
+      tipoPersona.updateValueAndValidity();
     });
   }
 
@@ -227,11 +241,11 @@ export class BienesMueblesComponent implements OnInit {
   }
 
   async saveInfo(form: BienesMuebles) {
+    console.log(form);
     try {
       const declaracion = {
         bienesMuebles: form,
       };
-
       const { data } = await this.apollo
         .mutate<DeclaracionOutput>({
           mutation: bienesMueblesMutation,
@@ -275,7 +289,8 @@ export class BienesMueblesComponent implements OnInit {
   }
 
   setEditMode() {
-    this.bienesMueblesForm.reset();
+    //this.bienesMueblesForm.reset();
+    this.createForm();
     this.bienesMueblesForm.get('ninguno').setValue(false);
     this.editMode = true;
     this.editIndex = null;

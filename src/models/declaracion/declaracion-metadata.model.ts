@@ -13,4 +13,7 @@ export interface DeclaracionMetadata {
 export interface DeclaracionMetadataPage {
   docs: DeclaracionMetadata[];
   pageNumber: number;
+  totalDocs:number;
+  totalPages:number;
+  page:number;
 }

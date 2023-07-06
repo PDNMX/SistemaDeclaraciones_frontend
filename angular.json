@@ -116,5 +116,8 @@
       }
     }
   },
-  "defaultProject": "declaraciones-patrimoniales"
+  "defaultProject": "declaraciones-patrimoniales",
+  "cli": {
+    "analytics": "02918bb6-5342-467f-b89a-8693712eb1d2"
+  }
 }

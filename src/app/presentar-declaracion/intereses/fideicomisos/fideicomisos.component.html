@@ -241,15 +241,7 @@
           <mat-form-field matTooltip="{{ tooltipData.rfcFideicomisario }}" appearance="fill">
             <mat-label>RFC del Fideicomisario</mat-label>
             <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_rfc_fideicomisario
-              type="text"
-              maxlength="13"
-              formControlName="rfc"
-            />
-            <mat-hint align="end">{{ input_rfc_fideicomisario.value?.length || 0 }}/13</mat-hint>
+            <input matInput #input_rfc_fideicomisario type="text" maxlength="13" formControlName="rfc" />
           </mat-form-field>
         </div>
 
@@ -328,6 +320,8 @@
 
     <mat-divider></mat-divider>
 
-    <section-footer [declaracionId]="declaracionId"></section-footer>
+    <section-footer 
+      *ngIf="(fideicomiso?.length > 0 || fideicomisosForm.value.ninguno)"
+     [declaracionId]="declaracionId"></section-footer>
   </mat-card>
 </div>

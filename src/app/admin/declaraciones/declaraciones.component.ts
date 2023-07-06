@@ -7,15 +7,16 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { Apollo } from 'apollo-angular';
 
 import { declaracionesMetadata, stats } from '@api/declaracion';
-import { UntilDestroy, untilDestroyed } from '@core';
-import { DeclaracionMetadata, DeclaracionMetadataPage } from '@models/declaracion';
+import { Declaracion, DeclaracionMetadata, DeclaracionMetadataPage } from '@models/declaracion';
 
 import { CredentialsService } from '@app/auth/credentials.service';
 
 import { MatDialog } from '@angular/material/dialog';
 import { PreviewDeclarationComponent } from '@shared/preview-declaration/preview-declaration.component';
 
-@UntilDestroy()
+import { autorizarPublica } from '@api/declaracion';
+import { DialogComponent } from '@app/@shared';
+
 @Component({
   selector: 'app-declaraciones',
   templateUrl: './declaraciones.component.html',
@@ -46,7 +47,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
 
   userID: string = null;
 
-  PAGE_SIZE = 10;
+  PAGE_SIZE = 50;
 
   constructor(
     private route: ActivatedRoute,
@@ -88,14 +89,14 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
   }
 
   async ngOnInit() {
-    await this.getCount();
+    //await this.getCount();
   }
 
-  previewDeclaration(id: string, publicVersion: boolean = false) {
+  previewDeclaration(id: string, publica: boolean) {
     const dialogRef = this.dialog.open(PreviewDeclarationComponent, {
       data: {
         id,
-        publicVersion,
+        publica
       },
     });
 
@@ -125,6 +126,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
         map(({ data }) => {
           this.isLoadingResults = false;
           this.isError = false;
+          this.totalInicial = data.declaracionesMetadata.totalDocs;
           return data.declaracionesMetadata.docs;
         }),
         catchError(() => {
@@ -160,6 +162,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
         map(({ data }) => {
           this.isLoadingResults = false;
           this.isError = false;
+          this.totalModificacion = data.declaracionesMetadata.totalDocs;
           return data.declaracionesMetadata.docs;
         }),
         catchError(() => {
@@ -195,6 +198,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
         map(({ data }) => {
           this.isLoadingResults = false;
           this.isError = false;
+          this.totalConclusion = data.declaracionesMetadata.totalDocs;
           return data.declaracionesMetadata.docs;
         }),
         catchError(() => {
@@ -227,6 +231,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
         map(({ data }) => {
           this.isLoadingResults = false;
           this.isError = false;
+          this.total = data.declaracionesMetadata.totalDocs;
           return data.declaracionesMetadata.docs;
         }),
         catchError(() => {
@@ -237,5 +242,79 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
       )
       .pipe(untilDestroyed(this))
       .subscribe((data) => (this.data = data));
+  }
+
+  hacerPublica(dec: Declaracion) {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        title: 'Confirmar operación',
+        message: '¿Seguro que quiere marcar declaración como autorizada para ser publicada?',
+        trueText: 'Aceptar',
+        falseText: 'Cancelar',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        try {
+          this.apollo.mutate({
+            mutation: autorizarPublica,
+            variables: {
+              id: dec._id,
+              autoriza: true
+            }
+          })
+          .toPromise()
+          this.presentAlert('Datos guardados', 'La declaración ha sido marcada como autorizada para ser publicada');
+          dec.autorizaPublica = true;
+        }
+        catch(ex) {
+          console.log(ex);
+          this.presentAlert('Error', JSON.stringify(ex));
+        }
+      }
+    });
+  }
+
+  quitarPublica(dec: Declaracion) {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        title: 'Confirmar operación',
+        message: '¿Seguro que quiere marcar declaración como NO autorizada para ser publicada?',
+        trueText: 'Aceptar',
+        falseText: 'Cancelar',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        try {
+          this.apollo.mutate({
+            mutation: autorizarPublica,
+            variables: {
+              id: dec._id,
+              autoriza: false
+            }
+          })
+          .toPromise()
+          this.presentAlert('Datos guardados', 'La declaración ha sido marcada como NO autorizada para ser publicada');
+          dec.autorizaPublica = false;
+        }
+        catch(ex) {
+          console.log(ex);
+          this.presentAlert('Error', JSON.stringify(ex));
+        }
+      }
+    });
+  }
+
+  presentAlert(title: string, message: string) {
+    this.dialog.open(DialogComponent, {
+      data: {
+        title,
+        message,
+        trueText: 'Aceptar',
+      },
+    });
   }
 }

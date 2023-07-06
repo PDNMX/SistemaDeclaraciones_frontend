@@ -184,16 +184,7 @@
           <mat-form-field matTooltip="{{ tooltipData.rfc }}" appearance="fill">
             <mat-label>RFC</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_rfc_empresa
-              type="text"
-              maxlength="12"
-              formControlName="rfc"
-              required
-            />
-            <mat-hint align="end">{{ input_rfc_empresa.value?.length || 0 }}/12</mat-hint>
+            <input matInput #input_rfc_empresa type="text" maxlength="13" formControlName="rfc" />
           </mat-form-field>
         </div>
 
@@ -356,7 +347,9 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
+      <button mat-raised-button color="primary"
+      [disabled]="!(cliente?.length > 0  || clientesPrincipalesForm.value.ninguno)"
+      [routerLink]="'/' + tipoDeclaracion + '/intereses/beneficios-privados'">
         CONTINUAR 6 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

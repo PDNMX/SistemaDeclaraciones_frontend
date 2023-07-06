@@ -39,7 +39,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
 
   declaracionId: string = null;
 
-  errorMatcher = new DeclarationErrorStateMatcher();
+  avanzar = false;
 
   constructor(
     private apollo: Apollo,
@@ -57,6 +57,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
   }
 
   confirmSaveInfo() {
+    this.avanzar = false;
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {
         title: 'Guardar cambios',
@@ -202,6 +203,9 @@ export class DomicilioDeclaranteComponent implements OnInit {
 
       this.isLoading = false;
       this.openSnackBar('Información actualizada', 'Aceptar');
+
+      if(this.avanzar)
+        this.router.navigate([this.getLinkSiguiente()]);
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
@@ -249,5 +253,21 @@ export class DomicilioDeclaranteComponent implements OnInit {
       aclaraciones.reset();
     }
     this.aclaraciones = value;
+  }
+
+  getLinkSiguiente() {
+    const base =
+      '/' +
+      this.tipoDeclaracion +
+      '/' +
+      (this.declaracionSimplificada ? 'simplificada/' : '/') +
+      'situacion-patrimonial/';
+
+    return base + 'datos-curriculares/';
+  }
+
+  siguiente() {
+    this.avanzar = true;
+    this.saveInfo();
   }
 }

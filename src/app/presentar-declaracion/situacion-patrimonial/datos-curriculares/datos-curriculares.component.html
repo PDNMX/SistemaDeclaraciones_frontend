@@ -212,8 +212,11 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button *ngIf="!declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 4 DE 15
+      <button mat-raised-button color="primary" 
+      [disabled]="(editMode && datosCurricularesDeclaranteForm.invalid) || isLoading"
+      (click)="siguiente()"
+      >
+        CONTINUAR 4 DE {{ declaracionSimplificada ? (tipoDeclaracion != 'modificacion' ? '7' : '6') : '15' }}
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
 

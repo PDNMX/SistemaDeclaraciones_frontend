@@ -54,6 +54,7 @@ export class AuthenticationService {
         })
         .toPromise()
         .then(({ data }: any) => {
+          sessionStorage.setItem("username", data.login.user._id);
           credentials = data.login;
           this.credentialsService.setCredentials(credentials, context.remember);
           return credentials;
@@ -76,7 +77,7 @@ export class AuthenticationService {
    * @param context The login parameters.
    * @return The user credentials.
    */
-  signup(context: SignupContext): Observable<boolean> {
+  signup(context: SignupContext): Observable<any> {
     const user = {
       username: context.username,
       password: context.contrasena,
@@ -101,8 +102,7 @@ export class AuthenticationService {
           return true;
         })
         .catch((error) => {
-          console.log(error);
-          return false;
+          return error;
         })
     );
   }

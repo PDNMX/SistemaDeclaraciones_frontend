@@ -1,4 +1,4 @@
-<mat-grid-list cols="1" rowHeight="60px">
+<mat-grid-list cols="1" rowHeight="60px" *ngIf="finalDeclaracion">
   <mat-grid-tile>
     <button mat-raised-button class="btn-finalizar" (click)="confirmFinish()">FINALIZAR MI DECLARACIÓN</button>
   </mat-grid-tile>

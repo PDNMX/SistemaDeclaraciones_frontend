@@ -230,7 +230,9 @@
         <button mat-raised-button color="primary" type="button" (click)="domicilioDeclaranteForm.reset()">
           LIMPIAR FORMULARIO
         </button>
-        <button mat-raised-button color="primary" [disabled]="domicilioDeclaranteForm.invalid || isLoading">
+        <button mat-raised-button color="primary" 
+        [disabled]="domicilioDeclaranteForm.invalid || isLoading">
+        
           GUARDAR CAMBIOS
         </button>
       </div>
@@ -238,8 +240,11 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button *ngIf="!declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 3 DE 15
+      <button mat-raised-button color="primary" 
+      (click)="siguiente()"
+      [disabled]="domicilioDeclaranteForm.invalid || isLoading"
+      >
+        CONTINUAR 3 DE {{ declaracionSimplificada ? (tipoDeclaracion != 'modificacion' ? '7' : '6') : '15' }}
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
 

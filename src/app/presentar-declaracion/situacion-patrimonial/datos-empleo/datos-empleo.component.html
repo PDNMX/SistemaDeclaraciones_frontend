@@ -10,7 +10,10 @@
     <mat-divider></mat-divider>
 
     <mat-toolbar class="background-white">
-      <label class="step-title"> 4. Datos empleo, cargo o comisión</label>
+      <label class="step-title"> 4. Datos empleo, cargo o comisión
+        {{ tipoDeclaracion == "inicial" ? "que inicia" : tipoDeclaracion == "modificacion" ? "" : "que concluye" }}
+        <!-- inicial: que inica, modificacion: nada, conclusion: que concluye -->
+      </label>
     </mat-toolbar>
 
     <mat-divider></mat-divider>
@@ -229,14 +232,15 @@
           </mat-form-field>
           <!--</div>-->
           <mat-form-field matTooltip="{{ tooltipData.fechaTomaPosesion }}" appearance="fill">
-            <mat-label>Fecha de toma de posesión/conclusión</mat-label>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              [matDatepicker]="picker"
-              formControlName="fechaTomaPosesion"
-              required
-            />
+            <mat-label>
+              <span *ngIf="tipoDeclaracion === 'conclusion'">
+                Fecha de conclusión del empleo, cargo o comisión
+              </span>
+              <span *ngIf="tipoDeclaracion !== 'conclusion'">
+                Fecha de toma de posesión del empleo, cargo o comisión
+              </span>
+            </mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fechaTomaPosesion" />
             <mat-hint>dd/mm/yyyy</mat-hint>
             <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -531,14 +535,11 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button
-        *ngIf="!declaracionSimplificada"
-        mat-raised-button
-        color="primary"
-        type="button"
-        (click)="formHasChanges()"
-      >
-        CONTINUAR 5 DE 15
+      <button mat-raised-button color="primary" type="button"
+      [disabled]="datosEmpleoCargoComisionForm.invalid || isLoading"
+      (click)="siguiente()">
+
+        CONTINUAR 5 DE {{ declaracionSimplificada ? (tipoDeclaracion != 'modificacion' ? '7' : '6') : '15' }}
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
 

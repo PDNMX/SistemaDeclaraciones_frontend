@@ -189,17 +189,7 @@
           <mat-form-field matTooltip="{{ tooltipData.rfc }}" appearance="fill">
             <mat-label>RFC</mat-label>
             <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_rfc
-              type="text"
-              maxlength="12"
-              maxlength="13"
-              formControlName="rfc"
-              required
-            />
-            <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/12-13</mat-hint>
+            <input matInput #input_rfc type="text" maxlength="13" formControlName="rfc" />
           </mat-form-field>
         </div>
 
@@ -310,7 +300,10 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
+      <button mat-raised-button color="primary"
+      [disabled]="!(beneficio?.length > 0  || beneficiosPrivadosForm.value.ninguno)"
+      [routerLink]="'/' + tipoDeclaracion + '/intereses/fideicomisos'">
+
         CONTINUAR 7 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

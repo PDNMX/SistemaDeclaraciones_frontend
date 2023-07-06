@@ -36,6 +36,7 @@ export class ServidorPublicoComponent implements OnInit {
   actividadAnualAnteriorForm: FormGroup;
   isLoading = false;
   userId: string = null;
+  avanzar = false;
 
   ingresoNetoDeclarante = 0;
   ingresosTotales = 0;
@@ -207,30 +208,29 @@ export class ServidorPublicoComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        const form: ActividadAnualAnterior = this.actividadAnualAnteriorForm.value;
-        if (form.servidorPublicoAnioAnterior) {
-          //sections
-          form.actividadIndustrialComercialEmpresarial.remuneracionTotal.valor = this.calcTotalAmountOfSection(
-            'actividadIndustrialComercialEmpresarial'
-          );
-          form.actividadFinanciera.remuneracionTotal.valor = this.calcTotalAmountOfSection('actividadFinanciera');
-          form.otrosIngresos.remuneracionTotal.valor = this.calcTotalAmountOfSection('otrosIngresos');
-          form.enajenacionBienes.remuneracionTotal.valor = this.calcTotalAmountOfSection('enajenacionBienes');
-          form.serviciosProfesionales.remuneracionTotal.valor = this.calcTotalAmountOfSection('serviciosProfesionales');
-          //totals
-          form.otrosIngresosTotal.valor = this.otrosIngresosDeclarante;
-          form.ingresoNetoAnualDeclarante.valor = this.ingresoNetoDeclarante;
-          form.totalIngresosNetosAnuales.valor = this.ingresosTotales;
-
-          this.saveInfo(form);
-        } else {
-          this.saveInfo({
-            servidorPublicoAnioAnterior: false,
-            aclaracionesObservaciones: form.aclaracionesObservaciones,
-          });
-        }
+        this.saveItem();
       }
     });
+  }
+
+  // puente
+  saveItem(){
+    const form: ActividadAnualAnterior = this.actividadAnualAnteriorForm.value;
+    if(form.servidorPublicoAnioAnterior === true){
+      //sections
+      form.actividadIndustrialComercialEmpresarial.remuneracionTotal.valor = this.calcTotalAmountOfSection(
+        'actividadIndustrialComercialEmpresarial'
+      );
+      form.actividadFinanciera.remuneracionTotal.valor = this.calcTotalAmountOfSection('actividadFinanciera');
+      form.otrosIngresos.remuneracionTotal.valor = this.calcTotalAmountOfSection('otrosIngresos');
+      form.enajenacionBienes.remuneracionTotal.valor = this.calcTotalAmountOfSection('enajenacionBienes');
+      form.serviciosProfesionales.remuneracionTotal.valor = this.calcTotalAmountOfSection('serviciosProfesionales');
+      //totals
+      form.otrosIngresosTotal.valor = this.otrosIngresosDeclarante;
+      form.ingresoNetoAnualDeclarante.valor = this.ingresoNetoDeclarante;
+      form.totalIngresosNetosAnuales.valor = this.ingresosTotales;
+    }
+    this.saveInfo(form);
   }
 
   createForm() {
@@ -542,8 +542,8 @@ export class ServidorPublicoComponent implements OnInit {
         actividadAnualAnterior: form,
       };
 
-      const { errors } = await this.apollo
-        .mutate({
+      const result = await this.apollo
+        .mutate<DeclaracionOutput>({
           mutation: declaracionMutation,
           variables: {
             id: this.declaracionId,
@@ -558,6 +558,9 @@ export class ServidorPublicoComponent implements OnInit {
 
       this.isLoading = false;
       this.presentSuccessAlert();
+
+      if(this.avanzar)
+        this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/bienes-inmuebles']);
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
@@ -573,5 +576,10 @@ export class ServidorPublicoComponent implements OnInit {
       aclaraciones.reset();
     }
     this.aclaraciones = value;
+  }
+
+  siguiente() {
+    this.avanzar = true;
+    this.saveItem();
   }
 }

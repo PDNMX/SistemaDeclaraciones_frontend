@@ -246,14 +246,13 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button *ngIf="!declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 2 DE 15
+      <button mat-raised-button color="primary" 
+      [disabled]="datosGeneralesForm.invalid || isLoading"
+      (click)="siguiente()"
+      >
+        CONTINUAR 2 DE {{ declaracionSimplificada ? (tipoDeclaracion != 'modificacion' ? '7' : '6') : '15' }}
         <mat-icon matSofix>arrow_forward</mat-icon>
-      </button>
-      <button *ngIf="declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 2 DE 7
-        <mat-icon matSofix>arrow_forward</mat-icon>
-      </button>
+    </button>
     </div>
 
     <section-footer [declaracionId]="declaracionId"></section-footer>

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
 import { firmarDeclaracion } from '@api/declaracion';
@@ -35,6 +35,19 @@ export class SectionFooterComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.tipoDeclaracion = tipoDeclaracion[this.router.url.split('/')[1]];
+    this.esSimplificada = this.router.url.indexOf('simplificada') >= 0;
+
+    this.activatedRoute.url.subscribe((data) => {
+      console.log(this.tipoDeclaracion);
+      if (
+        (this.esSimplificada && this.tipoDeclaracion == tipoDeclaracion.modificacion && data[0].path.indexOf('ingresos-netos') >= 0) ||
+        (this.esSimplificada && (this.tipoDeclaracion == tipoDeclaracion.inicial || this.tipoDeclaracion == tipoDeclaracion.conclusion) && data[0].path.indexOf('servidor-publico') >= 0)  ||
+        (data[0].path.indexOf('fideicomisos') >= 0)
+      ) {
+        //llegó al final de la simplificada de modificación, habbilitar el botón
+        this.finalDeclaracion = true;
+      } else this.finalDeclaracion = false;
+    });
   }
 
   ngOnInit(): void {}
@@ -56,7 +69,7 @@ export class SectionFooterComponent implements OnInit {
 
   async downloadAcuse() {
     try {
-      const info: any = await this.acuseService.downloadAcuse(this.declaracionId);
+      const info: any = await this.acuseService.downloadAcuse(this.declaracionId, false);
       const blob = new Blob([info], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       window.open(url);
@@ -91,16 +104,20 @@ export class SectionFooterComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(async (password) => {
       if (password) {
-        try {
+        try{
           await this.signDeclaration(password);
+        }
+        catch(error){
+          this.openSnackBar(error, 'Aceptar');
+        }
+        try {
           await this.downloadAcuse();
           this.presentSuccessAlert();
           this.router.navigate([`/declaraciones`], {
             replaceUrl: true,
           });
         } catch (error) {
-          console.log(error);
-          this.openSnackBar('ERROR: No pudo firmar la declaración', 'Aceptar');
+          this.openSnackBar(error, 'Aceptar');
         }
       }
     });

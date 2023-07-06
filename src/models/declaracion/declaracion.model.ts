@@ -50,6 +50,7 @@ export interface Declaracion {
   clientesPrincipales?: ClientesPrincipales;
   beneficiosPrivados?: BeneficiosPrivados;
   fideicomisos?: Fideicomisos;
+  autorizaPublica?: boolean;
 }
 
 export interface DeclaracionOutput {

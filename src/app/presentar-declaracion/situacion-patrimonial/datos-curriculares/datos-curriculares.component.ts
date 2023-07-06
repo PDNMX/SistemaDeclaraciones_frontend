@@ -17,6 +17,9 @@ import Nivel from '@static/catalogos/nivel.json';
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-curriculares';
 import { findOption } from '@utils/utils';
 
+import { DatosCurricularesDeclarante, DeclaracionOutput, Escolaridad } from '@models/declaracion';
+import { ThisReceiver } from '@angular/compiler';
+
 @Component({
   selector: 'app-datos-curriculares',
   templateUrl: './datos-curriculares.component.html',
@@ -30,6 +33,7 @@ export class DatosCurricularesComponent implements OnInit {
   editIndex: number = null;
   escolaridad: Escolaridad[] = [];
   isLoading = false;
+  avanzar= false;
 
   documentoObtenidoCatalogo = DocumentoObtenido;
   estatusCatalogo = Estatus;
@@ -192,7 +196,15 @@ export class DatosCurricularesComponent implements OnInit {
         datosCurricularesDeclarante: form,
       };
 
-      const { data, errors } = await this.apollo
+
+      const ultimaEscolaridad = declaracion.datosCurricularesDeclarante.escolaridad[declaracion.datosCurricularesDeclarante.escolaridad.length -1];
+
+      if(ultimaEscolaridad === null || ultimaEscolaridad.nivel === null || ultimaEscolaridad.carreraAreaConocimiento.trim() === "") {
+        //quitar el que es null
+        declaracion.datosCurricularesDeclarante.escolaridad.splice(declaracion.datosCurricularesDeclarante.escolaridad.length - 1, 1);
+      }
+
+      const { data } = await this.apollo
         .mutate<DeclaracionOutput>({
           mutation: datosCurricularesMutation,
           variables: {
@@ -207,8 +219,12 @@ export class DatosCurricularesComponent implements OnInit {
       }
 
       this.editMode = false;
-      this.setupForm(data?.declaracion.datosCurricularesDeclarante);
+
+      this.setupForm(data.declaracion.datosCurricularesDeclarante);
       this.presentSuccessAlert();
+
+      if(this.avanzar)
+        this.router.navigate([this.getLinkSiguiente()]);
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
@@ -225,6 +241,13 @@ export class DatosCurricularesComponent implements OnInit {
     } else {
       escolaridad[this.editIndex] = newItem;
     }
+
+    // const ultimaEscolaridad = escolaridad[escolaridad.length - 1];
+
+    // if(ultimaEscolaridad === null || ultimaEscolaridad.nivel === null || ultimaEscolaridad.carreraAreaConocimiento.trim() === "") {
+    //   //quitar el que es null
+    //   escolaridad = escolaridad.splice(escolaridad.length - 1, 1);
+    // }
 
     this.isLoading = true;
 
@@ -262,11 +285,22 @@ export class DatosCurricularesComponent implements OnInit {
     this.escolaridad = datosCurricularesDeclarante?.escolaridad || [];
     const aclaraciones = datosCurricularesDeclarante?.aclaracionesObservaciones;
 
+    const ultimaEscolaridad = this.escolaridad[this.escolaridad.length - 1] ;
+
+    if(ultimaEscolaridad == null || ultimaEscolaridad.nivel == null) {
+      //quitar el que es null
+      this.escolaridad = this.escolaridad.splice(this.escolaridad.indexOf(ultimaEscolaridad) - 1, 1);
+    }
+
     if (aclaraciones) {
       this.setAclaraciones(aclaraciones);
     }
 
     this.editMode = !!!this.escolaridad.length;
+
+    if(!this.editMode) {
+      this.datosCurricularesDeclaranteForm.reset();
+    }
   }
 
   toggleAclaraciones(value: boolean) {
@@ -278,5 +312,21 @@ export class DatosCurricularesComponent implements OnInit {
       aclaraciones.reset();
     }
     this.aclaraciones = value;
+  }
+
+  getLinkSiguiente() {
+    const base =
+      '/' +
+      this.tipoDeclaracion +
+      '/' +
+      (this.declaracionSimplificada ? 'simplificada/' : '/') +
+      'situacion-patrimonial/';
+
+    return base + 'datos-empleo/';
+  }
+
+  siguiente() {
+    this.avanzar = true;
+    this.saveItem();
   }
 }

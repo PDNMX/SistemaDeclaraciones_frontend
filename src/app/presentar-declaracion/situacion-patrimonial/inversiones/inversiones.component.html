@@ -7,13 +7,8 @@
 
     <mat-toolbar class="background-white">
       <label class="step-title">
-        13. Inversiones, cuentas bancarias u otro tipo de valores
-        <span *ngIf="tipoDeclaracion === 'inicial'"> (situación actual)</span>
-        <span *ngIf="tipoDeclaracion === 'modificacion'">
-          (entre el 1 de enero y 31 de diciembre del año inmediato anterior)</span
-        >
-        <span *ngIf="tipoDeclaracion === 'conclusion'"> (del año en curso a la fecha de conclusión del empleo)</span>
-      </label>
+        {{ tipoDeclaracion == 'modificacion' ? '12' : '13' }}
+        Inversiones, cuentas bancarias u otro tipo de valores</label>
     </mat-toolbar>
 
     <mat-divider></mat-divider>
@@ -99,23 +94,25 @@
 
           <p>Nombre del Tercero o Terceros</p>
           <div class="card-grid-3-col" *ngFor="let dato of v.tercero">
-            <div class="paragraph-flex">
-              <mat-icon matPrefix class="icon">person</mat-icon>
-              <p>
-                {{ dato.nombreRazonSocial }}
-              </p>
-            </div>
-            <div class="paragraph-flex">
-              <mat-icon matPrefix class="icon">fingerprint</mat-icon>
-              <p>
-                {{ dato.rfc }}
-              </p>
-            </div>
-            <div class="paragraph-flex">
-              <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
-              <p>
-                {{ dato.tipoPersona }}
-              </p>
+            <div *ngIf="dato.nombreRazonSocial.length > 0">
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">person</mat-icon>
+                <p>
+                  {{ dato.nombreRazonSocial }}
+                </p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon">fingerprint</mat-icon>
+                <p>
+                  {{ dato.rfc }}
+                </p>
+              </div>
+              <div class="paragraph-flex">
+                <mat-icon matPrefix class="icon card-no-public">person</mat-icon>
+                <p>
+                  {{ dato.tipoPersona }}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -320,7 +317,11 @@
           </div>
 
           <!-- Tercero -->
-          <div class="grid-4-col grid-margin" formGroupName="tercero">
+          <div
+            class="grid-4-col grid-margin"
+            formGroupName="tercero"
+            *ngIf="inversionesCuentasValoresForm.value.inversion?.titular?.clave != 'DEC'"
+          >
             <mat-form-field matTooltip="{{ tooltipData.nombreTercero }}" appearance="fill" class="double-col">
               <mat-label>Nombre del Tercero o Terceros</mat-label>
               <mat-icon matPrefix>person</mat-icon>
@@ -329,20 +330,14 @@
             <mat-form-field matTooltip="{{ tooltipData.rfcTercero }}" appearance="fill">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix>fingerprint</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                #input_rfc_tercero
-                formControlName="rfc"
-                type="text"
-                maxlength="13"
-              />
-              <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
+              <input matInput #input_rfc_tercero formControlName="rfc" type="text" maxlength="13" />
+              <!-- <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint> -->
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.tercero }}" appearance="fill">
               <mat-label>Persona Física o Moral</mat-label>
               <mat-icon matPrefix>person</mat-icon>
               <mat-select formControlName="tipoPersona">
+                <!--  CAMBIO DE Fisica a FISICA -->
                 <mat-option value="FISICA"> Física </mat-option>
                 <mat-option value="MORAL"> Moral </mat-option>
               </mat-select>
@@ -382,16 +377,8 @@
             <mat-form-field appearance="fill" formGroupName="localizacionInversion" *ngIf="tipoDomicilio === 'MEXICO'">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix>fingerprint</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                #input_rfc_institucion
-                type="text"
-                formControlName="rfc"
-                maxlength="13"
-                required
-              />
-              <mat-hint align="end">{{ input_rfc_institucion.value?.length || 0 }}/13</mat-hint>
+              <input matInput #input_rfc_institucion type="text" formControlName="rfc" maxlength="13" />
+              <!-- <mat-hint align="end">{{ input_rfc_institucion.value?.length || 0 }}/13</mat-hint> -->
             </mat-form-field>
             <mat-form-field
               appearance="fill"
@@ -492,8 +479,13 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 14 DE 15
+      <button mat-raised-button color="primary"
+      [disabled]="!(inversion?.length > 0 || inversionesCuentasValoresForm.value.ninguno)"
+      [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/adeudos'">
+      CONTINUAR
+      {{ tipoDeclaracion == 'modificacion' ? '13' : '14'}}
+      DE
+      {{ tipoDeclaracion == 'modificacion' ? '14' : '15'}}
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
     </div>

@@ -90,6 +90,9 @@
                   <button *ngIf="isRoot" mat-icon-button (click)="changeRoles(row)" matTooltip="Editar roles">
                     <mat-icon>supervisor_account</mat-icon>
                   </button>
+                  <button *ngIf="isRoot" mat-icon-button (click)="reestablecerContrasena(row)">
+                    <mat-icon>lock</mat-icon>
+                  </button>
                 </td>
               </ng-container>
 

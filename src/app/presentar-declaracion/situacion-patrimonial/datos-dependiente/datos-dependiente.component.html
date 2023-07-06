@@ -907,7 +907,12 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/ingresos-netos'"
+        [disabled]="!(dependienteEconomico?.length > 0 || datosDependientesEconomicosForm.value.ninguno)"
+      >
         CONTINUAR 8 DE 15
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

@@ -106,7 +106,6 @@
         <button mat-raised-button color="primary" (click)="addItem()">AGREGAR APOYO</button>
       </div>
     </div>
-
     <!-- Formulario -->
     <form (ngSubmit)="saveItem()" [formGroup]="apoyosForm" *ngIf="editMode">
       <!-- Agregar -->
@@ -187,16 +186,19 @@
             </mat-select>
           </mat-form-field>
 
+          <!--  -->
           <mat-form-field
-            matTooltip="{{ tooltipData.montoAproximado }}"
             appearance="fill"
             formGroupName="montoApoyoMensual"
+            *ngIf="apoyosForm.value.apoyo?.formaRecepcion == 'MONETARIO'"
           >
             <mat-label>Monto aproximado del apoyo mensual</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
             <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" required />
           </mat-form-field>
-          <mat-form-field appearance="fill">
+
+          <!--  -->
+          <mat-form-field appearance="fill" *ngIf="apoyosForm.value.apoyo?.formaRecepcion == 'ESPECIE'">
             <mat-label>Especifique el apoyo</mat-label>
             <mat-icon matPrefix>account_balance_wallet</mat-icon>
             <input
@@ -250,7 +252,10 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
+      <button mat-raised-button color="primary"
+      [disabled]="!(apoyo?.length > 0 || apoyosForm.value.ninguno)"
+      [routerLink]="'/' + tipoDeclaracion + '/intereses/representacion'">
+
         CONTINUAR 4 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

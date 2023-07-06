@@ -21,7 +21,9 @@ import { tooltipData } from '@static/tooltips/intereses/toma-descisiones';
 
 import { DeclaracionOutput, ParticipacionTD, ParticipacionTomaDecisiones } from '@models/declaracion';
 
-import { findOption, ifExistsEnableFields } from '@utils/utils';
+import { findOption, ifExistEnableFields } from '@utils/utils';
+import { ValidationContext } from 'graphql';
+import { Constantes } from '@app/@shared/constantes';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -67,7 +69,8 @@ export class TomaDecisionesComponent implements OnInit {
   }
 
   addItem() {
-    this.participacionTomaDecisionesForm.reset();
+    ///this.participacionTomaDecisionesForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }
@@ -98,19 +101,11 @@ export class TomaDecisionesComponent implements OnInit {
     this.participacionTomaDecisionesForm = this.formBuilder.group({
       ninguno: [false],
       participacion: this.formBuilder.group({
-        //tipoOperacion: ['', Validators.required],
+        tipoOperacion: ['AGREGAR'],
         tipoRelacion: ['', Validators.required],
         tipoInstitucion: ['', [Validators.required]],
         nombreInstitucion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-        rfc: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(
-              /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-            ),
-          ],
-        ],
+        rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         puestoRol: ['', Validators.pattern(/^\S.*\S?$/)],
         fechaInicioParticipacion: ['', [Validators.required]],
         recibeRemuneracion: [false, Validators.required],
@@ -304,7 +299,8 @@ export class TomaDecisionesComponent implements OnInit {
   }
 
   setEditMode() {
-    this.participacionTomaDecisionesForm.reset();
+    //this.participacionTomaDecisionesForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }

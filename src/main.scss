@@ -172,26 +172,27 @@ $mat-dark-theme-background: (
 // Theme Config
 
 body {
-  --primary-color: #34b3eb;
-  --primary-lighter-color: #c2e8f9;
-  --primary-darker-color: #219ae2;
+  --primary-color: rgb(127, 112, 63);
+  --primary-lighter-color: #cab87c;
+  --primary-darker-color: #49453c;
   --text-primary-color: #{$light-primary-text};
   --text-primary-lighter-color: #{$dark-primary-text};
   --text-primary-darker-color: #{$light-primary-text};
 }
 
 $mat-primary: (
-  main: #34b3eb,
-  lighter: #c2e8f9,
-  darker: #219ae2,
-  200: #34b3eb,
+  // main: #34b3eb,
+  main: #635c46,
+  lighter: #cab87c,
+  darker: #49453c,
+  200: #635c46,
   // For slide toggle,
   contrast:
     (
       main: $light-primary-text,
       lighter: $dark-primary-text,
       darker: $light-primary-text,
-    ),
+    )
 );
 $theme-primary: mat-palette($mat-primary, main, lighter, darker);
 
@@ -301,6 +302,12 @@ mat-vertical-stepper {
   .mat-step .mat-step-label {
     white-space: normal;
   }
+}
+
+.linea-arriba {
+  background-color: #dedad1;
+  margin: 0;
+  height: 1em;
 }
 
 // Theme customization

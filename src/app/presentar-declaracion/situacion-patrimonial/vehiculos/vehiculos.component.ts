@@ -24,9 +24,8 @@ import { tooltipData } from '@static/tooltips/situacion-patrimonial/vehiculos';
 
 import { DeclaracionOutput, Vehiculo, Vehiculos } from '@models/declaracion';
 
-import { findOption, ifExistsEnableFields } from '@utils/utils';
-
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+import { findOption, ifExistEnableFields } from '@utils/utils';
+import { Constantes } from '@app/@shared/constantes';
 
 @Component({
   selector: 'app-vehiculos',
@@ -74,7 +73,8 @@ export class VehiculosComponent implements OnInit {
   }
 
   addItem() {
-    this.vehiculosForm.reset();
+    //this.vehiculosForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }
@@ -115,7 +115,8 @@ export class VehiculosComponent implements OnInit {
             [
               Validators.required,
               Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
+                Constantes.VALIDACION_RFC
+                // /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
               ),
             ],
           ],
@@ -126,13 +127,14 @@ export class VehiculosComponent implements OnInit {
         anio: [null, [Validators.required, Validators.pattern(/^\d{4}$/)]],
         numeroSerieRegistro: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
         tercero: this.formBuilder.group({
-          tipoPersona: [null],
-          nombreRazonSocial: [null, [Validators.pattern(/^\S.*\S$/)]],
+          tipoPersona: ['FISICA', [Validators.required]],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
           rfc: [
             null,
             [
               Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
+                Constantes.VALIDACION_RFC
+                ///^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
               ),
             ],
           ],
@@ -150,6 +152,33 @@ export class VehiculosComponent implements OnInit {
         fechaAdquisicion: [null, [Validators.required]],
       }),
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+    });
+
+    /////////////////////////////
+    this.vehiculosForm.get('vehiculo.titular').valueChanges.subscribe((val) => {
+      if (!val) return;
+
+      const razonSocial = this.vehiculosForm.get('vehiculo.tercero').get('nombreRazonSocial');
+      const tipoPersona = this.vehiculosForm.get('vehiculo.tercero').get('tipoPersona');
+      const rfc = this.vehiculosForm.get('vehiculo.tercero').get('rfc');
+
+      if (val.clave === 'DEC') {
+        razonSocial.clearValidators();
+        tipoPersona.clearValidators();
+        rfc.clearValidators();
+
+        razonSocial.setValue('');
+        rfc.setValue('');
+        tipoPersona.setValue('FISICA');
+      } else {
+        tipoPersona.setValidators([Validators.required]);
+        razonSocial.setValidators([Validators.required]);
+        rfc.setValidators([Validators.pattern(Constantes.VALIDACION_RFC), Validators.required]);
+      }
+
+      razonSocial.updateValueAndValidity();
+      rfc.updateValueAndValidity();
+      tipoPersona.updateValueAndValidity();
     });
   }
 
@@ -313,7 +342,8 @@ export class VehiculosComponent implements OnInit {
   }
 
   setEditMode() {
-    this.vehiculosForm.reset();
+    //this.vehiculosForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }

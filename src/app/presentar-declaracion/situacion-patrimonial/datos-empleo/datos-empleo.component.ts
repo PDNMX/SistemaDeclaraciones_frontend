@@ -28,6 +28,7 @@ import { UntilDestroy, untilDestroyed } from '@app/@core';
   styleUrls: ['./datos-empleo.component.scss'],
 })
 export class DatosEmpleoComponent implements OnInit {
+  avanzar = false;
   aclaraciones = false;
   datosEmpleoCargoComisionForm: FormGroup;
   estado: Catalogo = null;
@@ -229,6 +230,9 @@ export class DatosEmpleoComponent implements OnInit {
 
       this.isLoading = false;
       this.openSnackBar('Información actualizada', 'Aceptar');
+
+      if(this.avanzar)
+        this.router.navigate([this.getLinkSiguiente()]);
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
@@ -276,5 +280,21 @@ export class DatosEmpleoComponent implements OnInit {
       aclaraciones.reset();
     }
     this.aclaraciones = value;
+  }
+
+  getLinkSiguiente() {
+    const base =
+      '/' +
+      this.tipoDeclaracion +
+      '/' +
+      (this.declaracionSimplificada ? 'simplificada/' : '/') +
+      'situacion-patrimonial/';
+
+    return base + 'experiencia-laboral/';
+  }
+
+  siguiente() {
+    this.avanzar = true;
+    this.saveInfo();
   }
 }

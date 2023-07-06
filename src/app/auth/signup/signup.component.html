@@ -3,6 +3,7 @@
   <mat-toolbar class="background-white title-toolbar">
     <label class="step-title">Registro</label>
   </mat-toolbar>
+
   <mat-divider></mat-divider>
   <div class="signup-container" fxLayout="row" fxLayoutAlign="center center">
     <mat-card fxFlex="90%" fxFlex.sm="70%" fxFlex.md="60%" fxFlex.gt-md="55%" class="signup-box">
@@ -36,11 +37,11 @@
               formControlName="primerApellido"
               autocomplete="apellido"
               [placeholder]="'Apellido paterno' | translate"
-              required
+
             />
-            <mat-error *ngIf="signupForm.controls.primerApellido.invalid && signupForm.controls.primerApellido.touched">
-              <span translate>Primer apellido requerido</span>
-            </mat-error>
+            <!-- <mat-error *ngIf="signupForm.controls.primerApellido.invalid && signupForm.controls.primerApellido.touched">
+              <span translate>Apellido paterno requerido</span>
+            </mat-error> -->
           </mat-form-field>
 
           <mat-form-field [hideRequiredMarker]="true" appearance="fill">
@@ -53,11 +54,11 @@
               autocomplete="apellido"
               [placeholder]="'Apellido materno' | translate"
             />
-            <mat-error
+            <!-- <mat-error
               *ngIf="signupForm.controls.segundoApellido.invalid && signupForm.controls.segundoApellido.touched"
             >
-              <span translate>Segundo apellido requerido</span>
-            </mat-error>
+              <span translate>Apellido materno requerido</span>
+            </mat-error> -->
           </mat-form-field>
 
           <mat-form-field [hideRequiredMarker]="true" appearance="fill">

@@ -24,6 +24,7 @@ export const declaracionesMetadata = gql`
         tipoDeclaracion
         createdAt
         updatedAt
+        autorizaPublica
         owner {
           _id
           username
@@ -783,7 +784,8 @@ export const inversionesCuentasValoresQuery = gql`
           }
           subTipoInversion {
             clave
-            valor
+            valor,
+            tipoInversion
           }
           titular {
             clave
@@ -982,6 +984,7 @@ export const beneficiosPrivadosQuery = gql`
         ninguno
         beneficio {
           tipoOperacion
+          #tipoPersona se quita porque el formulario no tiene estos campos
           tipoBeneficio {
             clave
             valor
@@ -997,7 +1000,6 @@ export const beneficiosPrivadosQuery = gql`
           }
           formaRecepcion
           especifiqueBeneficio
-
           montoMensualAproximado {
             valor
             moneda
@@ -1099,7 +1101,7 @@ export const participacionQuery = gql`
       participacion {
         ninguno
         participacion {
-          tipoOperacion
+          #tipoOperacion
           tipoRelacion
           nombreEmpresaSociedadAsociacion
           rfc

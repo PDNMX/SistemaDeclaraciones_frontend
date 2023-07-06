@@ -37,6 +37,7 @@ export class ShellComponent implements OnInit {
       text: '¿Te desempeñaste como servidor público en el año inmediato anterior?',
       url: '/situacion-patrimonial/servidor-publico',
       simplificada: true,
+      ocultar: false
     },
     { text: 'Bienes inmuebles', url: '/situacion-patrimonial/bienes-inmuebles' },
     { text: 'Vehículos', url: '/situacion-patrimonial/vehiculos' },
@@ -46,7 +47,7 @@ export class ShellComponent implements OnInit {
       url: '/situacion-patrimonial/inversiones',
     },
     { text: 'Adeudos / pasivos', url: '/situacion-patrimonial/adeudos' },
-    { text: 'Préstamo o comodato por terceros', url: '/situacion-patrimonial/prestamos-terceros' },
+    { text: 'Préstamo o comodato por terceros (situación actual)', url: '/situacion-patrimonial/prestamos-terceros' },
   ];
 
   interesesOptions = [
@@ -99,6 +100,15 @@ export class ShellComponent implements OnInit {
     const chunks = this.router.url.split('/');
     this.tipoDeclaracion = chunks[1] || null;
     this.declaracionSimplificada = chunks[2] === 'simplificada';
+
+    if(this.tipoDeclaracion == 'modificacion') {
+      this.situacionPatrimonialOptions[8].ocultar = true;
+    } else if (this.tipoDeclaracion == 'inicial') {
+      this.situacionPatrimonialOptions[3].text += " que inicial";
+    } else
+    {
+      this.situacionPatrimonialOptions[3].text += " que concluye";
+    }
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

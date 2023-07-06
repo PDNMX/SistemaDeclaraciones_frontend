@@ -46,7 +46,11 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
         }
       }
     }
-    if (networkError) console.log(`[Network error]: ${networkError}`);
+
+    if (networkError){
+      console.log(`[Network error]:`);
+      console.log(networkError);
+    }
   });
 
   const defaultOptions: DefaultOptions = {

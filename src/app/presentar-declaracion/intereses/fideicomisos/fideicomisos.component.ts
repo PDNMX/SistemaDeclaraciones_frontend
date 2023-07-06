@@ -20,6 +20,7 @@ import TipoOperacion from '@static/catalogos/tipoOperacion.json';
 import TipoParticipacion from '@static/catalogos/tipoParticipacionFideicomiso.json';
 import { tooltipData } from '@static/tooltips/intereses/fideicomisos';
 import { findOption } from '@utils/utils';
+import { Constantes } from '@app/@shared/constantes';
 
 @UntilDestroy()
 @Component({
@@ -65,7 +66,8 @@ export class FideicomisosComponent implements OnInit {
   }
 
   addItem() {
-    this.fideicomisosForm.reset();
+    //this.fideicomisosForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }
@@ -79,55 +81,24 @@ export class FideicomisosComponent implements OnInit {
     this.fideicomisosForm = this.formBuilder.group({
       ninguno: false,
       fideicomiso: this.formBuilder.group({
-        tipoOperacion: [null, [Validators.required]],
-        tipoRelacion: [null, [Validators.required]],
-        tipoFideicomiso: [null, [Validators.required]],
-        tipoParticipacion: [null, [Validators.required]],
-        rfcFideicomiso: [
-          null,
-          [
-            Validators.pattern(
-              /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-            ),
-          ],
-        ],
+        tipoOperacion: ['AGREGAR'],
+        tipoRelacion: ['', Validators.required],
+        tipoFideicomiso: ['', Validators.required],
+        tipoParticipacion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+        rfcFideicomiso: ['', [Validators.pattern(Constantes.VALIDACION_RFC)]],
         fideicomitente: this.formBuilder.group({
-          tipoPersona: [{ disabled: true, value: null }, [Validators.required]],
-          nombreRazonSocial: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-          rfc: [
-            { disabled: true, value: null },
-            [
-              Validators.required,
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
+          tipoPersona: ['', Validators.required],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
         fiduciario: this.formBuilder.group({
-          nombreRazonSocial: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-          rfc: [
-            { disabled: true, value: null },
-            [
-              Validators.required,
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
         fideicomisario: this.formBuilder.group({
-          tipoPersona: [{ disabled: true, value: null }, [Validators.required]],
-          nombreRazonSocial: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-          rfc: [
-            { disabled: true, value: null },
-            [
-              Validators.required,
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
+          tipoPersona: ['', Validators.required],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
         sector: [null, [Validators.required]],
         extranjero: [null, [Validators.required]],
@@ -306,7 +277,8 @@ export class FideicomisosComponent implements OnInit {
   }
 
   setEditMode() {
-    this.fideicomisosForm.reset();
+    //this.fideicomisosForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }

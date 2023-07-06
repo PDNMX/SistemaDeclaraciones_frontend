@@ -25,7 +25,7 @@
 
                   <ng-container matColumnDef="owner">
                     <th mat-header-cell *matHeaderCellDef>Declarante</th>
-                    <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
+                    <td mat-cell *matCellDef="let row">{{ row.owner?.nombre + ' ' + row.owner?.primerApellido + ' ' + row.owner?.segundoApellido + ' (' + row.owner?.username + ')'}}</td>
                   </ng-container>
 
                   <ng-container matColumnDef="firmada">
@@ -39,25 +39,37 @@
                   </ng-container>
 
                   <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
-                    <td mat-cell *matCellDef="let row" class="text-center">
-                      <button
-                        *ngIf="isSuperAdmin || isRoot"
-                        mat-icon-button
-                        (click)="previewDeclaration(row._id)"
-                        [disabled]="!row.firmada"
-                        matTooltip="Ver detalle de la declaración"
-                      >
+                    <th mat-header-cell *matHeaderCellDef class="">Acciones</th>
+                    <td mat-cell *matCellDef="let row" class="">
+                      <button *ngIf="isSuperAdmin || isRoot" mat-icon-button (click)="previewDeclaration(row._id, false)">
                         <mat-icon>visibility</mat-icon>
                       </button>
+
                       <button
-                        *ngIf="isSuperAdmin || isRoot"
+                      *ngIf="isSuperAdmin || isRoot"
+                      mat-icon-button
+                      (click)="previewDeclaration(row._id, true)"
+                      title="Versión pública"
+                    >
+                      <mat-icon>public</mat-icon>
+                    </button>
+
+                      <button
+                        *ngIf="(isSuperAdmin || isRoot) && !row.autorizaPublica && row.firmada === true"
                         mat-icon-button
-                        (click)="previewDeclaration(row._id, true)"
-                        [disabled]="!row.firmada"
-                        matTooltip="Ver datos públicos de la declaración"
+                        (click)="hacerPublica(row)"
+                        title="Autorizar que sea publicada"
                       >
-                        <mat-icon>folder_shared</mat-icon>
+                        <mat-icon>cloud_upload</mat-icon>
+                      </button>
+
+                      <button
+                      *ngIf="(isSuperAdmin || isRoot) && row.autorizaPublica === true && row.firmada === true"
+                      mat-icon-button
+                      (click)="quitarPublica(row)"
+                      title="Quitar autorización de publicación"
+                      >
+                        <mat-icon>cloud_off</mat-icon>
                       </button>
                     </td>
                   </ng-container>
@@ -87,7 +99,7 @@
 
                 <ng-container matColumnDef="owner">
                   <th mat-header-cell *matHeaderCellDef>Declarante</th>
-                  <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.owner?.nombre + ' ' + row.owner?.primerApellido + ' ' + row.owner?.segundoApellido + ' (' + row.owner?.username + ')'}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="firmada">
@@ -106,20 +118,18 @@
                     <button
                       *ngIf="isSuperAdmin || isRoot"
                       mat-icon-button
-                      (click)="previewDeclaration(row._id)"
-                      disabled="!row.firmada"
-                      matTooltip="Ver detalle de la declaración"
+                      (click)="previewDeclaration(row._id, false)"
                     >
                       <mat-icon>visibility</mat-icon>
                     </button>
+
                     <button
                       *ngIf="isSuperAdmin || isRoot"
                       mat-icon-button
                       (click)="previewDeclaration(row._id, true)"
-                      [disabled]="!row.firmada"
-                      matTooltip="Ver datos públicos de la declaración"
+
                     >
-                      <mat-icon>folder_shared</mat-icon>
+                      <mat-icon>public</mat-icon>
                     </button>
                   </td>
                 </ng-container>
@@ -148,7 +158,7 @@
 
                 <ng-container matColumnDef="owner">
                   <th mat-header-cell *matHeaderCellDef>Declarante</th>
-                  <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.owner?.nombre + ' ' + row.owner?.primerApellido + ' ' + row.owner?.segundoApellido + ' (' + row.owner?.username + ')'}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="firmada">
@@ -167,20 +177,19 @@
                     <button
                       *ngIf="isSuperAdmin || isRoot"
                       mat-icon-button
-                      (click)="previewDeclaration(row._id)"
-                      disabled="!row.firmada"
-                      matTooltip="Ver detalle de la declaración"
+                      (click)="previewDeclaration(row._id, false)"
+
                     >
                       <mat-icon>visibility</mat-icon>
                     </button>
+
                     <button
                       *ngIf="isSuperAdmin || isRoot"
                       mat-icon-button
                       (click)="previewDeclaration(row._id, true)"
-                      [disabled]="!row.firmada"
-                      matTooltip="Ver datos públicos de la declaración"
+
                     >
-                      <mat-icon>folder_shared</mat-icon>
+                      <mat-icon>public</mat-icon>
                     </button>
                   </td>
                 </ng-container>
@@ -209,7 +218,7 @@
 
                 <ng-container matColumnDef="owner">
                   <th mat-header-cell *matHeaderCellDef>Declarante</th>
-                  <td mat-cell *matCellDef="let row">{{ row.owner?.username }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.owner?.nombre + ' ' + row.owner?.primerApellido + ' ' + row.owner?.segundoApellido + ' (' + row.owner?.username + ')'}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="firmada">
@@ -228,20 +237,19 @@
                     <button
                       *ngIf="isSuperAdmin || isRoot"
                       mat-icon-button
-                      (click)="previewDeclaration(row._id)"
-                      [disabled]="!row.firmada"
-                      matTooltip="Ver detalle de la declaración"
+                      (click)="previewDeclaration(row._id, false)"
+
                     >
                       <mat-icon>visibility</mat-icon>
                     </button>
+
                     <button
                       *ngIf="isSuperAdmin || isRoot"
                       mat-icon-button
                       (click)="previewDeclaration(row._id, true)"
-                      [disabled]="!row.firmada"
-                      matTooltip="Ver datos públicos de la declaración"
+
                     >
-                      <mat-icon>folder_shared</mat-icon>
+                      <mat-icon>public</mat-icon>
                     </button>
                   </td>
                 </ng-container>

@@ -66,9 +66,13 @@
                 Editar
               </button>
               <button mat-button color="primary" (click)="previewDeclaration(declaracion._id)">Ver</button>
-              <button mat-button color="primary" (click)="previewDeclaration(declaracion._id, true)">
-                Versión pública
+              <button mat-button color="primary" (click)="autorizarPublica(declaracion)"  *ngIf="declaracion.autorizaPublica !== true && declaracion.firmada === true">
+                Autorizo que sea pública
               </button>
+              <span *ngIf="declaracion.autorizaPublica === true">
+                <mat-icon matPrefix color="primary">public</mat-icon>
+                Declaración autorizada para ser pública
+              </span>
             </div>
           </mat-card>
         </mat-list-item>
@@ -76,7 +80,7 @@
     </div>
     <mat-divider class="mg-top-100px"></mat-divider>
     <div class="center">
-      <app-paginator></app-paginator>
+      <app-paginator (siguienteClicked)="siguienteClicked"></app-paginator>
     </div>
   </div>
 

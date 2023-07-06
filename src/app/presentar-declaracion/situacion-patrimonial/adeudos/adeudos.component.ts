@@ -24,6 +24,7 @@ import Monedas from '@static/catalogos/monedas.json';
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/adeudos';
 
 import { findOption } from '@utils/utils';
+import { Constantes } from '@app/@shared/constantes';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -71,7 +72,8 @@ export class AdeudosComponent implements OnInit {
   }
 
   addItem() {
-    this.adeudosPasivosForm.reset();
+    //this.adeudosPasivosForm.reset();
+    this.createForm();
     this.adeudosPasivosForm.get('ninguno').setValue(false);
     this.editMode = true;
     this.editIndex = null;
@@ -82,6 +84,8 @@ export class AdeudosComponent implements OnInit {
     if (value === 'MX') {
       this.adeudosPasivosForm.get('adeudo.localizacionAdeudo.pais').setValue('MX');
     }
+    else
+    this.adeudosPasivosForm.get('adeudo.localizacionAdeudo').reset();
   }
 
   cancelEditMode() {
@@ -106,29 +110,14 @@ export class AdeudosComponent implements OnInit {
           moneda: ['MXN', [Validators.pattern(/^\S.*\S?$/)]],
         }),
         tercero: this.formBuilder.group({
-          tipoPersona: [null, [Validators.pattern(/^\S.*$/)]],
-          nombreRazonSocial: [null, [Validators.pattern(/^\S.*$/)]],
-          rfc: [
-            null,
-            [
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
+          tipoPersona: ['FISICA', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
         otorganteCredito: this.formBuilder.group({
-          tipoPersona: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-          nombreInstitucion: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-          rfc: [
-            null,
-            [
-              Validators.required,
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
+          tipoPersona: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          nombreInstitucion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
         localizacionAdeudo: this.formBuilder.group({
           pais: ['MX', [Validators.required]],
@@ -138,6 +127,33 @@ export class AdeudosComponent implements OnInit {
         { disabled: true, value: null },
         [Validators.required, Validators.pattern(/^\S.*\S$/)],
       ],
+    });
+
+    /////////////////////////////
+    this.adeudosPasivosForm.get('adeudo.titular').valueChanges.subscribe((val) => {
+      if (!val) return;
+
+      const razonSocial = this.adeudosPasivosForm.get('adeudo.tercero').get('nombreRazonSocial');
+      const tipoPersona = this.adeudosPasivosForm.get('adeudo.tercero').get('tipoPersona');
+      const rfc = this.adeudosPasivosForm.get('adeudo.tercero').get('rfc');
+
+      if (val.clave === 'DEC') {
+        razonSocial.clearValidators();
+        tipoPersona.clearValidators();
+        rfc.clearValidators();
+
+        razonSocial.setValue('');
+        rfc.setValue('');
+        tipoPersona.setValue('FISICA');
+      } else {
+        tipoPersona.setValidators([Validators.required]);
+        razonSocial.setValidators([Validators.required]);
+        rfc.setValidators([Validators.pattern(Constantes.VALIDACION_RFC), Validators.required]);
+      }
+
+      razonSocial.updateValueAndValidity();
+      rfc.updateValueAndValidity();
+      tipoPersona.updateValueAndValidity();
     });
   }
 

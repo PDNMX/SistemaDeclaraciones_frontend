@@ -10,7 +10,7 @@
     <mat-divider></mat-divider>
 
     <mat-toolbar class="background-white">
-      <label class="step-title"> 5. Experiencia laboral (últimos cinco empleos)</label>
+      <label class="step-title"> 5. Experiencia laboral</label>
     </mat-toolbar>
 
     <mat-divider></mat-divider>
@@ -431,14 +431,12 @@
 
     <mat-divider></mat-divider>
 
+    <!-- [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/datos-pareja'" -->
     <div class="boton center">
-      <button *ngIf="!declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 6 DE 15
-        <mat-icon matSofix>arrow_forward</mat-icon>
-      </button>
-
-      <button *ngIf="declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 6 DE 7
+      <button mat-raised-button color="primary"
+      [disabled]="!(experiencia?.length > 0 || experienciaLaboralForm.value.ninguno)"
+      [routerLink]="getLinkSiguiente()">
+        CONTINUAR 6 DE {{ declaracionSimplificada ? (tipoDeclaracion != 'modificacion' ? '7' : '6') : '15' }}
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
     </div>

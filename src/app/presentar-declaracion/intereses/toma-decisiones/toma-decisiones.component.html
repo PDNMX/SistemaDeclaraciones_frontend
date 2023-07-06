@@ -188,16 +188,7 @@
           <mat-form-field appearance="fill">
             <mat-label>RFC</mat-label>
             <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_rfc_tercero
-              type="text"
-              maxlength="13"
-              formControlName="rfc"
-              required
-            />
-            <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
+            <input matInput #input_rfc_tercero type="text" maxlength="13" formControlName="rfc" />
           </mat-form-field>
           <mat-form-field matTooltip="{{ tooltipData.puesto }}" appearance="fill">
             <mat-label>Puesto/Rol</mat-label>
@@ -207,16 +198,14 @@
 
           <mat-form-field matTooltip="{{ tooltipData.fechaInicioParticipacion }}" appearance="fill">
             <mat-label>Fecha de inicio de participación dentro de la Institución</mat-label>
-            <mat-icon matPrefix>beenhere</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              type="text"
-              placeholder="DD/MM/AAAA"
-              formControlName="fechaInicioParticipacion"
-              required
-            />
+            <input matInput [matDatepicker]="pickerAdquisicion" formControlName="fechaInicioParticipacion" />
             <mat-hint>dd/mm/yyyy</mat-hint>
+            <mat-datepicker-toggle matPrefix [for]="pickerAdquisicion"> </mat-datepicker-toggle>
+            <mat-datepicker #pickerAdquisicion></mat-datepicker>
+            <!-- <mat-label>Fecha de inicio de participación dentro de la Institución</mat-label>
+            <mat-icon matPrefix>beenhere</mat-icon>
+            <input matInput type="text" placeholder="DD/MM/AAAA" formControlName="fechaInicioParticipacion" />
+            <mat-hint>dd/mm/yyyy</mat-hint> -->
           </mat-form-field>
         </div>
 
@@ -319,7 +308,10 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
+      <button mat-raised-button color="primary"
+      [disabled]="!(participacion?.length > 0  || participacionTomaDecisionesForm.value.ninguno)"
+      [routerLink]="'/' + tipoDeclaracion + '/intereses/apoyos-publicos'">
+
         CONTINUAR 3 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

@@ -7,13 +7,8 @@
 
     <mat-toolbar class="background-white">
       <label class="step-title">
-        10. Bienes inmuebles
-        <span *ngIf="tipoDeclaracion === 'inicial'">(situación actual)</span>
-        <span *ngIf="tipoDeclaracion === 'modificacion'"
-          >(entre el 1 de enero y 31 de diciembre del año inmediato anterior)</span
-        >
-        <span *ngIf="tipoDeclaracion === 'conclusion'">(del año en curso a la fecha de conclusión del empleo)</span>
-      </label>
+        {{ tipoDeclaracion == 'modificacion' ? '9' : '10' }}
+        Bienes inmuebles</label>
     </mat-toolbar>
 
     <mat-divider></mat-divider>
@@ -248,7 +243,7 @@
     </div>
 
     <!-- Formulario -->
-    <form (ngSubmit)="saveItem()" [formGroup]="bienesInmueblesForm" *ngIf="editMode">
+    <form (ngSubmit)="saveItem()" [formGroup]="bienesInmueblesForm" #biForm *ngIf="editMode">
       <!-- Agregar -->
       <div class="padding-agregar" formGroupName="bienInmueble">
         <mat-divider></mat-divider>
@@ -284,8 +279,14 @@
               </mat-select>
             </mat-form-field>
           </div>
+
           <!-- Tercero -->
-          <div class="grid-3-col grid-margin" formGroupName="tercero">
+          <!-- *ngIf="bienesInmueblesForm.value.bienInmueble?.titular?.clave != 'DEC'"  -->
+          <div
+            class="grid-3-col grid-margin"
+            formGroupName="tercero"
+            *ngIf="bienesInmueblesForm.value.bienInmueble?.titular?.clave != 'DEC'"
+          >
             <mat-radio-group matTooltip="{{ tooltipData.tercero }}" class="checkbox" formControlName="tipoPersona">
               <p class="question double-col">Tercero</p>
               <mat-radio-button value="FISICA"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
@@ -299,15 +300,8 @@
             <mat-form-field matTooltip="{{ tooltipData.rfc }}" appearance="fill">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix>fingerprint</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                #input_rfc_tercero
-                formControlName="rfc"
-                type="text"
-                maxlength="13"
-              />
-              <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint>
+              <input matInput #input_rfc_tercero formControlName="rfc" type="text" maxlength="13" />
+              <!-- <mat-hint align="end">{{ input_rfc_tercero.value?.length || 0 }}/13</mat-hint> -->
             </mat-form-field>
           </div>
           <div class="grid-3-col grid-margin">
@@ -404,17 +398,8 @@
             <mat-form-field matTooltip="{{ tooltipData.rfcTransmisor }}" appearance="fill" formGroupName="transmisor">
               <mat-label>RFC</mat-label>
               <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                class="no-public"
-                formControlName="rfc"
-                #input_rfc
-                type="text"
-                maxlength="13"
-                required
-              />
-              <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/13</mat-hint>
+              <input matInput class="no-public" formControlName="rfc" #input_rfc type="text" maxlength="13" />
+              <!-- <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/{{ biForm == "Fisica" ? "13" : "12"}}</mat-hint> -->
             </mat-form-field>
             <mat-form-field
               matTooltip="{{ tooltipData.relacionTransmisorTitular }}"
@@ -586,9 +571,9 @@
               <mat-form-field appearance="fill">
                 <mat-label>País</mat-label>
                 <mat-icon matPrefix class="no-public">location_city</mat-icon>
-                <mat-select formControlName="pais" required>
-                  <mat-option *ngFor="let opt of paisesCatalogo" value="{{ opt.alpha2 }}">
-                    {{ opt.name }}
+                <mat-select formControlName="pais">
+                  <mat-option *ngFor="let opt of paisesCatalogo" value="{{ opt.clave }}">
+                    {{ opt.valor }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -756,8 +741,17 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 11 DE 15
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="!(bienInmueble?.length > 0 || bienesInmueblesForm.value.ninguno)"
+        [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/vehiculos'"
+      >
+        CONTINUAR
+        {{ tipoDeclaracion == 'modificacion' ? '10' : '11'}}
+        DE
+        {{ tipoDeclaracion == 'modificacion' ? '14' : '15'}}
+
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
     </div>

@@ -6,8 +6,7 @@ import { merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { Apollo } from 'apollo-angular';
-import { search, users } from '@api/user';
-import { UntilDestroy, untilDestroyed } from '@core';
+import { restaurarContrasena, search, users } from '@api/user';
 import { User, UsersPage } from '@models/user';
 import { ROLES } from '@utils/constants';
 
@@ -68,7 +67,7 @@ export class UsersComponent implements AfterViewInit {
     },
   };
 
-  PAGE_SIZE = 10;
+  PAGE_SIZE = 50;
 
   @ViewChild('usersPaginator') usersPaginator: MatPaginator;
   @ViewChild('searchPaginator') searchPaginator: MatPaginator;
@@ -221,5 +220,24 @@ export class UsersComponent implements AfterViewInit {
     return roles.map((r) => {
       return ROLES[r];
     });
+  }
+
+  async reestablecerContrasena(usr: User) {
+    try {
+      await this.apollo
+        .mutate({
+          mutation: restaurarContrasena,
+          variables: {
+            usuario: usr.username,
+            nuevaContrasena: usr.curp,
+          },
+        })
+        .toPromise()
+
+        ;
+        this.presentAlert('Usuario actualizado', 'La contraseÃ±a asignada es el la CURP del declarante: ' + usr.curp);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

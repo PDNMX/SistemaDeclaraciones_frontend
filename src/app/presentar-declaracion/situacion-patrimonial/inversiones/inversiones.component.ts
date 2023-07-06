@@ -23,9 +23,8 @@ import Monedas from '@static/catalogos/monedas.json';
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/inversiones';
 
 import { DeclaracionOutput, Inversion, InversionesCuentasValores } from '@models/declaracion';
-import { findOption, ifExistsEnableFields } from '@utils/utils';
-
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
+import { findOption, ifExistEnableFields } from '@utils/utils';
+import { Constantes } from '@app/@shared/constantes';
 
 @Component({
   selector: 'app-inversiones',
@@ -104,30 +103,15 @@ export class InversionesComponent implements OnInit {
         subTipoInversion: [null, [Validators.required]],
         titular: [null, [Validators.required]],
         tercero: this.formBuilder.group({
-          tipoPersona: [null],
-          nombreRazonSocial: [null, [Validators.pattern(/^\S.*\S?$/)]],
-          rfc: [
-            null,
-            [
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
+          tipoPersona: ['FISICA', [Validators.required]],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
         numeroCuentaContrato: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
         localizacionInversion: this.formBuilder.group({
-          pais: [null, [Validators.required]],
-          institucionRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-          rfc: [
-            null,
-            [
-              Validators.required,
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
+          pais: ['', [Validators.required]],
+          institucionRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
         saldoSituacionActual: this.formBuilder.group({
           valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
@@ -138,6 +122,33 @@ export class InversionesComponent implements OnInit {
         { disabled: true, value: null },
         [Validators.required, Validators.pattern(/^\S.*\S$/)],
       ],
+    });
+
+    /////////////////////////////
+    this.inversionesCuentasValoresForm.get('inversion.titular').valueChanges.subscribe((val) => {
+      if (!val) return;
+
+      const razonSocial = this.inversionesCuentasValoresForm.get('inversion.tercero').get('nombreRazonSocial');
+      const tipoPersona = this.inversionesCuentasValoresForm.get('inversion.tercero').get('tipoPersona');
+      const rfc = this.inversionesCuentasValoresForm.get('inversion.tercero').get('rfc');
+
+      if (val.clave === 'DEC') {
+        razonSocial.clearValidators();
+        tipoPersona.clearValidators();
+        rfc.clearValidators();
+
+        razonSocial.setValue('');
+        rfc.setValue('');
+        tipoPersona.setValue('FISICA');
+      } else {
+        tipoPersona.setValidators([Validators.required]);
+        razonSocial.setValidators([Validators.required]);
+        rfc.setValidators([Validators.pattern(Constantes.VALIDACION_RFC), Validators.required]);
+      }
+
+      razonSocial.updateValueAndValidity();
+      rfc.updateValueAndValidity();
+      tipoPersona.updateValueAndValidity();
     });
   }
 

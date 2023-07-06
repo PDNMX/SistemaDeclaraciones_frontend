@@ -20,6 +20,7 @@ export class ListaDeclaracionesComponent implements OnInit {
 
   async getNumberOfDeclarations() {
     try {
+      const username = sessionStorage.getItem("username");
       const { data }: any = await this.apollo
         .query({
           query: gql`
@@ -33,6 +34,9 @@ export class ListaDeclaracionesComponent implements OnInit {
               }
             }
           `,
+          variables: {
+            userID: username
+          }
         })
         .toPromise();
       this.declaraciones = data.stats.total || 0;

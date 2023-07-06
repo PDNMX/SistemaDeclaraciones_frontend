@@ -22,7 +22,8 @@ import { tooltipData } from '@static/tooltips/intereses/representacion';
 
 import { DeclaracionOutput, Representacion, Representaciones } from '@models/declaracion';
 
-import { findOption, ifExistsEnableFields } from '@utils/utils';
+import { findOption, ifExistEnableFields } from '@utils/utils';
+import { Constantes } from '@app/@shared/constantes';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -68,7 +69,8 @@ export class RepresentacionComponent implements OnInit {
   }
 
   addItem() {
-    this.representacionForm.reset();
+    //this.representacionForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }
@@ -100,21 +102,13 @@ export class RepresentacionComponent implements OnInit {
       ninguno: false,
       // participaciones
       representacion: this.formBuilder.group({
-        //tipoOperacion: ['', Validators.required],
+        tipoOperacion: ['AGREGAR'],
         tipoRelacion: ['', Validators.required],
         tipoRepresentacion: ['', Validators.required],
         fechaInicioRepresentacion: ['', [Validators.required]],
-        tipoPersona: ['', Validators.required],
+        tipoPersona: ['FISICA', Validators.required],
         nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-        rfc: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(
-              /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-            ),
-          ],
-        ],
+        rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         recibeRemuneracion: [false, Validators.required],
         montoMensual: this.formBuilder.group({
           valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
@@ -300,7 +294,8 @@ export class RepresentacionComponent implements OnInit {
   }
 
   setEditMode() {
-    this.representacionForm.reset();
+    //this.representacionForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }

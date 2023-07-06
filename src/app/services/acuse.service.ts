@@ -13,7 +13,7 @@ export class AcuseService {
 
   constructor(private credentialsService: CredentialsService, private http: HttpClient) {}
 
-  getAcuse(id: string) {
+  getAcuse(id: string, publica: boolean) {
     const token = this.credentialsService.token;
 
     const headers = new HttpHeaders({
@@ -22,7 +22,7 @@ export class AcuseService {
 
     try {
       return new Promise((resolve, reject) => {
-        this.http.get(`${environment.serverUrl}/declaracion-preview/${id}`, { headers }).subscribe(
+        this.http.get(`${environment.serverUrl}/declaracion-preview/${id}/${publica}`, { headers }).subscribe(
           (data) => {
             resolve(data ? data['resp'] : null);
           },
@@ -37,7 +37,7 @@ export class AcuseService {
     }
   }
 
-  downloadAcuse(id: string, publicVersion: boolean = false) {
+  downloadAcuse(id: string, publica: boolean) {
     const token = this.credentialsService.token;
 
     const headers = new HttpHeaders({
@@ -46,10 +46,7 @@ export class AcuseService {
     });
 
     return new Promise((resolve, reject) => {
-      const url = publicVersion
-        ? `${environment.serverUrl}/declaracion-preview/${id}?publico=true`
-        : `${environment.serverUrl}/declaracion-preview/${id}`;
-      this.http.get(url, { headers, responseType: 'blob' }).subscribe(
+      this.http.get(`${environment.serverUrl}/declaracion-preview/${id}/${publica}`, { headers, responseType: 'blob' }).subscribe(
         (data) => {
           resolve(data ? data : null);
         },

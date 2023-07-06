@@ -20,6 +20,7 @@ import TipoBeneficio from '@static/catalogos/tipoBeneficio.json';
 import tipoOperacion from '@static/catalogos/tipoOperacion.json';
 import { tooltipData } from '@static/tooltips/intereses/beneficios';
 import { findOption } from '@utils/utils';
+import { Constantes } from '@app/@shared/constantes';
 
 @UntilDestroy()
 @Component({
@@ -66,8 +67,8 @@ export class BeneficiosPrivadosComponent implements OnInit {
   }
 
   addItem() {
-    this.beneficiosPrivadosForm.reset();
-    this.setAclaraciones(this.aclaracionesText);
+    //this.beneficiosPrivadosForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }
@@ -81,21 +82,14 @@ export class BeneficiosPrivadosComponent implements OnInit {
     this.beneficiosPrivadosForm = this.formBuilder.group({
       ninguno: [false],
       beneficio: this.formBuilder.group({
-        tipoOperacion: [null, [Validators.required]],
-        tipoBeneficio: [null, [Validators.required]], //
-        beneficiario: [null, [Validators.required]],
+        tipoOperacion: ['AGREGAR'],
+        //tipoPersona: ['', [Validators.required]],
+        tipoBeneficio: ['', [Validators.required]], //
+        beneficiario: ['', [Validators.required]],
         otorgante: this.formBuilder.group({
-          tipoPersona: [false, [Validators.required]],
-          nombreRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-          rfc: [
-            null,
-            [
-              Validators.required,
-              Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-              ),
-            ],
-          ],
+          tipoPersona: ['', [Validators.required]],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+          rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
         formaRecepcion: [null, [Validators.required]],
         especifiqueBeneficio: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
@@ -319,7 +313,8 @@ export class BeneficiosPrivadosComponent implements OnInit {
   }
 
   setEditMode() {
-    this.beneficiosPrivadosForm.reset();
+    //this.beneficiosPrivadosForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }

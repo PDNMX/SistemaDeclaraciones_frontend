@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
 
+import { datosGeneralesQuery, declaracionesMetadata, declaracionMutation } from '@api/declaracion';
+
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -46,6 +48,8 @@ export class DatosGeneralesComponent implements OnInit {
   tooltipData = tooltipData;
   errorMatcher = new DeclarationErrorStateMatcher();
 
+  avanzar = false;
+
   constructor(
     private apollo: Apollo,
     private dialog: MatDialog,
@@ -62,6 +66,7 @@ export class DatosGeneralesComponent implements OnInit {
   }
 
   confirmSaveInfo() {
+    this.avanzar = false;
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {
         title: 'Guardar cambios',
@@ -81,7 +86,7 @@ export class DatosGeneralesComponent implements OnInit {
   createForm() {
     this.datosGeneralesForm = this.formBuilder.group({
       nombre: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]], //no side white spaces
-      primerApellido: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      primerApellido: [null, [Validators.pattern(/^\S.*\S$/)]],
       segundoApellido: [null, [Validators.pattern(/^\S.*\S$/)]],
       curp: [
         null,
@@ -145,7 +150,38 @@ export class DatosGeneralesComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getUltimaDeclaracionMetadata() {
+    const userId = sessionStorage.getItem("username");
+    try {
+      const { data }: any = await this.apollo
+        .query({
+          query: declaracionesMetadata,
+          variables: {
+            userID: userId,
+            filter: {
+              firmada: true,
+            },
+          },
+        })
+        .toPromise();
+
+      if (data.declaracionesMetadata.docs.length > 0) {
+        // recuperar la última declaración, ya vienen ordenadas por fecha
+        return data.declaracionesMetadata.docs[0];
+
+
+
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
   async getUserInfo() {
+    var declaracion;
     try {
       const { data, errors } = await this.apollo
         .query<DeclaracionOutput>({
@@ -157,13 +193,13 @@ export class DatosGeneralesComponent implements OnInit {
         })
         .toPromise();
 
-      if (errors) {
-        throw errors;
-      }
+        declaracion = data.declaracion;
 
-      this.declaracionId = data?.declaracion._id;
-      this.anio_ejercicio = data?.declaracion.anioEjercicio;
-      this.fillForm(data?.declaracion.datosGenerales);
+//  19/07/2021
+// Para copiar la última declaración a esta, se modificó el backend en: repositories>declaracion_repo>getOrCreate
+
+      this.declaracionId = declaracion._id;
+      this.fillForm(declaracion.datosGenerales);
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -244,6 +280,8 @@ export class DatosGeneralesComponent implements OnInit {
 
       this.isLoading = false;
       this.openSnackBar('Información actualizada', 'Aceptar');
+      if(this.avanzar)
+        this.router.navigate([this.getLinkSiguiente()]);
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
@@ -275,5 +313,21 @@ export class DatosGeneralesComponent implements OnInit {
       aclaraciones.reset();
     }
     this.aclaraciones = value;
+  }
+
+  getLinkSiguiente() {
+    const base =
+      '/' +
+      this.tipoDeclaracion +
+      '/' +
+      (this.declaracionSimplificada ? 'simplificada/' : '/') +
+      'situacion-patrimonial/';
+
+    return base + 'domicilio-declarante/';
+  }
+
+  siguiente() {
+    this.avanzar = true;
+    this.saveInfo();
   }
 }

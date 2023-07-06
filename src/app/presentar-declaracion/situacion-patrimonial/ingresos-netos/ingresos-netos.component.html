@@ -11,13 +11,14 @@
 
     <mat-toolbar class="background-white">
       <label class="step-title">
-        {{ declaracionSimplificada ? '6.' : '8.' }} Ingresos netos del declarante, pareja y/o dependiente económicos
-        <span *ngIf="tipoDeclaracion === 'inicial'">(situación actual)</span>
-        <span *ngIf="tipoDeclaracion === 'modificacion'"
-          >(entre el 1 de enero y 31 de diciembre del año inmediato anterior)</span
-        >
-        <span *ngIf="tipoDeclaracion === 'conclusion'">(del año en curso a la fecha de conclusión del empleo)</span>
-      </label>
+        {{ declaracionSimplificada ? '6' : '8' }} . Ingreso neto
+        {{
+          tipoDeclaracion == "inicial" ? "mensual" :
+          tipoDeclaracion == "modificacion" ? "anual"
+          : "percibido en el año en curso a la fecha de conclusión del encargo"
+        }}
+        del declarante, pareja y/o dependiente económicos
+        </label>
     </mat-toolbar>
 
     <mat-divider></mat-divider>
@@ -43,8 +44,12 @@
     <form (ngSubmit)="confirmSaveInfo()" [formGroup]="ingresosForm">
       <div class="bloque">
         <h3>
-          I.Remuneración neta del declarante por su cargo público (por Concepto de sueldos, honorarios, compensaciones,
-          bonos y otras Prestaciones) (cantidades netas después de impuestos)
+          I.Remuneración
+          {{ tipoDeclaracion == "inicial" ? "neta mensual del declarante por su cargo público" :
+          tipoDeclaracion == "modificacion" ? "neta anual del declarante por su cargo público" :
+          "percibida en el año en curso a la fecha de conclusión del declarante por su cargo público" }}
+           (por Concepto de sueldos, honorarios,
+          compensaciones, bonos y otras Prestaciones) (cantidades netas después de impuestos)
         </h3>
         <div class="grid-2-col">
           <mat-form-field
@@ -63,7 +68,11 @@
       <mat-divider></mat-divider>
 
       <div class="bloque">
-        <h3>II. Otros ingresos del declarante (suma del II.1 al II.4)</h3>
+        <h3>II. Otros ingresos
+          {{ tipoDeclaracion == "inicial" ? "mensuales" :
+          tipoDeclaracion == "modificacion" ? "anuales" :
+          "en el año en curso" }}
+          del declarante(suma del II.1 al II.4)</h3>
         <p class="total">{{ otrosIngresosDeclarante | currency }}</p>
       </div>
 
@@ -249,14 +258,22 @@
       <mat-divider></mat-divider>
 
       <div class="bloque">
-        <h3>A. Ingreso neto del declarante (suma del numeral I y II).</h3>
+        <h3>A. Ingreso
+          {{ tipoDeclaracion == "inicial" ? "mensual" :
+          tipoDeclaracion == "modificacion" ? "anual" :
+          "en el año en curso" }}
+          neto del declarante(suma del numeral I y II).</h3>
         <p class="total">{{ ingresoNetoDeclarante | currency }}</p>
       </div>
 
       <mat-divider></mat-divider>
 
       <div class="bloque" formGroupName="ingresoMensualNetoParejaDependiente">
-        <h3>B. Ingreso neto de la pareja y/o dependientes económicos (después de impuestos)</h3>
+        <h3>B. Ingreso
+          {{ tipoDeclaracion == "inicial" ? "mensual" :
+          tipoDeclaracion == "modificacion" ? "anual" :
+          "en el año en curso" }}
+          neto de la pareja y/o dependientes económicos (después de impuestos)</h3>
         <div class="grid-2-col">
           <mat-form-field
             matTooltip="{{ tooltipData.ingresoNetoParejaDependientes }}"
@@ -274,8 +291,12 @@
 
       <div class="bloque">
         <h3>
-          C.-Total de ingresos netos percibidos por el declarante, pareja y/o dependientes económicos (suma de Apartados
-          A y B)
+          C.-Total de ingresos
+          {{ tipoDeclaracion == "inicial" ? "mensuales" :
+          tipoDeclaracion == "modificacion" ? "anuales" :
+          "en el año en curso" }}
+          netos percibidos por el declarante, pareja y/o dependientes económicos (suma de
+          Apartados A y B)
         </h3>
         <p class="total">{{ ingresosTotales | currency }}</p>
       </div>
@@ -315,9 +336,22 @@
 
     <mat-divider></mat-divider>
 
-    <div class="boton center">
-      <button *ngIf="!declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 9 DE 15
+    <div class="boton center"
+      *ngIf="!(tipoDeclaracion == 'modificacion' && declaracionSimplificada)">
+      <button mat-raised-button color="primary"
+      [disabled]="ingresosForm.invalid || isLoading"
+      (click)="siguiente()"
+      >
+        CONTINUAR
+        {{ declaracionSimplificada ? (tipoDeclaracion != 'modificacion' ? '7' : '6') : '9' }}
+        DE
+        {{
+          declaracionSimplificada ?
+          (tipoDeclaracion != 'modificacion' ?
+            '7' :
+            '6') :
+          tipoDeclaracion == 'modificacion' ? '14' :
+          '15' }}
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
       <button *ngIf="declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
@@ -326,6 +360,7 @@
       </button>
     </div>
 
-    <section-footer [declaracionId]="declaracionId"></section-footer>
+    <section-footer
+    [declaracionId]="declaracionId"></section-footer>
   </mat-card>
 </div>

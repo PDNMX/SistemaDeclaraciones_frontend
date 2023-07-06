@@ -10,8 +10,8 @@
     <mat-divider></mat-divider>
 
     <mat-toolbar class="background-white">
-      <label class="step-title"
-        >{{ declaracionSimplificada ? '7.' : '9.' }} ¿Te desempeñaste como servidor público en el año inmediato
+      <label class="step-title">
+        {{ declaracionSimplificada ? '7' : '9' }} ¿Te desempeñaste como servidor público en el año inmediato
         anterior?</label
       >
     </mat-toolbar>
@@ -391,8 +391,13 @@
 
     <mat-divider></mat-divider>
 
-    <div class="boton center">
-      <button *ngIf="!declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
+    <div class="boton center" *ngIf="!declaracionSimplificada">
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="actividadAnualAnteriorForm.invalid || isLoading"
+        (click)="siguiente()"
+      >
         CONTINUAR 10 DE 15
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

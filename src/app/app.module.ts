@@ -50,3 +50,4 @@ import { ComienzaTuDeclaracionModule } from './presentar-declaracion/comienza-tu
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+console.log("Iniciado");

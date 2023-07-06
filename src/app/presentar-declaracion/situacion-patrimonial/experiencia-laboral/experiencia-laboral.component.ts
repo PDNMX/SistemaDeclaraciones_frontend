@@ -18,8 +18,10 @@ import AmbitoSector from '@static/catalogos/ambitoSector.json';
 import Extranjero from '@static/catalogos/extranjero.json';
 import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import Sector from '@static/catalogos/sector.json';
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/experiencia-laboral';
-import { findOption } from '@utils/utils';
+import Extranjero from '@static/catalogos/extranjero.json';
+
+import { tooltipData } from '@static/tooltips/experiencia-laboral';
+import { Constantes } from '@app/@shared/constantes';
 
 @UntilDestroy()
 @Component({
@@ -137,28 +139,22 @@ export class ExperienciaLaboralComponent implements OnInit {
     this.experienciaLaboralForm = this.formBuilder.group({
       ninguno: [false],
       experiencia: this.formBuilder.group({
-        ambitoSector: [null, [Validators.required]],
-        nivelOrdenGobierno: [null, [Validators.required]],
-        ambitoPublico: [null, [Validators.required]],
-        nombreEntePublico: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        areaAdscripcion: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        empleoCargoComision: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        funcionPrincipal: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        fechaIngreso: [null, [Validators.required]],
-        fechaEgreso: [null, [Validators.required]],
-        ubicacion: [null, [Validators.required]],
-        nombreEmpresaSociedadAsociacion: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        rfc: [
-          null,
-          [
-            Validators.pattern(
-              /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-            ),
-          ],
-        ],
-        area: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        puesto: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        sector: [null, [Validators.required]],
+        ambitoSector: [{ clave: '', valor: '' }, Validators.required],
+        nivelOrdenGobierno: ['', [Validators.required]],
+        ambitoPublico: ['', [Validators.required]],
+        nombreEntePublico: ['', [Validators.required]],
+        areaAdscripcion: ['', [Validators.required]],
+        empleoCargoComision: ['', [Validators.required]],
+        funcionPrincipal: ['', [Validators.required]],
+        fechaIngreso: ['', [Validators.required]],
+        fechaEgreso: ['', [Validators.required]],
+        ubicacion: ['', [Validators.required]],
+
+        nombreEmpresaSociedadAsociacion: ['', [Validators.required]],
+        rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
+        area: ['', [Validators.required]],
+        puesto: ['', [Validators.required]],
+        sector: [{ clave: '', valor: '' }, [Validators.required]],
       }),
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
@@ -416,5 +412,16 @@ export class ExperienciaLaboralComponent implements OnInit {
       aclaraciones.reset();
     }
     this.aclaraciones = value;
+  }
+
+  getLinkSiguiente() {
+    const base =
+      '/' +
+      this.tipoDeclaracion +
+      '/' +
+      (this.declaracionSimplificada ? 'simplificada/' : '/') +
+      'situacion-patrimonial/';
+
+    return base + 'ingresos-netos/';
   }
 }

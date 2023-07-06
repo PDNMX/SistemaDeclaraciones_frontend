@@ -1,3 +1,5 @@
+<div class="linea-arriba">&nbsp;</div>
+
 <div fxFlex>
   <app-header></app-header>
   <mat-sidenav-container fxFill>
@@ -21,7 +23,7 @@
 
         <mat-vertical-stepper (selectionChange)="goToSituacionPatrimonialSection($event.selectedStep)">
           <ng-container *ngFor="let opt of situacionPatrimonialOptions">
-            <mat-step *ngIf="!declaracionSimplificada || opt.simplificada" label="{{ opt.text }}">
+            <mat-step *ngIf="(!declaracionSimplificada || opt.simplificada) && !opt.ocultar" label="{{ opt.text }}">
               <!--<ng-template matStepLabel>
                 <a routerLink="{{ opt.url }}">{{ opt.text }}</a>
               </ng-template>-->

@@ -6,6 +6,12 @@ interface LocalizacionInversion {
   rfc: string;
 }
 
+export interface SubTipoInversion {
+  clave: string;
+  valor: string;
+  tipoInversion: string; // se agrega
+}
+
 export interface Inversion {
   tipoInversion: Catalogo;
   subTipoInversion: Catalogo;

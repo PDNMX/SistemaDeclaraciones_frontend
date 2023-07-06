@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, Predicate } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
@@ -26,7 +26,8 @@ import { tooltipData } from '@static/tooltips/situacion-patrimonial/bien-inmuebl
 
 import { BienInmueble, BienesInmuebles, Catalogo, DeclaracionOutput } from '@models/declaracion';
 
-import { findOption, ifExistsEnableFields } from '@utils/utils';
+import { findOption, ifExistEnableFields } from '@utils/utils';
+import { Constantes } from '@app/@shared/constantes';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -77,7 +78,11 @@ export class BienesInmueblesComponent implements OnInit {
   }
 
   addItem() {
-    this.bienesInmueblesForm.reset();
+    // al hacer un reset se perdían los valores de la unidad de medida
+    //por eso, se cambia de reset a createForm, para crear el formulario vacío
+    //pero con los valores iniciales que no están en la interfaz
+    //this.bienesInmueblesForm.reset();
+    this.createForm();
     this.bienesInmueblesForm.get('ninguno').setValue(false);
     this.editMode = true;
     this.editIndex = null;
@@ -86,6 +91,32 @@ export class BienesInmueblesComponent implements OnInit {
   cancelEditMode() {
     this.editMode = false;
     this.editIndex = null;
+  }
+
+  establecerValidadoresRFC() {
+    const control = this.bienesInmueblesForm.get('titular');
+    if (control == null) return;
+
+    this.bienesInmueblesForm.get('titular').valueChanges.subscribe((val) => {
+      console.log(val);
+
+      if (val == 'DEC') {
+        //quitar validacion de tercero
+        this.bienesInmueblesForm.get('tercero.tipoPersona').clearValidators();
+        this.bienesInmueblesForm.get('tercero.nombreRazonSocial').clearValidators();
+        this.bienesInmueblesForm.get('tercero.rfc').clearValidators();
+      } else {
+        this.bienesInmueblesForm.get('tercero.tipoPersona').setValidators([Validators.required]);
+        this.bienesInmueblesForm.get('tercero.nombreRazonSocial').setValidators(Validators.required);
+        this.bienesInmueblesForm
+          .get('tercero.rfc')
+          .setValidators([Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]);
+      }
+
+      this.bienesInmueblesForm.get('tercero.tipoPersona').updateValueAndValidity();
+      this.bienesInmueblesForm.get('tercero.nombreRazonSocial').updateValueAndValidity();
+      this.bienesInmueblesForm.get('tercero.rfc').updateValueAndValidity();
+    });
   }
 
   createForm() {
@@ -100,20 +131,21 @@ export class BienesInmueblesComponent implements OnInit {
         ],
         superficieTerreno: this.formBuilder.group({
           valor: [0, [Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
-          unidad: ['m'],
+          unidad: ['m2'],
         }),
         superficieConstruccion: this.formBuilder.group({
           valor: [0, [Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
-          unidad: ['m'],
+          unidad: ['m2'], // traia m en vez de m2, AUN ASI NO JALA
         }),
         tercero: this.formBuilder.group({
-          tipoPersona: [null],
-          nombreRazonSocial: [null, [Validators.pattern(/^\S.*\S?$/)]],
+          tipoPersona: ['FISICA', Validators.required], // Agregué FÍSICA COMO VALOR POR DEFECTO PARA QUE DEJE GUARDAR
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
           rfc: [
             null,
             [
               Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
+                //  SE CAMBIA LA VALIDACIÓN DE RFC YA QUE NO FUNCIONABA PARA PERSONAS MORALES, 16-04-2021
+                Constantes.VALIDACION_RFC
               ),
             ],
           ],
@@ -126,7 +158,8 @@ export class BienesInmueblesComponent implements OnInit {
             [
               Validators.required,
               Validators.pattern(
-                /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
+                //  SE CAMBIA LA VALIDACIÓN DE RFC YA QUE NO FUNCIONABA PARA PERSONAS MORALES, 16-04-2021
+                Constantes.VALIDACION_RFC
               ),
             ],
           ],
@@ -177,6 +210,29 @@ export class BienesInmueblesComponent implements OnInit {
         municipio.reset();
       }
       this.estado = value;
+    });
+
+    /////////////////////////////
+    this.bienesInmueblesForm.get('bienInmueble.titular').valueChanges.subscribe((val) => {
+      if (!val) return;
+
+      const razonSocial = this.bienesInmueblesForm.get('bienInmueble.tercero').get('nombreRazonSocial');
+      const tipoPersona = this.bienesInmueblesForm.get('bienInmueble.tercero').get('tipoPersona');
+      const rfc = this.bienesInmueblesForm.get('bienInmueble.tercero').get('rfc');
+
+      if (val.clave === 'DEC') {
+        razonSocial.clearValidators();
+        tipoPersona.clearValidators();
+        rfc.clearValidators();
+      } else {
+        tipoPersona.setValidators([Validators.required]);
+        razonSocial.setValidators([Validators.required]);
+        rfc.setValidators([Validators.pattern(Constantes.VALIDACION_RFC), Validators.required]);
+      }
+
+      razonSocial.updateValueAndValidity();
+      rfc.updateValueAndValidity();
+      tipoPersona.updateValueAndValidity();
     });
   }
 
@@ -229,27 +285,9 @@ export class BienesInmueblesComponent implements OnInit {
     }
   }
 
-  formHasChanges() {
-    let isDirty = this.bienesInmueblesForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/vehiculos']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/vehiculos']);
-    }
+  ngOnInit(): void {
+    this.establecerValidadoresRFC();
   }
-
-  ngOnInit(): void {}
 
   noProperty() {
     this.saveInfo({ ninguno: true });
@@ -337,6 +375,9 @@ export class BienesInmueblesComponent implements OnInit {
 
   saveItem() {
     let bienInmueble = [...this.bienInmueble];
+
+    console.log(bienInmueble);
+
     const aclaracionesObservaciones = this.bienesInmueblesForm.value.aclaracionesObservaciones;
     const newItem = this.bienesInmueblesForm.value.bienInmueble;
 

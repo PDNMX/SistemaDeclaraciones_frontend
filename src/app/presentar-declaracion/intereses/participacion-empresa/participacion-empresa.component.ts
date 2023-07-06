@@ -9,9 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { UntilDestroy, untilDestroyed } from '@core';
-
-import Relacion from '@static/catalogos/tipoRelacion.json';
+import TipoRelacion from '@static/catalogos/tipoRelacion.json';
 import TipoParticipacion from '@static/catalogos/tipoParticipacion.json';
 import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
@@ -22,7 +20,8 @@ import { tooltipData } from '@static/tooltips/intereses/participacion-empresa';
 
 import { DeclaracionOutput, Participacion, Participaciones } from '@models/declaracion';
 
-import { findOption, ifExistsEnableFields } from '@utils/utils';
+import { findOption, ifExistEnableFields } from '@utils/utils';
+import { Constantes } from '@app/@shared/constantes';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -40,7 +39,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
   participacion: Participacion[] = [];
   isLoading = false;
 
-  relacionCatalogo = Relacion;
+  relacionCatalogo = TipoRelacion;
   tipoParticipacionCatalogo = TipoParticipacion;
   extranjeroCatalogo = Extranjero;
   paisesCatalogo = Paises;
@@ -68,7 +67,8 @@ export class ParticipacionEmpresaComponent implements OnInit {
   }
 
   addItem() {
-    this.participacionForm.reset();
+    //this.participacionForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }
@@ -102,15 +102,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
       participacion: this.formBuilder.group({
         tipoRelacion: ['', Validators.required],
         nombreEmpresaSociedadAsociacion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-        rfc: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(
-              /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-            ),
-          ],
-        ],
+        rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         porcentajeParticipacion: [
           0,
           [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0), Validators.max(100)],
@@ -300,7 +292,8 @@ export class ParticipacionEmpresaComponent implements OnInit {
   }
 
   setEditMode() {
-    this.participacionForm.reset();
+    //this.participacionForm.reset();
+    this.createForm();
     this.editMode = true;
     this.editIndex = null;
   }

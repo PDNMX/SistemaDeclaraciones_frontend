@@ -71,3 +71,9 @@ export const updateUserProfile = gql`
     }
   }
 `;
+
+export const restaurarContrasena = gql`
+  mutation restaurarContrasena($usuario: String!, $nuevaContrasena: LimitedString!) {
+    restaurarContrasena(usuario: $usuario, nuevaContrasena: $nuevaContrasena)
+  }
+`;

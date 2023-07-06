@@ -19,9 +19,7 @@ import {
   OtrosIngresos,
   ServiciosProfesionales,
 } from '@models/declaracion';
-import TipoInstrumento from '@static/catalogos/tipoInstrumento.json';
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/ingresos-netos';
-import { findOption } from '@utils/utils';
+import { relativeTimeRounding } from 'moment';
 
 @UntilDestroy()
 @Component({
@@ -33,6 +31,7 @@ export class IngresosNetosComponent implements OnInit {
   aclaraciones = false;
   ingresosForm: FormGroup;
   isLoading = false;
+  avanzar = false;
 
   otrosIngresosDeclarante = 0;
   ingresoNetoDeclarante = 0;
@@ -162,21 +161,26 @@ export class IngresosNetosComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        const form: Ingresos = this.ingresosForm.value;
-        //sections
-        form.actividadIndustrialComercialEmpresarial.remuneracionTotal.valor = this.calcTotalAmountOfSection(
-          'actividadIndustrialComercialEmpresarial'
-        );
-        form.actividadFinanciera.remuneracionTotal.valor = this.calcTotalAmountOfSection('actividadFinanciera');
-        form.otrosIngresos.remuneracionTotal.valor = this.calcTotalAmountOfSection('otrosIngresos');
-        form.serviciosProfesionales.remuneracionTotal.valor = this.calcTotalAmountOfSection('serviciosProfesionales');
-        //totals
-        form.otrosIngresosMensualesTotal.valor = this.otrosIngresosDeclarante;
-        form.ingresoMensualNetoDeclarante.valor = this.ingresoNetoDeclarante;
-        form.totalIngresosMensualesNetos.valor = this.ingresosTotales;
-        this.saveInfo(form);
+        this.saveItem();
       }
     });
+  }
+
+  // puente para guardar
+  saveItem() {
+    const form: Ingresos = this.ingresosForm.value;
+    //sections
+    form.actividadIndustrialComercialEmpresarial.remuneracionTotal.valor = this.calcTotalAmountOfSection(
+      'actividadIndustrialComercialEmpresarial'
+    );
+    form.actividadFinanciera.remuneracionTotal.valor = this.calcTotalAmountOfSection('actividadFinanciera');
+    form.otrosIngresos.remuneracionTotal.valor = this.calcTotalAmountOfSection('otrosIngresos');
+    form.serviciosProfesionales.remuneracionTotal.valor = this.calcTotalAmountOfSection('serviciosProfesionales');
+    //totals
+    form.otrosIngresosMensualesTotal.valor = this.otrosIngresosDeclarante;
+    form.ingresoMensualNetoDeclarante.valor = this.ingresoNetoDeclarante;
+    form.totalIngresosMensualesNetos.valor = this.ingresosTotales;
+    this.saveInfo(form);
   }
 
   createForm() {
@@ -455,6 +459,9 @@ export class IngresosNetosComponent implements OnInit {
 
       this.isLoading = false;
       this.presentSuccessAlert();
+
+      if(this.avanzar)
+        this.router.navigate([this.getLinkSiguiente()]);
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
@@ -470,5 +477,25 @@ export class IngresosNetosComponent implements OnInit {
       aclaraciones.reset();
     }
     this.aclaraciones = value;
+  }
+
+  getLinkSiguiente() {
+    const base =
+      '/' +
+      this.tipoDeclaracion +
+      '/' +
+      (this.declaracionSimplificada ? 'simplificada/' : '/') +
+      'situacion-patrimonial/';
+//si es de modificacion y completa, debe ir a bienes inmuebles, si no, a servidor publico
+
+    if(this.tipoDeclaracion == "modificacion" && !this.declaracionSimplificada)
+      return base  + 'bienes-inmuebles/';
+    else
+      return base + 'servidor-publico/';
+  }
+
+  siguiente() {
+    this.avanzar = true;
+    this.saveItem();
   }
 }
