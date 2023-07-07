@@ -14,6 +14,11 @@ h3 {
 mat-card-content > div {
   padding: 10px 0 25px 0;
 }
+.bg-no-public {
+  background-color: var(--no-public-color);
+  display: inline-block;
+  padding: 3px 10px;
+}
 .grid-4-col {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

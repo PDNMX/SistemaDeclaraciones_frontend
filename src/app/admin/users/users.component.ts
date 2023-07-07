@@ -21,7 +21,6 @@ interface Response {
   };
 }
 
-@UntilDestroy()
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -109,6 +108,7 @@ export class UsersComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.setUserTable();
     this.setSearchTable();
+    this.search();
   }
 
   presentAlert(title: string, message: string) {
@@ -121,6 +121,11 @@ export class UsersComponent implements AfterViewInit {
     });
   }
 
+  searchClick() {
+    this.searchPaginator.pageIndex = 0;
+    this.search();
+  }
+
   async search() {
     try {
       const { data } = await this.apollo
@@ -128,6 +133,10 @@ export class UsersComponent implements AfterViewInit {
           query: search,
           variables: {
             keyword: this.searchValue,
+            pagination: {
+              page: this.searchPaginator.pageIndex,
+              size: this.PAGE_SIZE
+            }
           },
         })
         .toPromise();
@@ -141,14 +150,22 @@ export class UsersComponent implements AfterViewInit {
     }
   }
 
+  searchPageChange(ev: any) {
+    //OMAR: Se cambia el método de paginación porque no jalaba el otro
+    this.search();
+  }
+
   setSearchTable() {
-    merge(this.searchPaginator.page)
+    /*
+    merge(this.searchPaginator.pageIndex)
       .pipe(
         startWith({}),
         switchMap(() => {
-          if (this.searchValue.length <= 1) {
-            return observableOf(this.emptyResponse);
-          }
+          // if (this.searchValue.length <= 1) {
+          //   console.log("retornando emptyResponse");
+          //   return observableOf(this.emptyResponse);
+          // }
+          console.log("ejecutando consulta");
           this.isLoadingResults = true;
           return this.apollo.query<{ search: UsersPage }>({
             query: search,
@@ -175,45 +192,44 @@ export class UsersComponent implements AfterViewInit {
           return observableOf([]);
         })
       )
-      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.dataSearch = data));
+      */
   }
 
   setUserTable() {
     // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.pipe(untilDestroyed(this)).subscribe(() => (this.usersPaginator.pageIndex = 0));
+    // this.sort.sortChange.subscribe(() => (this.usersPaginator.pageIndex = 0));
 
-    merge(this.sort.sortChange, this.usersPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.apollo.query<{ users: UsersPage }>({
-            query: users,
-            variables: {
-              pagination: {
-                page: this.usersPaginator.pageIndex,
-                size: this.PAGE_SIZE,
-              },
-            },
-          });
-        }),
-        map(({ data }) => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.isError = false;
-          this.resultsLength = data.users.totalDocs || 0;
+    // merge(this.sort.sortChange, this.usersPaginator.page)
+    //   .pipe(
+    //     startWith({}),
+    //     switchMap(() => {
+    //       this.isLoadingResults = true;
+    //       return this.apollo.query<{ users: UsersPage }>({
+    //         query: users,
+    //         variables: {
+    //           pagination: {
+    //             page: this.usersPaginator.pageIndex,
+    //             size: this.PAGE_SIZE,
+    //           },
+    //         },
+    //       });
+    //     }),
+    //     map(({ data }) => {
+    //       // Flip flag to show that loading has finished.
+    //       this.isLoadingResults = false;
+    //       this.isError = false;
+    //       this.resultsLength = data.users.totalDocs || 0;
 
-          return data.users.docs;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          this.isError = true;
-          return observableOf([]);
-        })
-      )
-      .pipe(untilDestroyed(this))
-      .subscribe((data) => (this.data = data));
+    //       return data.users.docs;
+    //     }),
+    //     catchError(() => {
+    //       this.isLoadingResults = false;
+    //       this.isError = true;
+    //       return observableOf([]);
+    //     })
+    //   )
+    //   .subscribe((data) => (this.data = data));
   }
 
   transformRoles(roles: string[]) {
@@ -233,7 +249,7 @@ export class UsersComponent implements AfterViewInit {
           },
         })
         .toPromise()
-
+        
         ;
         this.presentAlert('Usuario actualizado', 'La contraseÃ±a asignada es el la CURP del declarante: ' + usr.curp);
     } catch (error) {

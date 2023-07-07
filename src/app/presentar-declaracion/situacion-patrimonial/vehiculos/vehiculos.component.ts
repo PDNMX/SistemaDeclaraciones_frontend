@@ -20,7 +20,7 @@ import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/vehiculos';
+import { tooltipData } from '@static/tooltips/vehiculos';
 
 import { DeclaracionOutput, Vehiculo, Vehiculos } from '@models/declaracion';
 
@@ -58,7 +58,6 @@ export class VehiculosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -105,13 +104,13 @@ export class VehiculosComponent implements OnInit {
     this.vehiculosForm = this.formBuilder.group({
       ninguno: [false],
       vehiculo: this.formBuilder.group({
-        tipoVehiculo: [null, [Validators.required]],
-        titular: [null, [Validators.required]],
+        tipoVehiculo: ['', Validators.required],
+        titular: ['', Validators.required],
         transmisor: this.formBuilder.group({
-          tipoPersona: [null, [Validators.required]],
-          nombreRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+          tipoPersona: ['', [Validators.required]],
+          nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
           rfc: [
-            null,
+            '',
             [
               Validators.required,
               Validators.pattern(
@@ -120,18 +119,19 @@ export class VehiculosComponent implements OnInit {
               ),
             ],
           ],
-          relacion: [null, [Validators.required]],
+          relacion: ['', Validators.required],
         }),
-        marca: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        modelo: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        anio: [null, [Validators.required, Validators.pattern(/^\d{4}$/)]],
-        numeroSerieRegistro: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        marca: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        modelo: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        anio: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+        numeroSerieRegistro: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
         tercero: this.formBuilder.group({
           tipoPersona: ['FISICA', [Validators.required]],
           nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
           rfc: [
-            null,
+            '',
             [
+              Validators.required,
               Validators.pattern(
                 Constantes.VALIDACION_RFC
                 ///^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
@@ -140,21 +140,21 @@ export class VehiculosComponent implements OnInit {
           ],
         }),
         lugarRegistro: this.formBuilder.group({
-          pais: [null, [Validators.required]],
-          entidadFederativa: [null, [Validators.required]],
+          pais: ['', [Validators.required]],
+          entidadFederativa: ['', Validators.required],
         }),
-        formaAdquisicion: [null, [Validators.required]],
-        formaPago: [null, [Validators.required]],
+        formaAdquisicion: ['', Validators.required],
+        formaPago: ['', [Validators.required]],
         valorAdquisicion: this.formBuilder.group({
           valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
           moneda: ['MXN', [Validators.required]],
         }),
-        fechaAdquisicion: [null, [Validators.required]],
+        fechaAdquisicion: ['', [Validators.required]],
       }),
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
-    /////////////////////////////
+    ///////////////////////////// OMAR
     this.vehiculosForm.get('vehiculo.titular').valueChanges.subscribe((val) => {
       if (!val) return;
 
@@ -195,7 +195,7 @@ export class VehiculosComponent implements OnInit {
     this.vehiculosForm.get(`vehiculo.tercero`).patchValue(vehiculo.tercero[0]);
     this.vehiculosForm.get(`vehiculo.transmisor`).patchValue(vehiculo.transmisor[0]);
 
-    ifExistsEnableFields(
+    ifExistEnableFields(
       vehiculo.lugarRegistro.entidadFederativa,
       this.vehiculosForm,
       'vehiculo.lugarRegistro.entidadFederativa'
@@ -203,7 +203,7 @@ export class VehiculosComponent implements OnInit {
     if (vehiculo.lugarRegistro.entidadFederativa) {
       this.tipoDomicilio = 'MEXICO';
     }
-    ifExistsEnableFields(vehiculo.lugarRegistro.pais, this.vehiculosForm, 'vehiculo.lugarRegistro.pais');
+    ifExistEnableFields(vehiculo.lugarRegistro.pais, this.vehiculosForm, 'vehiculo.lugarRegistro.pais');
     if (vehiculo.lugarRegistro.pais) {
       this.tipoDomicilio = 'EXTRANJERO';
     }
@@ -227,26 +227,6 @@ export class VehiculosComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  formHasChanges() {
-    let isDirty = this.vehiculosForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/bienes-muebles']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/bienes-muebles']);
     }
   }
 

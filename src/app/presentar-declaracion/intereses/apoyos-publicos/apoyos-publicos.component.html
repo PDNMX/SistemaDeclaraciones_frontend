@@ -114,10 +114,10 @@
         <p>Agregar participación</p>
         <!-- Datos -->
         <div class="grid-2-col grid-margin">
-          <mat-form-field matTooltip="{{ tooltipData.beneficiario }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Beneficiario de algún programa</mat-label>
             <mat-icon matPrefix class="no-public">person</mat-icon>
-            <mat-select formControlName="beneficiarioPrograma" required>
+            <mat-select formControlName="beneficiarioPrograma">
               <mat-option *ngFor="let beneficiario of beneficiarioProgramaCatalogo" [value]="beneficiario">
                 {{ beneficiario.valor }}
               </mat-option>
@@ -126,42 +126,36 @@
           <mat-form-field appearance="fill">
             <mat-label>Tipo de persona</mat-label>
             <mat-icon matPrefix>person</mat-icon>
-            <mat-select formControlName="tipoPersona" required>
+            <mat-select formControlName="tipoPersona">
               <mat-option value="FISICA"> FÍSICA </mat-option>
               <mat-option value="MORAL"> MORAL </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field matTooltip="{{ tooltipData.nombrePrograma }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Nombre del programa</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombrePrograma" required />
+            <input matInput type="text" formControlName="nombrePrograma" />
           </mat-form-field>
 
-          <mat-form-field matTooltip="{{ tooltipData.institucionOtorgaApoyo }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Institución que otorga el apoyo</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              type="text"
-              formControlName="institucionOtorgante"
-              required
-            />
+            <input matInput type="text" formControlName="institucionOtorgante" />
           </mat-form-field>
-          <mat-form-field matTooltip="{{ tooltipData.nivelOrdenGobierno }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Nivel u orden de gobierno</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
-            <mat-select formControlName="nivelOrdenGobierno" required>
+            <mat-select formControlName="nivelOrdenGobierno">
               <mat-option *ngFor="let NivelGobierno of NivelGobiernoCatalogo" value="{{ NivelGobierno }}">
                 {{ NivelGobierno | replace: '_':' ' }}
               </mat-option>
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field matTooltip="{{ tooltipData.tipoApoyo }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Tipo de apoyo</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
-            <mat-select formControlName="tipoApoyo" required>
+            <mat-select formControlName="tipoApoyo">
               <mat-option *ngFor="let tipoApoyo of TiposApoyoCatalogo" [value]="tipoApoyo">
                 {{ tipoApoyo.valor }}
               </mat-option>
@@ -174,12 +168,12 @@
           >
             <mat-label>Especifique</mat-label>
             <mat-icon matPrefix class="no-public">dns</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="text" required />
+            <input matInput type="text" />
           </mat-form-field>
-          <mat-form-field matTooltip="{{ tooltipData.formaRecepcionApoyo }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Forma de recepción de pago</mat-label>
             <mat-icon matPrefix>public</mat-icon>
-            <mat-select formControlName="formaRecepcion" required>
+            <mat-select formControlName="formaRecepcion">
               <mat-option *ngFor="let recepcionApoyo of recepcionApoyoCatalogo" value="{{ recepcionApoyo }}">
                 {{ recepcionApoyo }}
               </mat-option>
@@ -194,20 +188,14 @@
           >
             <mat-label>Monto aproximado del apoyo mensual</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" required />
+            <input matInput type="number" formControlName="valor" min="0" />
           </mat-form-field>
 
           <!--  -->
           <mat-form-field appearance="fill" *ngIf="apoyosForm.value.apoyo?.formaRecepcion == 'ESPECIE'">
             <mat-label>Especifique el apoyo</mat-label>
             <mat-icon matPrefix>account_balance_wallet</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              type="text"
-              formControlName="especifiqueApoyo"
-              required
-            />
+            <input matInput type="text" formControlName="especifiqueApoyo" />
           </mat-form-field>
         </div>
       </div>
@@ -222,18 +210,12 @@
       <div *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
-        <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
+        <mat-form-field appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea
-            maxlength="500"
-            [errorStateMatcher]="errorMatcher"
-            matInput
-            formControlName="aclaracionesObservaciones"
-            rows="10"
-          ></textarea>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>
       </div>
 
@@ -252,7 +234,7 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary"
+      <button mat-raised-button color="primary" 
       [disabled]="!(apoyo?.length > 0 || apoyosForm.value.ninguno)"
       [routerLink]="'/' + tipoDeclaracion + '/intereses/representacion'">
 

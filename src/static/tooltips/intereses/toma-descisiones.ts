@@ -11,8 +11,6 @@ const tooltipData = {
   montoMensualNeto: 'Especificar el monto mensual neto, sin centavos que percibe por su participación.',
   lugarDondeUbica:
     'Indicar si se encuentra en México, debiendo señalar entidad federativa; o en el extranjero, debiendo señalar el país donde se localiza.',
-  aclaracionesObservaciones:
-    'En este espacio el Declarante podrá realizar las aclaraciones u observaciones que considere pertinentes respecto de alguno o algunos de los incisos de este apartado.',
 };
 
 export { tooltipData };

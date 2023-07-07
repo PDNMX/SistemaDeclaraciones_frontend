@@ -21,12 +21,10 @@ import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/adeudos';
+import { tooltipData } from '@static/tooltips/adeudos';
 
 import { findOption } from '@utils/utils';
 import { Constantes } from '@app/@shared/constantes';
-
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
 @Component({
   selector: 'app-adeudos',
@@ -57,7 +55,6 @@ export class AdeudosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -98,9 +95,9 @@ export class AdeudosComponent implements OnInit {
       ninguno: [false],
       adeudo: this.formBuilder.group({
         titular: [[], Validators.required],
-        tipoAdeudo: [null, Validators.required],
+        tipoAdeudo: [{ clave: '', valor: '' }, Validators.required],
         numeroCuentaContrato: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
-        fechaAdquisicion: [null, [Validators.required]],
+        fechaAdquisicion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
         montoOriginal: this.formBuilder.group({
           valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/)]],
           moneda: ['MXN', [Validators.pattern(/^\S.*\S?$/)]],
@@ -123,13 +120,10 @@ export class AdeudosComponent implements OnInit {
           pais: ['MX', [Validators.required]],
         }),
       }),
-      aclaracionesObservaciones: [
-        { disabled: true, value: null },
-        [Validators.required, Validators.pattern(/^\S.*\S$/)],
-      ],
+      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
-    /////////////////////////////
+    ///////////////////////////// OMAR
     this.adeudosPasivosForm.get('adeudo.titular').valueChanges.subscribe((val) => {
       if (!val) return;
 
@@ -191,26 +185,6 @@ export class AdeudosComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  formHasChanges() {
-    let isDirty = this.adeudosPasivosForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/prestamos-terceros']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/prestamos-terceros']);
     }
   }
 

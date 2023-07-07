@@ -18,24 +18,12 @@
 
     <mat-divider></mat-divider>
 
-    <p *ngIf="tipoDeclaracion === 'modificacion'">
-      Esta sección únicamente aplica para la declaración de inicio y conclusión, en razón de que la declaración de
-      modificación refiere la situación del año inmediato anterior.
-    </p>
-
-    <p *ngIf="tipoDeclaracion !== 'modificacion'">
-      Todos los campos * son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+    <p>
+      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
       resaltados <span class="no-public-inline"></span> no serán públicos.
-      <br />
-      Es necesario capturar cantidades después de impuestos, <b>EN PESOS MEXICANOS</b>, sin comas, sin puntos, sin
-      centavos y sin ceros a la izquierda.
     </p>
 
-    <form
-      *ngIf="tipoDeclaracion !== 'modificacion'"
-      (ngSubmit)="confirmSaveInfo()"
-      [formGroup]="actividadAnualAnteriorForm"
-    >
+    <form (ngSubmit)="confirmSaveInfo()" [formGroup]="actividadAnualAnteriorForm">
       <div class="bloque">
         <h3>¿Te desempeñaste como servidor público en el año inmediato anterior?</h3>
         <mat-radio-group class="grid-2-col" formControlName="servidorPublicoAnioAnterior">
@@ -49,24 +37,14 @@
           <div class="grid-2-col fecha-publico">
             <mat-form-field matTooltip="{{ tooltipData.fechaInicio }}" appearance="fill">
               <mat-label>Fecha de inicio</mat-label>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                [matDatepicker]="pickerInicio"
-                formControlName="fechaIngreso"
-              />
+              <input matInput [matDatepicker]="pickerInicio" formControlName="fechaIngreso" />
               <mat-hint>dd/mm/yyyy</mat-hint>
               <mat-datepicker-toggle matPrefix [for]="pickerInicio"></mat-datepicker-toggle>
               <mat-datepicker #pickerInicio></mat-datepicker>
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.fechaConclusion }}" appearance="fill">
               <mat-label>Fecha de fin</mat-label>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                [matDatepicker]="pickerFin"
-                formControlName="fechaConclusion"
-              />
+              <input matInput [matDatepicker]="pickerFin" formControlName="fechaConclusion" />
               <mat-hint>dd/mm/yyyy</mat-hint>
               <mat-datepicker-toggle matPrefix [for]="pickerFin"></mat-datepicker-toggle>
               <mat-datepicker #pickerFin></mat-datepicker>
@@ -83,7 +61,7 @@
           <div class="grid-2-col">
             <mat-form-field matTooltip="{{ tooltipData.remuneracionNetaDeclarante }}" appearance="fill">
               <mat-label>Monto</mat-label>
-              <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
+              <input matInput type="number" formControlName="valor" min="0" />
               <mat-icon matPrefix>attach_money</mat-icon>
             </mat-form-field>
           </div>
@@ -112,7 +90,7 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
+                  <input matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field
@@ -120,12 +98,12 @@
                   appearance="fill"
                 >
                   <mat-label>Nombre o razón social</mat-label>
-                  <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombreRazonSocial" />
+                  <input matInput type="text" formControlName="nombreRazonSocial" />
                   <mat-icon matPrefix>dns</mat-icon>
                 </mat-form-field>
                 <mat-form-field matTooltip="{{ tooltipData.otrosIngresosDeclarante.tipoNegocio }}" appearance="fill">
                   <mat-label>Tipo de Negocio</mat-label>
-                  <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="tipoNegocio" />
+                  <input matInput type="text" formControlName="tipoNegocio" />
                   <mat-icon matPrefix>aspect_ratio</mat-icon>
                 </mat-form-field>
               </div>
@@ -159,7 +137,7 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
+                  <input matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field
@@ -207,13 +185,13 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
+                  <input matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field matTooltip="{{ tooltipData.otrosIngresosDeclarante.tipoServicio }}" appearance="fill">
                   <mat-label>Tipo de servicio prestado</mat-label>
                   <mat-icon matPrefix>wb_iridescent</mat-icon>
-                  <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="tipoServicio" />
+                  <input matInput type="text" formControlName="tipoServicio" />
                 </mat-form-field>
               </div>
               <button
@@ -246,7 +224,7 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
+                  <input matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
@@ -292,13 +270,13 @@
                   formGroupName="remuneracion"
                 >
                   <mat-label>Monto</mat-label>
-                  <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
+                  <input matInput type="number" formControlName="valor" min="0" />
                   <mat-icon matPrefix>attach_money</mat-icon>
                 </mat-form-field>
                 <mat-form-field matTooltip="{{ tooltipData.otrosIngresosDeclarante.tipoIngreso }}" appearance="fill">
                   <mat-label>Especificar tipo de ingreso (arrendamiento, regalías, sorteos, etc.)</mat-label>
                   <mat-icon matPrefix>wb_iridescent</mat-icon>
-                  <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="tipoIngreso" />
+                  <input matInput type="text" formControlName="tipoIngreso" />
                 </mat-form-field>
               </div>
               <button
@@ -339,7 +317,7 @@
               class="grid-item"
             >
               <mat-label>Monto</mat-label>
-              <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" />
+              <input matInput type="number" formControlName="valor" min="0" />
               <mat-icon matPrefix class="no-public">attach_money</mat-icon>
             </mat-form-field>
           </div>
@@ -366,20 +344,16 @@
       <div *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
         <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea
-            maxlength="500"
-            [errorStateMatcher]="errorMatcher"
-            matInput
-            formControlName="aclaracionesObservaciones"
-            rows="10"
-          ></textarea>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>
       </div>
+
+      <mat-divider></mat-divider>
 
       <div class="boton text-right">
         <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>

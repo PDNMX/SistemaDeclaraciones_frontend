@@ -10,8 +10,6 @@ import { AuthenticationService } from '../authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ERROR_COMPONENT_TYPE } from '@angular/compiler';
 
-import InstitucionesCatalogo from '@static/custom/instituciones.json';
-
 const log = new Logger('Signup');
 
 @UntilDestroy()
@@ -34,9 +32,6 @@ tmpError: any;
     private _snackBar: MatSnackBar
   ) {
     this.createForm();
-    if (this.institucionesCatalogo?.length) {
-      this.signupForm.get('institucion').enable();
-    }
   }
 
   ngOnInit() {}
@@ -67,12 +62,12 @@ tmpError: any;
             this.tmpError = success;
             var error = success.graphQLErrors[0].message;
 
-            if(error.indexOf("curp"))
-              error = "La CURP ya está registrada en el sistema";
-            else if(error.indexOf("rfc"))
-              error = "El RFC ya está registrada en el sistema";
-            else
-              error = "El correo electrónico ya está registrada en el sistema";
+            // if(error.indexOf("curp"))
+            //   error = "La CURP ya está registrada en el sistema";
+            // else if(error.indexOf("rfc"))
+            //   error = "El RFC ya está registrada en el sistema";
+            // else
+            //   error = "El correo electrónico ya está registrada en el sistema";
 
             this.openSnackBar(error, 'Aceptar');
           }
@@ -125,7 +120,6 @@ tmpError: any;
       ],
       contrasena: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
       confirmarContrasena: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
-      institucion: [{ disabled: true, value: null }, [Validators.required]],
     });
   }
 }

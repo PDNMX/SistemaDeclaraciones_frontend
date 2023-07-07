@@ -9,15 +9,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { UntilDestroy, untilDestroyed } from '@core';
-
 import Relacion from '@static/catalogos/tipoRelacion.json';
 import Institucion from '@static/catalogos/tipoInstitucion.json';
 import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
 import Estados from '@static/catalogos/estados.json';
-
-import { tooltipData } from '@static/tooltips/intereses/toma-descisiones';
 
 import { DeclaracionOutput, ParticipacionTD, ParticipacionTomaDecisiones } from '@models/declaracion';
 
@@ -25,9 +21,6 @@ import { findOption, ifExistEnableFields } from '@utils/utils';
 import { ValidationContext } from 'graphql';
 import { Constantes } from '@app/@shared/constantes';
 
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-
-@UntilDestroy()
 @Component({
   selector: 'app-toma-decisiones',
   templateUrl: './toma-decisiones.component.html',
@@ -52,9 +45,6 @@ export class TomaDecisionesComponent implements OnInit {
   tipoDomicilio = 'MEXICO';
 
   declaracionId: string = null;
-
-  tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -125,8 +115,7 @@ export class TomaDecisionesComponent implements OnInit {
     this.participacionTomaDecisionesForm
       .get('participacion')
       .get('recibeRemuneracion')
-      .valueChanges.pipe(untilDestroyed(this))
-      .subscribe((x) => {
+      .valueChanges.subscribe((x) => {
         x ? montoMensual.enable() : montoMensual.disable();
       });
   }
@@ -144,7 +133,7 @@ export class TomaDecisionesComponent implements OnInit {
         this.participacionTomaDecisionesForm.get(`participacion.${field}`).patchValue(participacion[field])
       );
 
-    ifExistsEnableFields(
+    ifExistEnableFields(
       participacion.ubicacion.entidadFederativa,
       this.participacionTomaDecisionesForm,
       'participacion.ubicacion.entidadFederativa'
@@ -154,7 +143,7 @@ export class TomaDecisionesComponent implements OnInit {
       this.tipoDomicilio = 'MEXICO';
     }
 
-    ifExistsEnableFields(
+    ifExistEnableFields(
       participacion.ubicacion.pais,
       this.participacionTomaDecisionesForm,
       'participacion.ubicacion.pais'
@@ -183,26 +172,6 @@ export class TomaDecisionesComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  formHasChanges() {
-    let isDirty = this.participacionTomaDecisionesForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/apoyos-publicos']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/apoyos-publicos']);
     }
   }
 

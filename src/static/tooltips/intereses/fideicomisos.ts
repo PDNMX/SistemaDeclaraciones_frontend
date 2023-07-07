@@ -8,16 +8,17 @@ const tooltipData = {
     'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del fideicomiso.',
   fideicomitente: 'Seleccionar si es persona física o persona moral.',
   nombreRazonSocialFideicomitente: 'Proporcionar nombre completo.',
-  rfcFideicomitente: 'Proporcionar los trece dígitos.',
+  rfcFideicomitente:
+    'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del fideicomitente.',
   nombreRazonSocialFiduciario: 'Proporcionar nombre completo.',
-  rfcFiduciario: 'Proporcionar los trece dígitos.',
+  rfcFiduciario:
+    'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del fiduciario.',
   fideicomisario: 'Seleccionar si es persona física o persona moral.',
   nombreRazonSocialFideicomisario: 'Proporcionar nombre completo.',
-  rfcFideicomisario: 'Proporcionar los trece dígitos.',
+  rfcFideicomisario:
+    'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del fideicomisario.',
   sectorProductivo: 'Seleccionar alguno de la lista desplegable.',
   localizaFideicomiso: 'Seleccionar en México o en el extranjero.',
-  aclaracionesObservaciones:
-    'En este espacio el Declarante podrá realizar las aclaraciones u observaciones que considere pertinentes respecto de alguno o algunos de los incisos de este apartado.',
 };
 
 export { tooltipData };

@@ -9,8 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { UntilDestroy, untilDestroyed } from '@core';
-
 import Paises from '@static/catalogos/paises.json';
 import Estados from '@static/catalogos/estados.json';
 import TipoRelacion from '@static/catalogos/tipoRelacion.json';
@@ -18,16 +16,11 @@ import TipoRepresentacion from '@static/catalogos/tipoRepresentacion.json';
 import Extranjero from '@static/catalogos/extranjero.json';
 import Sector from '@static/catalogos/sector.json';
 
-import { tooltipData } from '@static/tooltips/intereses/representacion';
-
 import { DeclaracionOutput, Representacion, Representaciones } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
 import { Constantes } from '@app/@shared/constantes';
 
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-
-@UntilDestroy()
 @Component({
   selector: 'app-representacion',
   templateUrl: './representacion.component.html',
@@ -52,9 +45,6 @@ export class RepresentacionComponent implements OnInit {
   tipoDomicilio: string;
 
   declaracionId: string = null;
-
-  tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -127,8 +117,7 @@ export class RepresentacionComponent implements OnInit {
     this.representacionForm
       .get('representacion')
       .get('recibeRemuneracion')
-      .valueChanges.pipe(untilDestroyed(this))
-      .subscribe((x) => {
+      .valueChanges.subscribe((x) => {
         x ? montoMensual.enable() : montoMensual.disable();
       });
   }
@@ -144,7 +133,7 @@ export class RepresentacionComponent implements OnInit {
       .filter((field) => representacion[field] !== null)
       .forEach((field) => this.representacionForm.get(`representacion.${field}`).patchValue(representacion[field]));
 
-    ifExistsEnableFields(
+    ifExistEnableFields(
       representacion.ubicacion.entidadFederativa,
       this.representacionForm,
       'representacion.ubicacion.entidadFederativa'
@@ -153,7 +142,7 @@ export class RepresentacionComponent implements OnInit {
       this.tipoDomicilio = 'MEXICO';
     }
 
-    ifExistsEnableFields(representacion.ubicacion.pais, this.representacionForm, 'representacion.ubicacion.pais');
+    ifExistEnableFields(representacion.ubicacion.pais, this.representacionForm, 'representacion.ubicacion.pais');
     if (representacion.ubicacion.pais) {
       this.tipoDomicilio = 'EXTRANJERO';
     }
@@ -178,26 +167,6 @@ export class RepresentacionComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  formHasChanges() {
-    let isDirty = this.representacionForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/clientes-principales']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/clientes-principales']);
     }
   }
 

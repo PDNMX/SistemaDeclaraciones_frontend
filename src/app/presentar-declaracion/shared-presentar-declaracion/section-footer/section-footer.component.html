@@ -3,3 +3,9 @@
     <button mat-raised-button class="btn-finalizar" (click)="confirmFinish()">FINALIZAR MI DECLARACIÓN</button>
   </mat-grid-tile>
 </mat-grid-list>
+<div class="contenedor-loader" *ngIf="isLoading">
+  <div class="loader"></div>
+  <div>
+    Firmando declaración, por favor espere
+  </div>
+</div>

@@ -10,7 +10,7 @@ import { Declaracion, DeclaracionMetadata, TipoDeclaracion } from '@models/decla
 
 import { Apollo } from 'apollo-angular';
 
-import { autorizarPublica } from '@api/declaracion';
+import { autorizarPublica, enviarDeclaracion } from '@api/declaracion';
 
 @Component({
   selector: 'app-mis-declaraciones',
@@ -116,11 +116,10 @@ export class MisDeclaracionesComponent implements OnInit {
     });
   }
 
-  previewDeclaration(id: string, publicVersion: boolean = false) {
+  previewDeclaration(id: string) {
     const dialogRef = this.dialog.open(PreviewDeclarationComponent, {
       data: {
         id,
-        publicVersion,
       },
     });
 
@@ -128,6 +127,30 @@ export class MisDeclaracionesComponent implements OnInit {
       if (result) {
       }
     });
+  }
+
+  enviarDeclaracion(d: any) {
+    d.isLoading = true;
+    this.apollo.mutate({
+      mutation: enviarDeclaracion,
+      variables: {
+        id: d._id
+      }
+    })
+    .toPromise()
+    .then((result:any)=>{
+
+      if(result.data?.enviarDeclaracion === true)
+        this.presentAlert('Declaración enviada', 'Tu declaración ha sido enviada al correo electrónico que registraste');
+      else
+        throw result;
+    })
+    .catch((err)=>{
+      this.presentAlert('Error', err);
+    })
+    .finally(()=>{
+      d.isLoading = false;
+    })
   }
 
   autorizarPublica(d: Declaracion) {

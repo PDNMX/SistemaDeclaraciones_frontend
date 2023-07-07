@@ -27,7 +27,6 @@ export interface Declaracion {
   firmada?: boolean;
   declaracionCompleta?: boolean;
   tipoDeclaracion?: TipoDeclaracion;
-  anioEjercicio?: number;
   datosGenerales?: DatosGenerales;
   domicilioDeclarante?: DomicilioDeclarante;
   datosCurricularesDeclarante?: DatosCurricularesDeclarante;

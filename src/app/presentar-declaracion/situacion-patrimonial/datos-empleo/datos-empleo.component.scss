@@ -4,7 +4,33 @@
   background-color: #ffffff;
 }
 
+.hidden {
+  display: none;
+}
 form > p {
   margin: 50px 0;
   display: block;
+}
+.left {
+  flex: 0 0 70%;
+}
+.right {
+  flex: 0 0 30%;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 20px 0 25px 0;
+}
+.grid-item-last {
+  grid-column-start: 3;
+}
+
+.boton-agrgar-empleo {
+  text-align: right;
+  margin-top: 0;
+  /*margin-bottom: 100px;*/
+}
+.boton-agrgar-empleo button {
+  text-transform: uppercase;
 }

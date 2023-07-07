@@ -1,28 +1,25 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
+import { fideicomisosMutation, fideicomisosQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { fideicomisosMutation, fideicomisosQuery } from '@api/declaracion';
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-import { UntilDestroy, untilDestroyed } from '@core';
-import { DeclaracionOutput, Fideicomiso, Fideicomisos } from '@models/declaracion';
-import Extranjero from '@static/catalogos/extranjero.json';
 import Relacion from '@static/catalogos/tipoRelacion.json';
-import Sector from '@static/catalogos/sector.json';
 import TipoFideicomiso from '@static/catalogos/tipoFideicomiso.json';
-import TipoOperacion from '@static/catalogos/tipoOperacion.json';
 import TipoParticipacion from '@static/catalogos/tipoParticipacionFideicomiso.json';
-import { tooltipData } from '@static/tooltips/intereses/fideicomisos';
+import Sector from '@static/catalogos/sector.json';
+import Extranjero from '@static/catalogos/extranjero.json';
+
+import { DeclaracionOutput, Fideicomiso, Fideicomisos } from '@models/declaracion';
+
 import { findOption } from '@utils/utils';
 import { Constantes } from '@app/@shared/constantes';
 
-@UntilDestroy()
 @Component({
   selector: 'app-fideicomisos',
   templateUrl: './fideicomisos.component.html',
@@ -30,28 +27,21 @@ import { Constantes } from '@app/@shared/constantes';
 })
 export class FideicomisosComponent implements OnInit {
   aclaraciones = false;
-  aclaracionesText: string = null;
   fideicomiso: Fideicomiso[] = [];
   fideicomisosForm: FormGroup;
   editMode = false;
   editIndex: number = null;
   isLoading = false;
 
-  @ViewChild('otroSector') otroSector: ElementRef;
-
-  extranjeroCatalogo = Extranjero;
   relacionCatalogo = Relacion;
-  sectorCatalogo = Sector;
   tipoFideicomisoCatalogo = TipoFideicomiso;
-  tipoOperacionCatalogo = TipoOperacion;
   tipoParticipacionCatalogo = TipoParticipacion;
+  sectorCatalogo = Sector;
+  extranjeroCatalogo = Extranjero;
 
   tipoDeclaracion: string = null;
 
   declaracionId: string = null;
-
-  tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -100,19 +90,10 @@ export class FideicomisosComponent implements OnInit {
           nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
           rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
-        sector: [null, [Validators.required]],
-        extranjero: [null, [Validators.required]],
+        sector: ['', [Validators.required]],
+        extranjero: ['', Validators.required],
       }),
-      aclaracionesObservaciones: [
-        { disabled: true, value: null },
-        [Validators.required, Validators.pattern(/^\S.*\S$/)],
-      ],
-    });
-
-    const tipoParticipacion = this.fideicomisosForm.get('fideicomiso.tipoParticipacion');
-
-    tipoParticipacion.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
-      this.tipoParticipacionChanged(value);
+      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
   }
 
@@ -123,26 +104,16 @@ export class FideicomisosComponent implements OnInit {
   }
 
   fillForm(fideicomiso: Fideicomiso) {
-    const fideicomisoForm = this.fideicomisosForm.get('fideicomiso');
-    fideicomisoForm.patchValue(fideicomiso || {});
+    Object.keys(fideicomiso)
+      .filter((field) => fideicomiso[field] !== null)
+      .forEach((field) => this.fideicomisosForm.get(`fideicomiso.${field}`).patchValue(fideicomiso[field]));
 
-    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
-  }
-
-  get finalFideicomisoForm() {
-    const form = JSON.parse(JSON.stringify(this.fideicomisosForm.value.fideicomiso)); // Deep copy
-
-    if (form.sector?.clave === 'OTRO') {
-      form.sector.valor = this.otroSector.nativeElement.value;
-    }
-
-    return form;
   }
 
   async getUserInfo() {
     try {
-      const { data, errors } = await this.apollo
+      const { data } = await this.apollo
         .query<DeclaracionOutput>({
           query: fideicomisosQuery,
           variables: {
@@ -151,29 +122,13 @@ export class FideicomisosComponent implements OnInit {
         })
         .toPromise();
 
-      if (errors) {
-        throw errors;
-      }
-
-      this.declaracionId = data?.declaracion._id;
-      if (data?.declaracion.fideicomisos) {
-        this.setupForm(data?.declaracion.fideicomisos);
+      this.declaracionId = data.declaracion._id;
+      if (data.declaracion.fideicomisos) {
+        this.setupForm(data.declaracion.fideicomisos);
       }
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
-  }
-
-  inputsAreValid(): boolean {
-    let result = true;
-    const fideicomiso = this.fideicomisosForm.value.fideicomiso;
-
-    if (fideicomiso.sector?.clave === 'OTRO') {
-      result = result && this.otroSector.nativeElement.value?.match(/^\S.*\S$/);
-    }
-
-    return result;
   }
 
   ngOnInit(): void {}
@@ -226,7 +181,7 @@ export class FideicomisosComponent implements OnInit {
         fideicomisos: form,
       };
 
-      const { data, errors } = await this.apollo
+      const { data } = await this.apollo
         .mutate<DeclaracionOutput>({
           mutation: fideicomisosMutation,
           variables: {
@@ -235,24 +190,21 @@ export class FideicomisosComponent implements OnInit {
           },
         })
         .toPromise();
-
-      if (errors) {
-        throw errors;
-      }
-
       this.editMode = false;
-      this.setupForm(data?.declaracion.fideicomisos);
+      if (data.declaracion.fideicomisos) {
+        this.setupForm(data.declaracion.fideicomisos);
+      }
       this.presentSuccessAlert();
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
+      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
     }
   }
 
   saveItem() {
     let fideicomiso = [...this.fideicomiso];
     const aclaracionesObservaciones = this.fideicomisosForm.value.aclaracionesObservaciones;
-    const newItem = this.finalFideicomisoForm;
+    const newItem = this.fideicomisosForm.value.fideicomiso;
 
     if (this.editIndex === null) {
       fideicomiso = [...fideicomiso, newItem];
@@ -261,19 +213,13 @@ export class FideicomisosComponent implements OnInit {
     }
 
     this.isLoading = true;
-    console.log(fideicomiso);
+
     this.saveInfo({
       fideicomiso,
       aclaracionesObservaciones,
     });
 
     this.isLoading = false;
-  }
-
-  setAclaraciones(aclaraciones?: string) {
-    this.fideicomisosForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
-    this.aclaracionesText = aclaraciones || null;
-    this.toggleAclaraciones(!!aclaraciones);
   }
 
   setEditMode() {
@@ -287,20 +233,21 @@ export class FideicomisosComponent implements OnInit {
     const { sector } = this.fideicomisosForm.value.fideicomiso;
 
     if (sector) {
-      this.fideicomisosForm.get('fideicomiso.sector').setValue(findOption(this.sectorCatalogo, sector.clave));
+      this.fideicomisosForm.get('fideicomiso.sector').setValue(findOption(this.sectorCatalogo, sector));
     }
   }
 
-  setupForm(fideicomisos: Fideicomisos | undefined) {
-    this.fideicomiso = fideicomisos?.fideicomiso || [];
-    const aclaraciones = fideicomisos?.aclaracionesObservaciones;
+  setupForm(fideicomisos: Fideicomisos) {
+    this.fideicomiso = fideicomisos.fideicomiso;
+    const aclaraciones = fideicomisos.aclaracionesObservaciones;
 
-    if (fideicomisos?.ninguno) {
+    if (fideicomisos.ninguno) {
       this.fideicomisosForm.get('ninguno').patchValue(true);
     }
 
     if (aclaraciones) {
-      this.setAclaraciones(aclaraciones);
+      this.fideicomisosForm.get('aclaracionesObservaciones').setValue(aclaraciones);
+      this.toggleAclaraciones(true);
     }
   }
 

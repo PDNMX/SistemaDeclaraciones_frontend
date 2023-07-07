@@ -12,8 +12,6 @@ const tooltipData = {
     'Indicar si se encuentra en México, debiendo señalar entidad federativa o en el extranjero, debiendo señalar el país donde se localiza.',
   sectorProductivo:
     'Elegir el sector al que pertenece la empresa, sociedad o asociación. En caso de señalar otro, especifique.',
-  aclaracionesObservaciones:
-    'En este espacio el Declarante podrá realizar las aclaraciones u observaciones que considere pertinentes respecto de alguno o algunos de los incisos de este apartado.',
 };
 
 export { tooltipData };

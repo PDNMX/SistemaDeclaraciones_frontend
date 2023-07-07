@@ -11,8 +11,10 @@ h2,
 h3 {
   font-weight: 400;
 }
-.background-white {
-  height: 120px;
+.bg-no-public {
+  background-color: var(--no-public-color);
+  display: inline-block;
+  padding: 3px 10px;
 }
 .grid-4-col {
   display: grid;

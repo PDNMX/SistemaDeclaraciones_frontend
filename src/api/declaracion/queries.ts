@@ -490,7 +490,6 @@ export const datosEmpleoCargoComisionQuery = gql`
           codigoPostal
         }
         aclaracionesObservaciones
-        cuentaConOtroCargoPublico
       }
     }
   }
@@ -500,7 +499,6 @@ export const datosGeneralesQuery = gql`
   query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
     declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
       _id
-      anioEjercicio
       datosGenerales {
         nombre
         primerApellido
@@ -931,10 +929,6 @@ export const vehiculosQuery = gql`
             moneda
           }
           fechaAdquisicion
-          motivoBaja {
-            clave
-            valor
-          }
         }
         aclaracionesObservaciones
       }
@@ -984,7 +978,7 @@ export const beneficiosPrivadosQuery = gql`
         ninguno
         beneficio {
           tipoOperacion
-          #tipoPersona se quita porque el formulario no tiene estos campos
+          #tipoPersona OMAR: se quita porque el formulario no tiene estos campos
           tipoBeneficio {
             clave
             valor

@@ -16,11 +16,7 @@ import beneficiarioPrograma from '@static/catalogos/beneficiariosPrograma.json';
 import NivelGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import TiposApoyo from '@static/catalogos/tipoApoyo.json';
 import RecepcionApoyo from '@static/catalogos/formaRecepcion.json';
-
-import { tooltipData } from '@static/tooltips/intereses/apoyos';
 import { apoyosQuery, apoyosMutation } from '@api/declaracion';
-
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
 @Component({
   selector: 'app-apoyos-publicos',
@@ -43,9 +39,6 @@ export class ApoyosPublicosComponent implements OnInit {
   tipoDeclaracion: string = null;
 
   declaracionId: string = null;
-
-  tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -92,7 +85,7 @@ export class ApoyosPublicosComponent implements OnInit {
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
-    /////////////////////////////
+    ///////////////////////////// OMAR
     this.apoyosForm.get('apoyo.formaRecepcion').valueChanges.subscribe((val) => {
       if (!val) return;
 
@@ -146,26 +139,6 @@ export class ApoyosPublicosComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  formHasChanges() {
-    let isDirty = this.apoyosForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/representacion']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/representacion']);
     }
   }
 

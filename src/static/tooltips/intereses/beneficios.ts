@@ -12,8 +12,6 @@ const tooltipData = {
     'Es necesario capturar cantidades sin comas, sin puntos, sin centavos y sin ceros a la izquierda.',
   tipoMoneda: 'Señalar tipo de moneda en que se recibe el beneficio.',
   sectorProductivo: 'Seleccionar alguno de la lista desplegable.',
-  aclaracionesObservaciones:
-    'En este espacio el Declarante podrá realizar las aclaraciones u observaciones que considere pertinentes respecto de alguno o algunos de los incisos de este apartado.',
 };
 
 export { tooltipData };

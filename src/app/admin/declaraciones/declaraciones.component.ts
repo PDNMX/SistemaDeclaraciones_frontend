@@ -100,7 +100,10 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe(() => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+      }
+    });
   }
 
   setInicialTable() {
@@ -135,7 +138,6 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
           return observableOf([]);
         })
       )
-      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.dataInicial = data));
   }
 
@@ -171,7 +173,6 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
           return observableOf([]);
         })
       )
-      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.dataModificacion = data));
   }
 
@@ -207,7 +208,6 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
           return observableOf([]);
         })
       )
-      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.dataConclusion = data));
   }
 
@@ -240,7 +240,6 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
           return observableOf([]);
         })
       )
-      .pipe(untilDestroyed(this))
       .subscribe((data) => (this.data = data));
   }
 

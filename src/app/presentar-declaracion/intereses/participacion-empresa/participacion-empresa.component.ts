@@ -16,16 +16,11 @@ import Paises from '@static/catalogos/paises.json';
 import Estados from '@static/catalogos/estados.json';
 import Sector from '@static/catalogos/sector.json';
 
-import { tooltipData } from '@static/tooltips/intereses/participacion-empresa';
-
 import { DeclaracionOutput, Participacion, Participaciones } from '@models/declaracion';
 
 import { findOption, ifExistEnableFields } from '@utils/utils';
 import { Constantes } from '@app/@shared/constantes';
 
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-
-@UntilDestroy()
 @Component({
   selector: 'app-participacion-empresa',
   templateUrl: './participacion-empresa.component.html',
@@ -50,9 +45,6 @@ export class ParticipacionEmpresaComponent implements OnInit {
   tipoDomicilio: string;
 
   declaracionId: string = null;
-
-  tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -126,8 +118,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
     this.participacionForm
       .get('participacion')
       .get('recibeRemuneracion')
-      .valueChanges.pipe(untilDestroyed(this))
-      .subscribe((x) => {
+      .valueChanges.subscribe((x) => {
         x ? montoMensual.enable() : montoMensual.disable();
       });
   }
@@ -142,7 +133,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
     Object.keys(participacion)
       .filter((field) => participacion[field] !== null)
       .forEach((field) => this.participacionForm.get(`participacion.${field}`).patchValue(participacion[field]));
-    ifExistsEnableFields(
+    ifExistEnableFields(
       participacion.ubicacion.entidadFederativa,
       this.participacionForm,
       'participacion.ubicacion.entidadFederativa'
@@ -151,7 +142,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
       this.tipoDomicilio = 'MEXICO';
     }
 
-    ifExistsEnableFields(participacion.ubicacion.pais, this.participacionForm, 'participacion.ubicacion.pais');
+    ifExistEnableFields(participacion.ubicacion.pais, this.participacionForm, 'participacion.ubicacion.pais');
     if (participacion.ubicacion.pais) {
       this.tipoDomicilio = 'EXTRANJERO';
     }
@@ -176,26 +167,6 @@ export class ParticipacionEmpresaComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  formHasChanges() {
-    let isDirty = this.participacionForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/toma-decisiones']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/toma-decisiones']);
     }
   }
 

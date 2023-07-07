@@ -6,7 +6,7 @@
     <mat-divider></mat-divider>
 
     <mat-toolbar class="background-white">
-      <label class="step-title">
+      <label class="step-title"> 
         {{ tipoDeclaracion == 'modificacion' ? '12' : '13' }}
         Inversiones, cuentas bancarias u otro tipo de valores</label>
     </mat-toolbar>
@@ -14,26 +14,10 @@
     <mat-divider></mat-divider>
 
     <p>
-      Todos los campos * son obligatorios. Todos los datos de inversiones, cuentas bancarias y otro tipo de
+      Todos los campos son obligatorios. Todos los datos de inversiones, cuentas bancarias y otro tipo de
       valores/activos a nombre de la
       <span class="negritas">pareja, dependientes económicos y/o terceros</span> o que sean en copropiedad con el
       declarante no seran públicos y los campos resaltados <span class="no-public-inline"></span> no serán públicos.
-
-      <br />
-      <span *ngIf="tipoDeclaracion === 'inicial'">
-        Para la declaración de inicio reportar la situación de las inversiones, cuentas bancarias y otro tipo de valores
-        a la fecha de ingreso al empleo, cargo o comisión.
-      </span>
-      <span *ngIf="tipoDeclaracion === 'modificacion'">
-        Para la declaración de modificación reportar la situación de las inversiones, cuentas bancarias y otro tipo de
-        valores del año inmediato anterior.
-      </span>
-      <span *ngIf="tipoDeclaracion === 'conclusion'">
-        Para la declaración de conclusión reportar la situación de las inversiones, cuentas bancarias y otro tipo de
-        valores a la fecha de conclusión del empleo, cargo o comisión.
-      </span>
-      <br />El Declarante reportara toda la información relacionada con sus inversiones, cuentas bancarias o algún otro
-      tipo de valor que forme parte de sus activos.
     </p>
 
     <!-- Botones iniciales -->
@@ -159,7 +143,7 @@
           <mat-divider></mat-divider>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button color="primary" (click)="editItem(i)">Modificar</button>
+          <button mat-button color="primary" (click)="editItem($event,i)">Modificar</button>
           <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
         </mat-card-actions>
       </mat-card>
@@ -169,18 +153,19 @@
     </div>
 
     <!-- Formulario -->
-    <form (ngSubmit)="saveItem()" [formGroup]="inversionesCuentasValoresForm" *ngIf="editMode">
+    <a id="formEditar"></a>
+    <form (ngSubmit)="saveItem()" [formGroup]="inversionesCuentasValoresForm" *ngIf="editMode" >
       <!-- Agregar  -->
       <div class="padding-agregar" formGroupName="inversion">
         <mat-divider></mat-divider>
-        <h2>Agregar inversión</h2>
+        <h2>Cuenta o inversión</h2>
         <!-- Agregar -->
         <div class="">
           <div class="grid-4-col grid-margin">
             <mat-form-field matTooltip="{{ tooltipData.tipoInverson }}" appearance="fill">
               <mat-label>Tipo de Inversión/Activo</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
-              <mat-select formControlName="tipoInversion" required>
+              <mat-select formControlName="tipoInversion">
                 <mat-option *ngFor="let tipoInversion of tipoInversionCatalogo" [value]="tipoInversion">
                   {{ tipoInversion.valor }}
                 </mat-option>
@@ -194,11 +179,8 @@
             >
               <mat-label>Bancaria</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
-              <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -211,11 +193,8 @@
             >
               <mat-label>Fondos de Inversión</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
-              <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -228,11 +207,8 @@
             >
               <mat-label>Organizaciones Privadas y/o Mercantiles</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
-              <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -245,11 +221,8 @@
             >
               <mat-label>Posesión de Monedas y/o Metales</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
-              <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -262,11 +235,8 @@
             >
               <mat-label>Seguros</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
-              <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -279,11 +249,8 @@
             >
               <mat-label>Valores Bursátiles</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
-              <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -296,11 +263,8 @@
             >
               <mat-label>Afores y otros</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
-              <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+              <mat-select formControlName="subTipoInversion">
+                <mat-option *ngFor="let sub of subTipoInversionCatalogo" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -308,7 +272,7 @@
             <mat-form-field matTooltip="{{ tooltipData.titularInversion }}" appearance="fill" class="double-col">
               <mat-label>Titular de la inversión, cuenta bancaria y otro tipo de valores</mat-label>
               <mat-icon matPrefix class="no-public">person</mat-icon>
-              <mat-select formControlName="titular" required>
+              <mat-select formControlName="titular">
                 <mat-option *ngFor="let titularBien of titularBienCatalogo" [value]="titularBien">
                   {{ titularBien.valor }}
                 </mat-option>
@@ -325,7 +289,7 @@
             <mat-form-field matTooltip="{{ tooltipData.nombreTercero }}" appearance="fill" class="double-col">
               <mat-label>Nombre del Tercero o Terceros</mat-label>
               <mat-icon matPrefix>person</mat-icon>
-              <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombreRazonSocial" />
+              <input matInput type="text" formControlName="nombreRazonSocial" />
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.rfcTercero }}" appearance="fill">
               <mat-label>RFC</mat-label>
@@ -337,7 +301,7 @@
               <mat-label>Persona Física o Moral</mat-label>
               <mat-icon matPrefix>person</mat-icon>
               <mat-select formControlName="tipoPersona">
-                <!--  CAMBIO DE Fisica a FISICA -->
+                <!-- OMAR, CAMBIO DE Fisica a FISICA -->
                 <mat-option value="FISICA"> Física </mat-option>
                 <mat-option value="MORAL"> Moral </mat-option>
               </mat-select>
@@ -352,9 +316,9 @@
             >
               <mat-label>¿Dónde se localiza la inversión, cuenta bancaria y otro tipo de valores/activos? </mat-label>
               <mat-icon matPrefix>public</mat-icon>
-              <mat-select #mexicoExtranjero (selectionChange)="localizacionChanged($event.value)" required>
-                <mat-option value="{{ extranjeroCatalogo[0] }}"> EN MÉXICO </mat-option>
-                <mat-option value="{{ extranjeroCatalogo[1] }}"> EN EL EXTRANJERO </mat-option>
+              <mat-select [(value)]="mexicoExtranjero" (selectionChange)="localizacionChanged($event)">
+                <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
+                <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -366,13 +330,7 @@
             >
               <mat-label>Institución o razón social</mat-label>
               <mat-icon matPrefix>dns</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                type="text"
-                formControlName="institucionRazonSocial"
-                required
-              />
+              <input matInput type="text" formControlName="institucionRazonSocial" />
             </mat-form-field>
             <mat-form-field appearance="fill" formGroupName="localizacionInversion" *ngIf="tipoDomicilio === 'MEXICO'">
               <mat-label>RFC</mat-label>
@@ -387,7 +345,7 @@
             >
               <mat-label>País donde se localiza</mat-label>
               <mat-icon matPrefix>public</mat-icon>
-              <mat-select formControlName="pais" required>
+              <mat-select formControlName="pais">
                 <mat-option *ngFor="let pais of paisesCatalogo" [value]="pais.clave">
                   {{ pais.valor }}
                 </mat-option>
@@ -398,14 +356,7 @@
             <mat-form-field matTooltip="{{ tooltipData.saldo }}" appearance="fill" formGroupName="saldoSituacionActual">
               <mat-label>Saldo a la fecha (situación actual)</mat-label>
               <mat-icon matPrefix class="no-public">credit_card</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                type="number"
-                formControlName="valor"
-                min="0"
-                required
-              />
+              <input matInput type="number" formControlName="valor" min="0" />
             </mat-form-field>
             <mat-form-field
               matTooltip="{{ tooltipData.tipoMoneda }}"
@@ -414,7 +365,7 @@
             >
               <mat-label>Tipo de Moneda</mat-label>
               <mat-icon matPrefix>credit_card</mat-icon>
-              <mat-select formControlName="moneda" required>
+              <mat-select formControlName="moneda">
                 <mat-option *ngFor="let m of monedasCatalogo" [value]="m.clave">
                   {{ m.clave }} - {{ m.valor }}
                 </mat-option>
@@ -423,13 +374,7 @@
             <mat-form-field matTooltip="{{ tooltipData.numeroCuentaContrato }}" appearance="fill">
               <mat-label>Número de cuenta, contrato o póliza</mat-label>
               <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                type="text"
-                formControlName="numeroCuentaContrato"
-                required
-              />
+              <input matInput type="text" formControlName="numeroCuentaContrato" />
             </mat-form-field>
           </div>
         </div>
@@ -445,18 +390,12 @@
       <div class="" *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar aclaraciones/observaciones</button>
         </div>
 
         <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea
-            maxlength="500"
-            [errorStateMatcher]="errorMatcher"
-            matInput
-            formControlName="aclaracionesObservaciones"
-            rows="10"
-          ></textarea>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>
       </div>
 
@@ -479,12 +418,12 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary"
+      <button mat-raised-button color="primary" 
       [disabled]="!(inversion?.length > 0 || inversionesCuentasValoresForm.value.ninguno)"
       [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/adeudos'">
-      CONTINUAR
+      CONTINUAR 
       {{ tipoDeclaracion == 'modificacion' ? '13' : '14'}}
-      DE
+      DE 
       {{ tipoDeclaracion == 'modificacion' ? '14' : '15'}}
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

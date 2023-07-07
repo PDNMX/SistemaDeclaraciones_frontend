@@ -8,16 +8,17 @@
       <label class="step-title"> 5. Clientes principales (hasta los últimos dos años)</label>
     </mat-toolbar>
 
-    <mat-divider></mat-divider>
-
-    <p class="vertical-margin-25">
-      Todos los campos * son obligatorios. Todos los datos de clientes principales de la pareja o dependientes
-      económicos no serán públicos y los campos resaltados <span class="no-public-inline"></span> no serán públicos.
-    </p>
     <p>
       En caso de tener alguna empresa, negocio o actividad lucrativa deberá señalar a sus clientes principales, siempre
       y cuando el beneficio o ganancia directa al Declarante supere mensualmente 250 Unidades de Medida y Actualización
       (UMA), refiriéndose al valor diario de ésta. Deberá reportar hasta los últimos dos años.
+    </p>
+
+    <mat-divider></mat-divider>
+
+    <p class="grid-margin">
+      Todos los campos son obligatorios. Todos los datos de clientes principales de la pareja o dependientes económicos
+      no serán públicos y los campos resaltados <span class="no-public-inline"></span> no serán públicos.
     </p>
 
     <!-- Botones iniciales -->
@@ -105,6 +106,19 @@
               </p>
             </div>
           </div>
+
+          <!-- <mat-divider></mat-divider>
+
+          <div class="padding-card-section">
+            <div class="paragraph-flex aclaraciones">
+              <mat-icon matPrefix class="icon">speaker_notes</mat-icon>
+              <p>Aclaraciones/Observaciones</p>
+            </div>
+            <p>
+              {{ c.aclaracionesObservaciones }}
+            </p>
+          </div> -->
+
           <mat-divider></mat-divider>
         </mat-card-content>
         <mat-card-actions>
@@ -113,75 +127,44 @@
         </mat-card-actions>
       </mat-card>
 
-      <div *ngIf="!editMode && aclaracionesText">
-        <div class="paragraph-flex aclaraciones">
-          <mat-icon matPrefix class="icon card-no-public">insert_comment</mat-icon>
-          <p>Aclaraciones / Observaciones</p>
-        </div>
-        <p class="vertical-margin-25">{{ aclaracionesText }}</p>
-      </div>
-
       <div class="boton-agregar" *ngIf="(cliente.length && !editMode) || clientesPrincipalesForm.value.ninguno">
         <button mat-raised-button color="primary" (click)="addItem()">AGREGAR CLIENTE</button>
       </div>
     </div>
 
     <!-- Formulario -->
-    <form (ngSubmit)="saveItem()" [formGroup]="clientesPrincipalesForm" [ngClass]="{ hidden: !editMode }">
+    <form (ngSubmit)="saveItem()" [formGroup]="clientesPrincipalesForm" *ngIf="editMode">
       <!-- Agregar -->
       <div class="padding-agregar" formGroupName="cliente">
         <mat-divider></mat-divider>
         <p>Agregar cliente principal</p>
         <!-- Datos -->
 
-        <div class="grid-3-col grid-margin">
-          <mat-form-field appearance="fill">
-            <mat-label>Tipo de Operacion</mat-label>
-            <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="tipoOperacion" required>
-              <mat-option *ngFor="let tipoOperacion of tipoOperacionCatalogo" [value]="tipoOperacion">
-                {{ tipoOperacion | replace: '_':' ' }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
         <div class="grid-2-col grid-margin">
-          <mat-radio-group
-            matTooltip="{{ tooltipData.realizaActividadLucrativaIndependiente }}"
-            class="checkbox"
-            formControlName="realizaActividadLucrativa"
-          >
+          <mat-radio-group class="checkbox checkbox-height" formControlName="realizaActividadLucrativa">
             <label class="question"
               >¿Realiza alguna actividad lucrativa independiente al empleo, cargo o comisión?</label
             >
             <mat-radio-button [value]="true">Si</mat-radio-button>
             <mat-radio-button [value]="false">No</mat-radio-button>
           </mat-radio-group>
-          <mat-form-field matTooltip="{{ tooltipData.quien }}" appearance="fill">
-            <mat-label>¿Quién realiza la actividad?</mat-label>
+          <mat-form-field appearance="fill">
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="tipoRelacion" required>
-              <mat-option *ngFor="let relacion of relacionCatalogo" [value]="relacion">{{
-                relacion | replace: '_':' '
-              }}</mat-option>
+            <mat-select formControlName="tipoRelacion">
+              <mat-option value="{{ relacionCatalogo[0] }}"> Declarante </mat-option>
+              <mat-option value="{{ relacionCatalogo[1] }}"> Pareja </mat-option>
+              <mat-option value="{{ relacionCatalogo[2] }}"> Dependiente Economico </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
 
         <div class="grid-2-col grid-margin" formGroupName="empresa">
-          <mat-form-field matTooltip="{{ tooltipData.nombreEmpresa }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Nombre de la empresa o servicio que proporciona</mat-label>
             <mat-icon matPrefix>person</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              type="text"
-              formControlName="nombreEmpresaServicio"
-              required
-            />
+            <input matInput type="text" formControlName="nombreEmpresaServicio" />
           </mat-form-field>
-          <mat-form-field matTooltip="{{ tooltipData.rfc }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>RFC</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
             <input matInput #input_rfc_empresa type="text" maxlength="13" formControlName="rfc" />
@@ -189,100 +172,60 @@
         </div>
 
         <div class="grid-3-col grid-margin" formGroupName="clientePrincipal">
-          <mat-radio-group
-            matTooltip="{{ tooltipData.clientePrincipal }}"
-            class="checkbox"
-            formControlName="tipoPersona"
-          >
+          <mat-radio-group class="checkbox checkbox-height" formControlName="tipoPersona">
             <label class="question">Cliente principal</label>
             <mat-radio-button value="FISICA"><span class="no-public-inline"></span>Persona Física</mat-radio-button>
             <mat-radio-button value="MORAL">Persona Moral</mat-radio-button>
           </mat-radio-group>
-          <mat-form-field matTooltip="{{ tooltipData.nombreRazonSocialClientePrincipal }}" appearance="fill">
-            <mat-label>Nombre o razón social del cliente principal</mat-label>
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre o razón social del representante/representado</mat-label>
             <mat-icon matPrefix class="no-public">person</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              type="text"
-              formControlName="nombreRazonSocial"
-              required
-            />
+            <input matInput type="text" formControlName="nombreRazonSocial" />
           </mat-form-field>
-          <mat-form-field matTooltip="{{ tooltipData.rfcClientePrincipal }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>RFC</mat-label>
             <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_rfc
-              type="text"
-              maxlength="13"
-              formControlName="rfc"
-              required
-            />
-            <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/12-13</mat-hint>
+            <input matInput #input_rfc type="text" maxlength="13" formControlName="rfc" />
+            <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/13</mat-hint>
           </mat-form-field>
         </div>
 
         <div class="grid-2-col grid-margin">
-          <mat-form-field matTooltip="{{ tooltipData.sectorProductivo }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Sector al que pertenece</mat-label>
             <mat-icon matPrefix>person</mat-icon>
-            <mat-select formControlName="sector" required>
+            <mat-select formControlName="sector">
               <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
                 {{ sector.valor }}
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field
-            appearance="fill"
-            [ngClass]="{ hidden: clientesPrincipalesForm.value.cliente.sector?.clave !== 'OTRO' }"
-          >
+          <mat-form-field appearance="fill" *ngIf="clientesPrincipalesForm.value.cliente.sector?.clave === 'OTRO'">
             <mat-label>Especifique</mat-label>
             <mat-icon matPrefix class="no-public">person</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" #otroSector matInput type="text" required />
+            <input matInput type="text" />
           </mat-form-field>
-
-          <div class="grid-2-col" formGroupName="montoAproximadoGanancia">
-            <mat-form-field matTooltip="{{ tooltipData.montoAproximadoBeneficio }}" appearance="fill">
-              <mat-label>Monto Aproximado del beneficio o ganancia mensual que obtiene del cliente principal</mat-label>
-              <mat-icon matPrefix>account_balance_wallet</mat-icon>
-              <input
-                [errorStateMatcher]="errorMatcher"
-                matInput
-                type="number"
-                formControlName="valor"
-                min="0"
-                required
-              />
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-              <mat-label>Tipo de moneda</mat-label>
-              <mat-icon matPrefix>beenhere</mat-icon>
-              <mat-select formControlName="moneda" required>
-                <mat-option *ngFor="let m of monedasCatalogo" [value]="m.clave">
-                  {{ m.clave }} - {{ m.valor }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+          <mat-form-field appearance="fill" formGroupName="montoAproximadoGanancia">
+            <mat-label>Monto Aproximado del beneficio o ganancia mensual que obtiene del cliente principal</mat-label>
+            <mat-icon matPrefix>account_balance_wallet</mat-icon>
+            <input matInput type="number" formControlName="valor" min="0" />
+          </mat-form-field>
         </div>
 
         <div class="grid-2-col grid-margin" formGroupName="ubicacion">
-          <mat-form-field matTooltip="{{ tooltipData.lugarUbicacion }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Lugar donde se ubica</mat-label>
             <mat-icon matPrefix>public</mat-icon>
-            <mat-select #locationSelect (selectionChange)="locationChanged($event.value)" required>
-              <mat-option value="MEXICO"> MÉXICO </mat-option>
-              <mat-option value="EXTRANJERO"> EN EL EXTRANJERO </mat-option>
+            <mat-select #location (selectionChange)="locationChanged($event.value)">
+              <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
+              <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
             </mat-select>
           </mat-form-field>
           <!-- México -->
           <mat-form-field appearance="fill" *ngIf="this.tipoDomicilio === 'MEXICO'">
             <mat-label>Entidad Federativa</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="entidadFederativa" required>
+            <mat-select formControlName="entidadFederativa">
               <mat-option *ngFor="let estados of estadosCatalogo" [value]="estados">
                 {{ estados.valor }}
               </mat-option>
@@ -292,7 +235,7 @@
           <mat-form-field appearance="fill" *ngIf="this.tipoDomicilio === 'EXTRANJERO'">
             <mat-label>País </mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="pais" required>
+            <mat-select formControlName="pais">
               <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
                 {{ opt.valor }}
               </mat-option>
@@ -300,6 +243,8 @@
           </mat-form-field>
         </div>
       </div>
+
+      <mat-divider></mat-divider>
 
       <div class="boton" *ngIf="!aclaraciones">
         <button mat-raised-button class="text-primary" (click)="toggleAclaraciones(true)">
@@ -309,18 +254,12 @@
       <div *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
-        <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
+        <mat-form-field appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea
-            maxlength="500"
-            [errorStateMatcher]="errorMatcher"
-            matInput
-            formControlName="aclaracionesObservaciones"
-            rows="10"
-          ></textarea>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>
       </div>
 
@@ -334,11 +273,7 @@
         <button mat-raised-button color="primary" type="button" (click)="clientesPrincipalesForm.reset()">
           LIMPIAR FORMULARIO
         </button>
-        <button
-          mat-raised-button
-          color="primary"
-          [disabled]="clientesPrincipalesForm.invalid || !inputsAreValid() || isLoading"
-        >
+        <button mat-raised-button color="primary" [disabled]="clientesPrincipalesForm.invalid || isLoading">
           GUARDAR CAMBIOS
         </button>
       </div>
@@ -347,7 +282,7 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary"
+      <button mat-raised-button color="primary" 
       [disabled]="!(cliente?.length > 0  || clientesPrincipalesForm.value.ninguno)"
       [routerLink]="'/' + tipoDeclaracion + '/intereses/beneficios-privados'">
         CONTINUAR 6 DE 7

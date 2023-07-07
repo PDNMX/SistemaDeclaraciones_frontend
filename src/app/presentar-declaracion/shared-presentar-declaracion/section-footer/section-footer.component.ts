@@ -26,13 +26,17 @@ enum tipoDeclaracion {
 export class SectionFooterComponent implements OnInit {
   @Input() declaracionId: string = null;
   tipoDeclaracion: string = null;
+  finalDeclaracion = false;
+  esSimplificada = false;
+  isLoading = false;
 
   constructor(
     private apollo: Apollo,
     private acuseService: AcuseService,
     private dialog: MatDialog,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private activatedRoute: ActivatedRoute
   ) {
     this.tipoDeclaracion = tipoDeclaracion[this.router.url.split('/')[1]];
     this.esSimplificada = this.router.url.indexOf('simplificada') >= 0;
@@ -124,6 +128,7 @@ export class SectionFooterComponent implements OnInit {
   }
 
   async signDeclaration(password: string) {
+    this.isLoading = true;
     try {
       await this.apollo
         .mutate({
@@ -134,6 +139,7 @@ export class SectionFooterComponent implements OnInit {
           },
         })
         .toPromise();
+        this.isLoading = false;
     } catch (error) {
       throw error;
     }

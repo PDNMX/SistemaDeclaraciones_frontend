@@ -13,9 +13,13 @@ import { DialogComponent } from '@app/@shared';
 export class ComienzaTuDeclaracionComponent implements OnInit {
   tipoDeclaracion: string;
 
-  ngOnInit(): void {}
+  constructor(private apollo: Apollo, private dialog: MatDialog, private router: Router) {}
 
-  // Validar que no se pueda iniciar una declaracion simplificada o completa si ya se tiene una que no se ha terminado
+  ngOnInit(): void {
+    this.tipoDeclaracion = this.router.url.split('/')[1];
+  }
+
+  //OMAR: Validar que no se pueda iniciar una declaracion simplificada o completa si ya se tiene una que no se ha terminado
   async iniciarDeclaracion(tipo: String, modo: String) {
     //obtener la ultima declaracion
     if (tipo == 'CONCLUSION' && !(await this.validarDeclaracionDeConclusion())) {
@@ -24,9 +28,9 @@ export class ComienzaTuDeclaracionComponent implements OnInit {
 
     this.validarDeclaracionIniciada(tipo, modo);
 
-    // 15/07/2021 --> Cuando inicia una declaración, copiar los datos de la última declaracion que tenga hecha para
+    //OMAR: 15/07/2021 --> Cuando inicia una declaración, copiar los datos de la última declaracion que tenga hecha para
     // que se muestren en la declaración
-
+    
     //this.copiarUltimaDeclaracion();
   }
 
@@ -84,7 +88,7 @@ export class ComienzaTuDeclaracionComponent implements OnInit {
             userID: userId,
             filter: {
               firmada: false,
-              tipoDeclaracion: tipo,
+              //tipoDeclaracion: tipo,
             },
           },
         })

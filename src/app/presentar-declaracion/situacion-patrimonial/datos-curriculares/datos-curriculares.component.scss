@@ -3,3 +3,10 @@
   flex: 1;
   background-color: #ffffff;
 }
+
+[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+.no-public-inline {
+  margin-top: 12px;
+}

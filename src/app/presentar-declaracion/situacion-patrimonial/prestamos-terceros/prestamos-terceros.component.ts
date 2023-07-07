@@ -9,8 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { UntilDestroy, untilDestroyed } from '@core';
-
 import TipoInmueble from '@static/catalogos/tipoInmueble.json';
 import TipoVehiculo from '@static/catalogos/tipoVehiculo.json';
 import Extranjero from '@static/catalogos/extranjero.json';
@@ -19,15 +17,10 @@ import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import ParentescoRelacion from '@static/catalogos/parentescoRelacion.json';
 
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/prestamo-terceros';
-
 import { Catalogo, DeclaracionOutput, Prestamo, PrestamoComodato } from '@models/declaracion';
 
-import { findOption, ifExistsEnableFields } from '@utils/utils';
+import { findOption, ifExistEnableFields } from '@utils/utils';
 
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-
-@UntilDestroy()
 @Component({
   selector: 'app-prestamos-terceros',
   templateUrl: './prestamos-terceros.component.html',
@@ -56,9 +49,6 @@ export class PrestamosTercerosComponent implements OnInit {
   tipoDomicilio: string;
 
   declaracionId: string = null;
-
-  tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -108,7 +98,7 @@ export class PrestamosTercerosComponent implements OnInit {
       const estado = this.prestamoComodatoForm
         .get('prestamo.tipoBien.inmueble.domicilioMexico')
         .get('entidadFederativa');
-      estado.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
+      estado.valueChanges.subscribe((value) => {
         const municipio = this.prestamoComodatoForm
           .get('prestamo.tipoBien.inmueble.domicilioMexico')
           .get('municipioAlcaldia');
@@ -155,7 +145,7 @@ export class PrestamosTercerosComponent implements OnInit {
               calle: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
               numeroExterior: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
               numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
-              coloniaLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+              coloniaLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
               municipioAlcaldia: [{ disabled: true, value: '' }, Validators.required],
               entidadFederativa: ['', Validators.required],
               codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/i)]],
@@ -164,7 +154,7 @@ export class PrestamosTercerosComponent implements OnInit {
               calle: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
               numeroExterior: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
               numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
-              ciudadLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+              ciudadLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
               estadoProvincia: ['', Validators.required],
               pais: ['', Validators.required],
               codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/i)]],
@@ -214,7 +204,7 @@ export class PrestamosTercerosComponent implements OnInit {
         this.prestamoComodatoForm.get(`prestamo.duenoTitular.${field}`).patchValue(prestamo.duenoTitular[field])
       );
 
-    ifExistsEnableFields(prestamo.tipoBien.inmueble, this.prestamoComodatoForm, 'prestamo.tipoBien.inmueble');
+    ifExistEnableFields(prestamo.tipoBien.inmueble, this.prestamoComodatoForm, 'prestamo.tipoBien.inmueble');
     if (prestamo.tipoBien.inmueble) {
       this.tipoBien = 'inmueble';
 
@@ -226,7 +216,7 @@ export class PrestamosTercerosComponent implements OnInit {
             .patchValue(prestamo.tipoBien.inmueble[field])
         );
 
-      ifExistsEnableFields(
+      ifExistEnableFields(
         prestamo.tipoBien.inmueble.domicilioMexico,
         this.prestamoComodatoForm,
         'prestamo.tipoBien.inmueble.domicilioMexico'
@@ -235,7 +225,7 @@ export class PrestamosTercerosComponent implements OnInit {
         this.tipoDomicilio = 'MEXICO';
       }
 
-      ifExistsEnableFields(
+      ifExistEnableFields(
         prestamo.tipoBien.inmueble.domicilioExtranjero,
         this.prestamoComodatoForm,
         'prestamo.tipoBien.inmueble.domicilioExtranjero'
@@ -244,7 +234,7 @@ export class PrestamosTercerosComponent implements OnInit {
         this.tipoDomicilio = 'EXTRANJERO';
       }
     }
-    ifExistsEnableFields(prestamo.tipoBien.vehiculo, this.prestamoComodatoForm, 'prestamo.tipoBien.vehiculo');
+    ifExistEnableFields(prestamo.tipoBien.vehiculo, this.prestamoComodatoForm, 'prestamo.tipoBien.vehiculo');
     if (prestamo.tipoBien.vehiculo) {
       this.tipoBien = 'vehiculos';
       Object.keys(prestamo.tipoBien.vehiculo)
@@ -255,7 +245,7 @@ export class PrestamosTercerosComponent implements OnInit {
             .patchValue(prestamo.tipoBien.vehiculo[field])
         );
 
-      ifExistsEnableFields(
+      ifExistEnableFields(
         prestamo.tipoBien.vehiculo.lugarRegistro.entidadFederativa,
         this.prestamoComodatoForm,
         'prestamo.tipoBien.vehiculo.lugarRegistro.entidadFederativa'
@@ -264,7 +254,7 @@ export class PrestamosTercerosComponent implements OnInit {
         this.tipoDomicilio = 'MEXICO';
       }
 
-      ifExistsEnableFields(
+      ifExistEnableFields(
         prestamo.tipoBien.vehiculo.lugarRegistro.pais,
         this.prestamoComodatoForm,
         'prestamo.tipoBien.vehiculo.lugarRegistro.pais'
@@ -294,26 +284,6 @@ export class PrestamosTercerosComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  formHasChanges() {
-    let isDirty = this.prestamoComodatoForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/participacion-empresa']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/intereses/participacion-empresa']);
     }
   }
 

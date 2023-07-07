@@ -66,13 +66,20 @@
                 Editar
               </button>
               <button mat-button color="primary" (click)="previewDeclaration(declaracion._id)">Ver</button>
-              <button mat-button color="primary" (click)="autorizarPublica(declaracion)"  *ngIf="declaracion.autorizaPublica !== true && declaracion.firmada === true">
+              <button mat-button color="primary" *ngIf="declaracion.firmada" (click)="enviarDeclaracion(declaracion)" [disabled]="declaracion.isLoading">
+                <app-loader class="inline-loader" [isLoading]="declaracion.isLoading"></app-loader>
+
+                <span *ngIf="!declaracion.isLoading">Enviar</span>  
+              </button>
+
+              <!-- <button mat-button color="primary" (click)="autorizarPublica(declaracion)"  *ngIf="declaracion.autorizaPublica !== true && declaracion.firmada === true">
                 Autorizo que sea pública
               </button>
               <span *ngIf="declaracion.autorizaPublica === true">
                 <mat-icon matPrefix color="primary">public</mat-icon>
                 Declaración autorizada para ser pública
-              </span>
+              </span> -->
+              
             </div>
           </mat-card>
         </mat-list-item>

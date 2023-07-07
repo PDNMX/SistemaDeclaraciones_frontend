@@ -16,6 +16,15 @@ export const autorizarPublica = gql`
   mutation autorizarPublica($id: ID!, $autoriza: Boolean!) {
     autorizarPublica(id: $id, autoriza: $autoriza)
   }
+
+`;
+
+
+export const enviarDeclaracion = gql`
+  mutation enviarDeclaracion($id: ID!) {
+    enviarDeclaracion(id: $id)
+  }
+
 `;
 
 /**** PESENTAR DECLARACION ****/
@@ -456,7 +465,7 @@ export const inversionesCuentasValoresMutation = gql`
           subTipoInversion {
             clave
             valor
-            tipoInversion # se agrega
+            tipoInversion #omar: se agrega
           }
           titular {
             clave
@@ -655,6 +664,7 @@ export const beneficiosPrivadosMutation = gql`
         ninguno
         beneficio {
           tipoOperacion
+          tipoPersona
           tipoBeneficio {
             clave
             valor

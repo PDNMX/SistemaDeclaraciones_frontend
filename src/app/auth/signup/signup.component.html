@@ -29,7 +29,7 @@
           </mat-form-field>
 
           <mat-form-field [hideRequiredMarker]="true" appearance="fill">
-            <mat-label>Primer apellido</mat-label>
+            <mat-label>Apellido paterno</mat-label>
             <mat-icon matPrefix>person</mat-icon>
             <input
               type="text"
@@ -37,7 +37,7 @@
               formControlName="primerApellido"
               autocomplete="apellido"
               [placeholder]="'Apellido paterno' | translate"
-
+              
             />
             <!-- <mat-error *ngIf="signupForm.controls.primerApellido.invalid && signupForm.controls.primerApellido.touched">
               <span translate>Apellido paterno requerido</span>
@@ -45,7 +45,7 @@
           </mat-form-field>
 
           <mat-form-field [hideRequiredMarker]="true" appearance="fill">
-            <mat-label>Segundo apellido</mat-label>
+            <mat-label>Apellido materno</mat-label>
             <mat-icon matPrefix>person</mat-icon>
             <input
               type="text"
@@ -143,19 +143,6 @@
             <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/13</mat-hint>
             <mat-error *ngIf="signupForm.controls.rfc.invalid && signupForm.controls.rfc.touched">
               <span translate>RFC requerido</span>
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field *ngIf="institucionesCatalogo.length" [hideRequiredMarker]="true" appearance="fill" fxFlex>
-            <mat-label>Institución</mat-label>
-            <mat-icon matPrefix>account_balance</mat-icon>
-            <mat-select formControlName="institucion" required>
-              <mat-option *ngFor="let institucion of institucionesCatalogo" [value]="institucion">
-                {{ institucion.ente_publico }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="signupForm.controls.institucion.invalid && signupForm.controls.institucion.touched">
-              <span translate>Institución requerida</span>
             </mat-error>
           </mat-form-field>
         </div>

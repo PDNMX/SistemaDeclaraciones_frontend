@@ -5,7 +5,6 @@ import { AcuseService } from '@app/services/acuse.service';
 
 export interface DialogData {
   id: string;
-  publicVersion?: boolean;
   signDeclaration: boolean | null;
   publica: boolean
 }

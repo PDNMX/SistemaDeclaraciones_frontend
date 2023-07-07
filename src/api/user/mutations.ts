@@ -17,10 +17,6 @@ export const changeRoles = gql`
       curp
       rfc
       roles
-      institucion {
-        clave
-        valor
-      }
       createdAt
       updatedAt
     }
@@ -44,12 +40,7 @@ export const signup = gql`
       curp
       rfc
       roles
-      institucion {
-        clave
-        valor
-      }
       createdAt
-      updatedAt
     }
   }
 `;
@@ -64,10 +55,6 @@ export const updateUserProfile = gql`
       segundoApellido
       curp
       rfc
-      institucion {
-        clave
-        valor
-      }
     }
   }
 `;

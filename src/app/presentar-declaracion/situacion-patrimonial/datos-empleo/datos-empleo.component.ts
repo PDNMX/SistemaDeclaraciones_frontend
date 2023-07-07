@@ -1,27 +1,26 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { MatSelect } from '@angular/material/select';
 import { Apollo } from 'apollo-angular';
+import { datosEmpleoCargoComisionQuery, declaracionMutation } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { datosEmpleoCargoComisionQuery, declaracionMutation } from '@api/declaracion';
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-import { Catalogo, DatosEmpleoCargoComision, DeclaracionOutput } from '@models/declaracion';
+import { Catalogo, DatosEmpleoCargoComision } from '@models/declaracion';
+
+import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
 import AmbitoPublico from '@static/catalogos/ambitoPublico.json';
 import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
-import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
-import Paises from '@static/catalogos/paises.json';
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-empleo';
-import { findOption } from '@utils/utils';
-import { UntilDestroy, untilDestroyed } from '@app/@core';
+import Paises from '@static/catalogos/countries.json';
 
-@UntilDestroy()
+import { tooltipData } from '@static/tooltips/datos-empleo';
+
+import { findOption } from '@utils/utils';
+
 @Component({
   selector: 'app-datos-empleo',
   templateUrl: './datos-empleo.component.html',
@@ -34,8 +33,6 @@ export class DatosEmpleoComponent implements OnInit {
   estado: Catalogo = null;
   isLoading = false;
 
-  @ViewChild('tipoDomicilioInput') tipoDomicilioInput: MatSelect;
-
   nivelOrdenGobiernoCatalogo = NivelOrdenGobierno;
   ambitoPublicoCatalogo = AmbitoPublico;
   estadosCatalogo = Estados;
@@ -44,12 +41,11 @@ export class DatosEmpleoComponent implements OnInit {
 
   declaracionSimplificada = false;
   tipoDeclaracion: string = null;
-  tipoDomicilio: string = null;
+  tipoDomicilio = 'MEXICO';
 
   declaracionId: string = null;
 
   tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -85,51 +81,44 @@ export class DatosEmpleoComponent implements OnInit {
 
   createForm() {
     this.datosEmpleoCargoComisionForm = this.formBuilder.group({
-      nivelOrdenGobierno: [null, [Validators.required]],
-      ambitoPublico: [null, [Validators.required]],
-      nombreEntePublico: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-      areaAdscripcion: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-      empleoCargoComision: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-      contratadoPorHonorarios: [null, [Validators.required]],
-      nivelEmpleoCargoComision: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-      funcionPrincipal: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-      fechaTomaPosesion: [null, [Validators.required]],
+      nivelOrdenGobierno: ['', Validators.required],
+      ambitoPublico: ['', Validators.required],
+      nombreEntePublico: ['', [Validators.pattern(/^\S.*\S?$/)]],
+      areaAdscripcion: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+      empleoCargoComision: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+      contratadoPorHonorarios: ['', Validators.required],
+      nivelEmpleoCargoComision: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+      funcionPrincipal: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+      fechaTomaPosesion: ['', [Validators.required]],
       telefonoOficina: this.formBuilder.group({
-        telefono: [null, [Validators.pattern(/^\d{10}$/)]],
-        extension: [null, [Validators.pattern(/^\d{1,10}$/)]],
+        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        extension: [''],
       }),
       domicilioMexico: this.formBuilder.group({
-        calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
-        coloniaLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        municipioAlcaldia: [{ disabled: true, value: null }, [Validators.required]],
-        entidadFederativa: [null, [Validators.required]],
-        codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
+        calle: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+        numeroExterior: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+        numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
+        coloniaLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        municipioAlcaldia: [{ disabled: true, value: { clave: '', valor: '' } }, Validators.required],
+        entidadFederativa: [{ clave: '', valor: '' }, Validators.required],
+        codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/i)]],
       }),
       domicilioExtranjero: this.formBuilder.group({
-        calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
-        ciudadLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        estadoProvincia: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        pais: [null, [Validators.required]],
-        codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
+        calle: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+        numeroExterior: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+        numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
+        ciudadLocalidad: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        estadoProvincia: ['', Validators.required],
+        pais: ['', Validators.required],
+        codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/i)]],
       }),
-      aclaracionesObservaciones: [
-        { disabled: true, value: '' },
-        [Validators.required, Validators.pattern(/^\S.*\S?$/)],
-      ],
-      cuentaConOtroCargoPublico: [
-        { disabled: this.tipoDeclaracion !== 'modificacion', value: null },
-        [Validators.required],
-      ],
+      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
-    // this.datosEmpleoCargoComisionForm.get('domicilioExtranjero').disable();
+    this.datosEmpleoCargoComisionForm.get('domicilioExtranjero').disable();
 
     const estado = this.datosEmpleoCargoComisionForm.get('domicilioMexico').get('entidadFederativa');
-    estado.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
+    estado.valueChanges.subscribe((value) => {
       const municipio = this.datosEmpleoCargoComisionForm.get('domicilioMexico').get('municipioAlcaldia');
 
       if (value) {
@@ -142,19 +131,19 @@ export class DatosEmpleoComponent implements OnInit {
     });
   }
 
-  fillForm(datosEmpleoCargoComision: DatosEmpleoCargoComision | undefined) {
-    this.datosEmpleoCargoComisionForm.patchValue(datosEmpleoCargoComision || {});
+  fillForm(datosEmpleoCargoComision: DatosEmpleoCargoComision) {
+    this.datosEmpleoCargoComisionForm.patchValue(datosEmpleoCargoComision);
 
-    if (datosEmpleoCargoComision?.aclaracionesObservaciones) {
+    if (datosEmpleoCargoComision.aclaracionesObservaciones) {
       this.toggleAclaraciones(true);
     }
-    this.setSelectedOptions(datosEmpleoCargoComision);
+    this.setSelectedOptions();
   }
 
   async getUserInfo() {
     try {
-      const { data, errors } = await this.apollo
-        .query<DeclaracionOutput>({
+      const { data }: any = await this.apollo
+        .query({
           query: datosEmpleoCargoComisionQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
@@ -163,39 +152,10 @@ export class DatosEmpleoComponent implements OnInit {
         })
         .toPromise();
 
-      if (errors) {
-        throw errors;
-      }
-
-      this.declaracionId = data?.declaracion._id;
-      this.fillForm(data?.declaracion.datosEmpleoCargoComision);
+      this.declaracionId = data.declaracion._id;
+      this.fillForm(data.declaracion.datosEmpleoCargoComision || {});
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
-    }
-  }
-
-  formHasChanges() {
-    let url = '/' + this.tipoDeclaracion;
-    if (this.declaracionSimplificada) url += '/simplificada';
-    let isDirty = this.datosEmpleoCargoComisionForm.dirty;
-    console.log(isDirty);
-
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate([url + '/situacion-patrimonial/experiencia-laboral']);
-      });
-    } else {
-      this.router.navigate([url + '/situacion-patrimonial/experiencia-laboral']);
     }
   }
 
@@ -214,7 +174,7 @@ export class DatosEmpleoComponent implements OnInit {
         datosEmpleoCargoComision: this.datosEmpleoCargoComisionForm.value,
       };
 
-      const { errors } = await this.apollo
+      const result = await this.apollo
         .mutate({
           mutation: declaracionMutation,
           variables: {
@@ -223,11 +183,6 @@ export class DatosEmpleoComponent implements OnInit {
           },
         })
         .toPromise();
-
-      if (errors) {
-        throw errors;
-      }
-
       this.isLoading = false;
       this.openSnackBar('Información actualizada', 'Aceptar');
 
@@ -235,31 +190,28 @@ export class DatosEmpleoComponent implements OnInit {
         this.router.navigate([this.getLinkSiguiente()]);
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
+      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
     }
   }
 
-  setSelectedOptions(datosEmpleoCargoComision: DatosEmpleoCargoComision) {
-    const { domicilioExtranjero, domicilioMexico } = datosEmpleoCargoComision ?? {};
+  setSelectedOptions() {
+    const { domicilioMexico } = this.datosEmpleoCargoComisionForm.value;
 
     if (domicilioMexico) {
       this.datosEmpleoCargoComisionForm
         .get('domicilioMexico.entidadFederativa')
-        .setValue(findOption(this.estadosCatalogo, domicilioMexico.entidadFederativa?.clave));
+        .setValue(findOption(this.estadosCatalogo, domicilioMexico.entidadFederativa.clave));
       this.datosEmpleoCargoComisionForm
         .get('domicilioMexico.municipioAlcaldia')
         .setValue(
-          findOption(this.municipiosCatalogo[this.estado?.clave] || [], domicilioMexico.municipioAlcaldia?.clave)
+          findOption(this.municipiosCatalogo[this.estado?.clave] || [], domicilioMexico.municipioAlcaldia.clave)
         );
-      this.tipoDomicilioInput.writeValue('MEXICO');
-      this.tipoDomicilioChanged('MEXICO');
-    } else if (domicilioExtranjero) {
-      this.tipoDomicilioInput.writeValue('EXTRANJERO');
-      this.tipoDomicilioChanged('EXTRANJERO');
+    } else {
+      this.tipoDomicilio = 'EXTRANJERO';
     }
   }
 
-  tipoDomicilioChanged(value: string) {
+  tipoDomicilioChanged(value: any) {
     this.tipoDomicilio = value;
     const notSelectedType = this.tipoDomicilio === 'MEXICO' ? 'domicilioExtranjero' : 'domicilioMexico';
     const selectedType = this.tipoDomicilio === 'EXTRANJERO' ? 'domicilioExtranjero' : 'domicilioMexico';

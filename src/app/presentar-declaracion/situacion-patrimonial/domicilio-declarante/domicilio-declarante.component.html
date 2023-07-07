@@ -15,8 +15,8 @@
 
     <mat-divider></mat-divider>
 
-    <p class="vertical-margin-25">
-      Todos los campos * son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
+    <p>
+      Todos los campos son obligatorios. Los datos de terceros, siempre y cuando sean personas físicas, y los campos
       resaltados <span class="no-public-inline"></span> no serán públicos.
     </p>
     <mat-grid-list cols="15" rowHeight="100px">
@@ -24,7 +24,7 @@
         <mat-form-field appearance="fill">
           <mat-label>Lugar en el que reside</mat-label>
           <mat-icon matPrefix class="no-public">public</mat-icon>
-          <mat-select [(ngModel)]="tipoDomicilio" (selectionChange)="tipoDomicilioChanged()" required>
+          <mat-select [(ngModel)]="tipoDomicilio" (selectionChange)="tipoDomicilioChanged()">
             <mat-option value="MEXICO"> MÉXICO </mat-option>
             <mat-option value="EXTRANJERO"> EN EL EXTRANJERO </mat-option>
           </mat-select>
@@ -37,36 +37,28 @@
           <mat-form-field appearance="fill">
             <mat-label>Calle</mat-label>
             <mat-icon matPrefix class="no-public">streetview</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="calle" required />
+            <input matInput type="text" formControlName="calle" />
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile colspan="3">
           <mat-form-field appearance="fill">
             <mat-label>Número Exterior</mat-label>
             <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="numeroExterior" required />
+            <input matInput type="text" formControlName="numeroExterior" />
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile colspan="3">
           <mat-form-field appearance="fill">
             <mat-label>Número Interior</mat-label>
             <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput #input_ni type="text" formControlName="numeroInterior" />
+            <input matInput #input_ni type="text" formControlName="numeroInterior" />
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile colspan="3">
           <mat-form-field appearance="fill">
             <mat-label>Código Postal</mat-label>
             <mat-icon matPrefix class="no-public">markunread_mailbox</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_cp
-              maxlength="5"
-              type="text"
-              formControlName="codigoPostal"
-              required
-            />
+            <input matInput #input_cp maxlength="5" type="text" formControlName="codigoPostal" />
             <mat-hint align="end">{{ input_cp.value?.length || 0 }}/5</mat-hint>
           </mat-form-field>
         </mat-grid-tile>
@@ -75,7 +67,7 @@
           <mat-form-field appearance="fill">
             <mat-label>Entidad Federativa</mat-label>
             <mat-icon matPrefix class="no-public">public</mat-icon>
-            <mat-select formControlName="entidadFederativa" required>
+            <mat-select formControlName="entidadFederativa">
               <mat-option *ngFor="let opt of estadosCatalogo" [value]="opt">
                 {{ opt.valor }}
               </mat-option>
@@ -84,9 +76,9 @@
         </mat-grid-tile>
         <mat-grid-tile colspan="5">
           <mat-form-field appearance="fill">
-            <mat-label>Municipio / Alcaldia</mat-label>
+            <mat-label>Municipio/Alcaldia</mat-label>
             <mat-icon matPrefix class="no-public">beenhere</mat-icon>
-            <mat-select formControlName="municipioAlcaldia" required>
+            <mat-select formControlName="municipioAlcaldia">
               <mat-option *ngFor="let opt of municipiosCatalogo[estado?.clave]" [value]="opt">
                 {{ opt.valor }}
               </mat-option>
@@ -97,18 +89,11 @@
           <mat-form-field appearance="fill">
             <mat-label>Colonia</mat-label>
             <mat-icon matPrefix class="no-public">location_city</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_localidad
-              type="text"
-              formControlName="coloniaLocalidad"
-              required
-            />
+            <input matInput #input_localidad type="text" formControlName="coloniaLocalidad" />
           </mat-form-field>
         </mat-grid-tile>
 
-        <mat-grid-tile class="content-left" colspan="15" *ngIf="!aclaraciones">
+        <mat-grid-tile colspan="6" *ngIf="!aclaraciones">
           <button mat-raised-button type="button" class="text-primary" (click)="toggleAclaraciones(true)">
             AGREGAR ACLARACIONES / OBSERVACIONES
           </button>
@@ -124,37 +109,29 @@
         <mat-grid-tile colspan="6">
           <mat-form-field appearance="fill">
             <mat-label>Calle</mat-label>
-            <mat-icon matPrefix class="no-public">streetview</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="calle" required />
+            <mat-icon matPrefix>streetview</mat-icon>
+            <input matInput type="text" formControlName="calle" />
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile colspan="3">
           <mat-form-field appearance="fill">
             <mat-label>Número Exterior</mat-label>
-            <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="numeroExterior" required />
+            <mat-icon matPrefix>image_aspect_ratio</mat-icon>
+            <input matInput type="text" formControlName="numeroExterior" />
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile colspan="3">
           <mat-form-field appearance="fill">
             <mat-label>Número Interior</mat-label>
             <mat-icon matPrefix class="no-public">image_aspect_ratio</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput #input_ni type="text" formControlName="numeroInterior" />
+            <input matInput #input_ni type="text" formControlName="numeroInterior" />
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile colspan="3">
           <mat-form-field appearance="fill">
             <mat-label>Código Postal</mat-label>
             <mat-icon matPrefix class="no-public">markunread_mailbox</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_cp
-              maxlength="5"
-              type="text"
-              formControlName="codigoPostal"
-              required
-            />
+            <input matInput #input_cp maxlength="5" type="text" formControlName="codigoPostal" />
             <mat-hint align="end">{{ input_cp.value?.length || 0 }}/5</mat-hint>
           </mat-form-field>
         </mat-grid-tile>
@@ -163,7 +140,7 @@
           <mat-form-field appearance="fill">
             <mat-label>País</mat-label>
             <mat-icon matPrefix class="no-public">location_city</mat-icon>
-            <mat-select formControlName="pais" required>
+            <mat-select formControlName="pais">
               <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
                 {{ opt.valor }}
               </mat-option>
@@ -172,34 +149,20 @@
         </mat-grid-tile>
         <mat-grid-tile colspan="5">
           <mat-form-field appearance="fill">
-            <mat-label>Estado / Provincia</mat-label>
+            <mat-label>Estado/Provincia</mat-label>
             <mat-icon matPrefix class="no-public">public</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_ep
-              type="text"
-              formControlName="estadoProvincia"
-              required
-            />
+            <input matInput #input_ep type="text" formControlName="estadoProvincia" />
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile colspan="5">
           <mat-form-field appearance="fill">
-            <mat-label>Ciudad / Localidad</mat-label>
+            <mat-label>Ciudad/Localidad</mat-label>
             <mat-icon matPrefix class="no-public">beenhere</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              #input_cl
-              type="text"
-              formControlName="ciudadLocalidad"
-              required
-            />
+            <input matInput #input_cl type="text" formControlName="ciudadLocalidad" />
           </mat-form-field>
         </mat-grid-tile>
 
-        <mat-grid-tile class="content-left" colspan="15" *ngIf="!aclaraciones">
+        <mat-grid-tile colspan="6" *ngIf="!aclaraciones">
           <button mat-raised-button type="button" class="text-primary" (click)="toggleAclaraciones(true)">
             AGREGAR ACLARACIONES / OBSERVACIONES
           </button>
@@ -209,19 +172,12 @@
       <div *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" type="button" (click)="toggleAclaraciones(false)">CANCELAR</button>
+          <button mat-raised-button color="primary" type="button" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
         <mat-form-field appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea
-            maxlength="500"
-            [errorStateMatcher]="errorMatcher"
-            matInput
-            formControlName="aclaracionesObservaciones"
-            rows="10"
-          >
-          </textarea>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>
       </div>
 
@@ -245,11 +201,6 @@
       [disabled]="domicilioDeclaranteForm.invalid || isLoading"
       >
         CONTINUAR 3 DE {{ declaracionSimplificada ? (tipoDeclaracion != 'modificacion' ? '7' : '6') : '15' }}
-        <mat-icon matSofix>arrow_forward</mat-icon>
-      </button>
-
-      <button *ngIf="declaracionSimplificada" mat-raised-button color="primary" (click)="formHasChanges()">
-        CONTINUAR 3 DE 7
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>
     </div>

@@ -3,14 +3,16 @@ import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
+import { declaracionMutation, ingresosQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { declaracionMutation, ingresosQuery } from '@api/declaracion';
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-import { UntilDestroy, untilDestroyed } from '@core';
+import TipoInstrumento from '@static/catalogos/tipoInstrumento.json';
+
+import { tooltipData } from '@static/tooltips/ingresos-netos';
+
 import {
   ActividadFinanciera,
   ActividadIndustrial,
@@ -21,7 +23,6 @@ import {
 } from '@models/declaracion';
 import { relativeTimeRounding } from 'moment';
 
-@UntilDestroy()
 @Component({
   selector: 'app-ingresos-netos',
   templateUrl: './ingresos-netos.component.html',
@@ -45,7 +46,6 @@ export class IngresosNetosComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -65,10 +65,10 @@ export class IngresosNetosComponent implements OnInit {
     this.actividadFinanciera.push(
       this.formBuilder.group({
         remuneracion: this.formBuilder.group({
-          valor: [0, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)]],
+          valor: [0, [Validators.required, Validators.pattern(/^\d+$/)]],
           moneda: ['MXN'],
         }),
-        tipoInstrumento: [null, [Validators.required]],
+        tipoInstrumento: ['', [Validators.required]],
       })
     );
   }
@@ -77,11 +77,11 @@ export class IngresosNetosComponent implements OnInit {
     this.actividadIndustrialComercialEmpresarial.push(
       this.formBuilder.group({
         remuneracion: this.formBuilder.group({
-          valor: [0, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)]],
+          valor: [0, [Validators.required, Validators.pattern(/^\d+$/)]],
           moneda: ['MXN'],
         }),
-        nombreRazonSocial: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        tipoNegocio: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        tipoNegocio: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
       })
     );
   }
@@ -90,10 +90,10 @@ export class IngresosNetosComponent implements OnInit {
     this.otrosIngresos.push(
       this.formBuilder.group({
         remuneracion: this.formBuilder.group({
-          valor: [0, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)]],
+          valor: [0, [Validators.required, Validators.pattern(/^\d+$/)]],
           moneda: ['MXN'],
         }),
-        tipoIngreso: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        tipoIngreso: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
       })
     );
   }
@@ -102,10 +102,10 @@ export class IngresosNetosComponent implements OnInit {
     this.serviciosProfesionales.push(
       this.formBuilder.group({
         remuneracion: this.formBuilder.group({
-          valor: [0, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)]],
+          valor: [0, [Validators.required, Validators.pattern(/^\d+$/)]],
           moneda: ['MXN'],
         }),
-        tipoServicio: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        tipoServicio: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
       })
     );
   }
@@ -166,7 +166,7 @@ export class IngresosNetosComponent implements OnInit {
     });
   }
 
-  // puente para guardar
+  //omar: puente para guardar
   saveItem() {
     const form: Ingresos = this.ingresosForm.value;
     //sections
@@ -186,57 +186,57 @@ export class IngresosNetosComponent implements OnInit {
   createForm() {
     this.ingresosForm = this.formBuilder.group({
       remuneracionMensualCargoPublico: this.formBuilder.group({
-        valor: [0, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)]],
+        valor: [0, [Validators.required, Validators.pattern(/^\d+$/)]],
         moneda: ['MXN'],
       }),
       otrosIngresosMensualesTotal: this.formBuilder.group({
-        valor: [0, [Validators.pattern(/^\d+$/), Validators.min(0)]],
+        valor: [0, [Validators.pattern(/^\d+$/)]],
         moneda: ['MXN'],
       }),
       actividadIndustrialComercialEmpresarial: this.formBuilder.group({
         remuneracionTotal: this.formBuilder.group({
-          valor: [0, [Validators.pattern(/^\d+$/), Validators.min(0)]],
+          valor: [0, [Validators.pattern(/^\d+$/)]],
           moneda: ['MXN'],
         }),
         actividades: this.formBuilder.array([]),
       }),
       actividadFinanciera: this.formBuilder.group({
         remuneracionTotal: this.formBuilder.group({
-          valor: [0, [Validators.pattern(/^\d+$/), Validators.min(0)]],
+          valor: [0, [Validators.pattern(/^\d+$/)]],
           moneda: ['MXN'],
         }),
         actividades: this.formBuilder.array([]),
       }),
       serviciosProfesionales: this.formBuilder.group({
         remuneracionTotal: this.formBuilder.group({
-          valor: [0, [Validators.pattern(/^\d+$/), Validators.min(0)]],
+          valor: [0, [Validators.pattern(/^\d+$/)]],
           moneda: ['MXN'],
         }),
         servicios: this.formBuilder.array([]),
       }),
       otrosIngresos: this.formBuilder.group({
         remuneracionTotal: this.formBuilder.group({
-          valor: [0, [Validators.pattern(/^\d+$/), Validators.min(0)]],
+          valor: [0, [Validators.pattern(/^\d+$/)]],
           moneda: ['MXN'],
         }),
         ingresos: this.formBuilder.array([]),
       }),
       ingresoMensualNetoDeclarante: this.formBuilder.group({
-        valor: [0, [Validators.pattern(/^\d+$/), Validators.min(0)]],
+        valor: [0, [Validators.pattern(/^\d+$/)]],
         moneda: ['MXN'],
       }),
       ingresoMensualNetoParejaDependiente: this.formBuilder.group({
-        valor: [0, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)]],
+        valor: [0, [Validators.required, Validators.pattern(/^\d+$/)]],
         moneda: ['MXN'],
       }),
       totalIngresosMensualesNetos: this.formBuilder.group({
-        valor: [0, [Validators.pattern(/^\d+$/), Validators.min(0)]],
+        valor: [0, [Validators.pattern(/^\d+$/)]],
         moneda: ['MXN'],
       }),
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
-    this.ingresosForm.valueChanges.pipe(untilDestroyed(this)).subscribe((form: Ingresos) => {
+    this.ingresosForm.valueChanges.subscribe((form: Ingresos) => {
       this.otrosIngresosDeclarante = this.calcOtrosIngresosDeclarante();
       this.ingresoNetoDeclarante = form.remuneracionMensualCargoPublico.valor + this.otrosIngresosDeclarante;
       this.ingresosTotales = this.ingresoNetoDeclarante + form.ingresoMensualNetoParejaDependiente.valor;
@@ -307,14 +307,6 @@ export class IngresosNetosComponent implements OnInit {
           break;
       }
       formArray.at(index).patchValue(value);
-
-      if (formArrayName === 'actividadFinanciera') {
-        const { tipoInstrumento } = formArray.at(index).value;
-        formArray
-          .at(index)
-          .get('tipoInstrumento')
-          .setValue(findOption(this.tipoInstrumentoCatalogo, tipoInstrumento?.clave));
-      }
     }
   }
 
@@ -369,7 +361,7 @@ export class IngresosNetosComponent implements OnInit {
 
   async getUserInfo() {
     try {
-      const { data, errors } = await this.apollo
+      const { data } = await this.apollo
         .query<DeclaracionOutput>({
           query: ingresosQuery,
           variables: {
@@ -379,41 +371,12 @@ export class IngresosNetosComponent implements OnInit {
         })
         .toPromise();
 
-      if (errors) {
-        throw errors;
-      }
-
-      this.declaracionId = data?.declaracion._id;
-      if (data?.declaracion.ingresos) {
-        this.fillForm(data?.declaracion.ingresos);
+      this.declaracionId = data.declaracion._id;
+      if (data.declaracion.ingresos) {
+        this.fillForm(data.declaracion.ingresos);
       }
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
-    }
-  }
-
-  formHasChanges() {
-    let url = '/' + this.tipoDeclaracion;
-    if (this.declaracionSimplificada) url += '/simplificada';
-    let isDirty = this.ingresosForm.dirty;
-    console.log(isDirty);
-
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate([url + '/situacion-patrimonial/servidor-publico']);
-      });
-    } else {
-      this.router.navigate([url + '/situacion-patrimonial/servidor-publico']);
     }
   }
 
@@ -443,7 +406,7 @@ export class IngresosNetosComponent implements OnInit {
         ingresos: form,
       };
 
-      const { errors } = await this.apollo
+      const result = await this.apollo
         .mutate({
           mutation: declaracionMutation,
           variables: {
@@ -452,11 +415,6 @@ export class IngresosNetosComponent implements OnInit {
           },
         })
         .toPromise();
-
-      if (errors) {
-        throw errors;
-      }
-
       this.isLoading = false;
       this.presentSuccessAlert();
 
@@ -464,7 +422,7 @@ export class IngresosNetosComponent implements OnInit {
         this.router.navigate([this.getLinkSiguiente()]);
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
+      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
     }
   }
 

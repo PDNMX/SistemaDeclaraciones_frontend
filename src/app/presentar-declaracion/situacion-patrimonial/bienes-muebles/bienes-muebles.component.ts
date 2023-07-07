@@ -17,14 +17,12 @@ import ParentescoRelacion from '@static/catalogos/parentescoRelacion.json';
 import ValorConformeA from '@static/catalogos/valorConformeA.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/bienes-muebles';
+import { tooltipData } from '@static/tooltips/bienes-muebles';
 
 import { BienMueble, BienesMuebles, DeclaracionOutput } from '@models/declaracion';
 
 import { findOption } from '@utils/utils';
 import { Constantes } from '@app/@shared/constantes';
-
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
 @Component({
   selector: 'app-bienes-muebles',
@@ -52,7 +50,6 @@ export class BienesMueblesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -84,7 +81,7 @@ export class BienesMueblesComponent implements OnInit {
       ninguno: [false],
       bienMueble: this.formBuilder.group({
         titular: [[], Validators.required],
-        tipoBien: [null, [Validators.required]],
+        tipoBien: [{ clave: '', valor: '' }, Validators.required],
         transmisor: this.formBuilder.group({
           tipoPersona: ['', [Validators.required]],
           nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
@@ -96,23 +93,20 @@ export class BienesMueblesComponent implements OnInit {
           nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
           rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],  //cambio de validacion de rfc
         }),
-        descripcionGeneralBien: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        formaAdquisicion: [null, [Validators.required]],
-        formaPago: [null, [Validators.required]],
+        descripcionGeneralBien: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+        formaAdquisicion: [{ clave: '', valor: '' }, Validators.required],
+        formaPago: ['', [Validators.required]],
         valorAdquisicion: this.formBuilder.group({
           valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
           moneda: ['MXN', [Validators.required]],
         }),
-        fechaAdquisicion: [null, [Validators.required]],
-        motivoBaja: null,
+        fechaAdquisicion: ['', [Validators.required]],
+        motivoBaja: { disabled: true, value: '' },
       }),
-      aclaracionesObservaciones: [
-        { disabled: true, value: null },
-        [Validators.required, Validators.pattern(/^\S.*\S$/)],
-      ],
+      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
-    /////////////////////////////
+    ///////////////////////////// OMAR
     this.bienesMueblesForm.get('bienMueble.titular').valueChanges.subscribe((val) => {
       if (!val) return;
 
@@ -173,26 +167,6 @@ export class BienesMueblesComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  formHasChanges() {
-    let isDirty = this.bienesMueblesForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/inversiones']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/inversiones']);
     }
   }
 

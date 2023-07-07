@@ -9,7 +9,7 @@ interface LocalizacionInversion {
 export interface SubTipoInversion {
   clave: string;
   valor: string;
-  tipoInversion: string; // se agrega
+  tipoInversion: string; //OMAR: se agrega
 }
 
 export interface Inversion {

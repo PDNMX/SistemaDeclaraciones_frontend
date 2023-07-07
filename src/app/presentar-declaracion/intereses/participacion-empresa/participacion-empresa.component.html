@@ -136,10 +136,10 @@
         <mat-divider></mat-divider>
 
         <div class="grid-2-col grid-margin">
-          <mat-form-field matTooltip="{{ tooltipData.declaranteParejaDependiente }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>¿Quién participa?</mat-label>
             <mat-icon matPrefix>person</mat-icon>
-            <mat-select formControlName="tipoRelacion" required>
+            <mat-select formControlName="tipoRelacion">
               <mat-option value="{{ relacionCatalogo[0] }}"> Declarante </mat-option>
               <mat-option value="{{ relacionCatalogo[1] }}"> Pareja </mat-option>
               <mat-option value="{{ relacionCatalogo[2] }}"> Dependiente Economico </mat-option>
@@ -148,20 +148,10 @@
         </div>
 
         <div class="grid-3-col grid-margin">
-          <mat-form-field
-            matTooltip="{{ tooltipData.nombreEmpresaSociedadAsociacion }}"
-            appearance="fill"
-            class="double-col"
-          >
+          <mat-form-field appearance="fill" class="double-col">
             <mat-label>Nombre de la empresa, sociedad o asoiación</mat-label>
             <mat-icon matPrefix>dns</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              type="text"
-              formControlName="nombreEmpresaSociedadAsociacion"
-              required
-            />
+            <input matInput type="text" formControlName="nombreEmpresaSociedadAsociacion" />
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>RFC</mat-label>
@@ -172,23 +162,15 @@
         </div>
 
         <div class="grid-2-col grid-margin">
-          <mat-form-field matTooltip="{{ tooltipData.porcentajeParticipacion }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Porcentaje de participación de acuerdo a escritura</mat-label>
             <mat-icon matPrefix>donut_large</mat-icon>
-            <input
-              [errorStateMatcher]="errorMatcher"
-              matInput
-              type="number"
-              formControlName="porcentajeParticipacion"
-              min="0"
-              max="100"
-              required
-            />
+            <input matInput type="number" formControlName="porcentajeParticipacion" min="0" max="100" />
           </mat-form-field>
-          <mat-form-field matTooltip="{{ tooltipData.tipoParticipacion }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Tipo de participación</mat-label>
             <mat-icon matPrefix>feedback</mat-icon>
-            <mat-select formControlName="tipoParticipacion" required>
+            <mat-select formControlName="tipoParticipacion">
               <mat-option *ngFor="let tipoParticipacion of tipoParticipacionCatalogo" [value]="tipoParticipacion">
                 {{ tipoParticipacion.valor }}
               </mat-option>
@@ -198,32 +180,24 @@
 
         <div class="grid-2-col grid-margin">
           <div class="grid-2-col">
-            <mat-radio-group
-              matTooltip="{{ tooltipData.recibeRemuneracion }}"
-              class="checkbox"
-              formControlName="recibeRemuneracion"
-            >
+            <mat-radio-group class="checkbox checkbox-height" formControlName="recibeRemuneracion">
               <label class="question">¿Recibe remuneración por su paticipación?</label>
               <mat-radio-button [value]="true">Si</mat-radio-button>
               <mat-radio-button [value]="false">No</mat-radio-button>
             </mat-radio-group>
           </div>
-          <mat-form-field
-            matTooltip="{{ tooltipData.montoMensualNeto }}"
-            appearance="fill"
-            formGroupName="montoMensual"
-          >
+          <mat-form-field appearance="fill" formGroupName="montoMensual">
             <mat-label>Monto Mensual Neto</mat-label>
             <mat-icon matPrefix>account_balance_wallet</mat-icon>
-            <input [errorStateMatcher]="errorMatcher" matInput type="number" formControlName="valor" min="0" required />
+            <input matInput type="number" formControlName="valor" min="0" />
           </mat-form-field>
         </div>
 
         <div class="grid-2-col grid-margin" formGroupName="ubicacion">
-          <mat-form-field matTooltip="{{ tooltipData.lugarDondeUbica }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Lugar donde se ubica</mat-label>
             <mat-icon matPrefix>public</mat-icon>
-            <mat-select (selectionChange)="locationChanged($event.value)" required>
+            <mat-select (selectionChange)="locationChanged($event.value)">
               <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
               <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
             </mat-select>
@@ -232,7 +206,7 @@
           <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'EXTRANJERO'">
             <mat-label>País donde se ubica</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="pais" required>
+            <mat-select formControlName="pais">
               <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
                 {{ opt.valor }}
               </mat-option>
@@ -242,7 +216,7 @@
           <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'MEXICO'">
             <mat-label>Entidad Federativa</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="entidadFederativa" required>
+            <mat-select formControlName="entidadFederativa">
               <mat-option *ngFor="let estados of estadosCatalogo" [value]="estados">
                 {{ estados.valor }}
               </mat-option>
@@ -250,10 +224,10 @@
           </mat-form-field>
         </div>
         <div class="grid-2-col grid-margin">
-          <mat-form-field matTooltip="{{ tooltipData.sectorProductivo }}" appearance="fill">
+          <mat-form-field appearance="fill">
             <mat-label>Sector productivo al que pertenece</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
-            <mat-select formControlName="sector" required>
+            <mat-select formControlName="sector">
               <mat-option *ngFor="let sector of sectorCatalogo" [value]="sector">
                 {{ sector.valor }}
               </mat-option>
@@ -272,18 +246,12 @@
       <div *ngIf="aclaraciones">
         <div class="flex grid-margin">
           <p>Aclaraciones / Observaciones</p>
-          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">CANCELAR</button>
+          <button mat-raised-button color="primary" (click)="toggleAclaraciones(false)">Cancelar</button>
         </div>
 
-        <mat-form-field matTooltip="{{ tooltipData.aclaracionesObservaciones }}" appearance="fill" class="grid-margin">
+        <mat-form-field appearance="fill" class="grid-margin">
           <mat-icon matPrefix class="aclaraciones-no-public">speaker_notes</mat-icon>
-          <textarea
-            maxlength="500"
-            [errorStateMatcher]="errorMatcher"
-            matInput
-            formControlName="aclaracionesObservaciones"
-            rows="10"
-          ></textarea>
+          <textarea matInput formControlName="aclaracionesObservaciones" rows="10"></textarea>
         </mat-form-field>
       </div>
 
@@ -306,7 +274,7 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary"
+      <button mat-raised-button color="primary" 
       [disabled]="!(participacion?.length > 0 || participacionForm.value.ninguno)"
       [routerLink]="'/' + tipoDeclaracion + '/intereses/toma-decisiones'">
 

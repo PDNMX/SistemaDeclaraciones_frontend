@@ -21,17 +21,16 @@
           color="primary"
           matSuffix
           aria-label="Search"
-          (click)="search()"
-          [disabled]="!searchValue.length"
+          (click)="searchClick()"
         >
           Buscar
         </button>
       </div>
 
       <div class="paragraph-flex">
-        <div class="main-table-container mat-elevation-z8">
+        <div class="main-table-container ">
           <div class="table-container">
-            <table mat-table [dataSource]="searchValue.length ? dataSearch : data" matSort matSortDisableClear>
+            <table mat-table [dataSource]="dataSearch " matSort matSortDisableClear>
               <ng-container matColumnDef="curp">
                 <th mat-header-cell *matHeaderCellDef>CURP</th>
                 <td mat-cell *matCellDef="let row">{{ row.curp }}</td>
@@ -70,12 +69,7 @@
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
                 <td mat-cell *matCellDef="let row" class="text-center">
-                  <a
-                    mat-icon-button
-                    href="admin/usuarios/{{ row._id }}"
-                    target="_blank"
-                    matTooltip="Ver perfil del usuario"
-                  >
+                  <a mat-icon-button href="admin/usuarios/{{ row._id }}" target="_blank">
                     <mat-icon>visibility</mat-icon>
                   </a>
                   <a
@@ -83,11 +77,10 @@
                     href="admin/declaraciones/{{ row._id }}"
                     target="_blank"
                     [disabled]="!row.roles.includes('USER')"
-                    matTooltip="Ver declaraciones del usuario"
                   >
                     <mat-icon>source</mat-icon>
                   </a>
-                  <button *ngIf="isRoot" mat-icon-button (click)="changeRoles(row)" matTooltip="Editar roles">
+                  <button *ngIf="isRoot" mat-icon-button (click)="changeRoles(row)">
                     <mat-icon>supervisor_account</mat-icon>
                   </button>
                   <button *ngIf="isRoot" mat-icon-button (click)="reestablecerContrasena(row)">
@@ -101,18 +94,22 @@
             </table>
           </div>
 
-          <mat-paginator
-            [ngClass]="{ hidden: searchValue.length }"
+          <!-- <div [ngClass]="{ hidden: searchValue.length }">
+            <mat-paginator
             [length]="resultsLength"
             [pageSize]="PAGE_SIZE"
             #usersPaginator
           ></mat-paginator>
-          <mat-paginator
-            [ngClass]="{ hidden: !searchValue.length }"
+          </div> -->
+          <div >
+            <mat-paginator
+            (page)="searchPageChange($event)"
             [length]="resultsLength"
             [pageSize]="PAGE_SIZE"
             #searchPaginator
           ></mat-paginator>
+          </div>
+          
         </div>
       </div>
     </div>

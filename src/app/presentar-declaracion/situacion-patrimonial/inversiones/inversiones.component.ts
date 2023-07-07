@@ -20,7 +20,7 @@ import Extranjero from '@static/catalogos/extranjero.json';
 import Paises from '@static/catalogos/paises.json';
 import Monedas from '@static/catalogos/monedas.json';
 
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/inversiones';
+import { tooltipData } from '@static/tooltips/inversiones';
 
 import { DeclaracionOutput, Inversion, InversionesCuentasValores } from '@models/declaracion';
 import { findOption, ifExistEnableFields } from '@utils/utils';
@@ -56,7 +56,8 @@ export class InversionesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
+  mexicoExtranjero = "";
+  ultimaUbicacion: number;
 
   constructor(
     private apollo: Apollo,
@@ -76,7 +77,8 @@ export class InversionesComponent implements OnInit {
     this.editIndex = null;
   }
 
-  localizacionChanged(value: string) {
+  localizacionChanged(e: any) {
+    var value = e.value;
     const localizacionInversion = this.inversionesCuentasValoresForm.get('inversion').get('localizacionInversion');
     const pais = localizacionInversion.get('pais');
     const rfc = localizacionInversion.get('rfc');
@@ -93,22 +95,29 @@ export class InversionesComponent implements OnInit {
   cancelEditMode() {
     this.editMode = false;
     this.editIndex = null;
+
+    window.scrollTo({
+      
+      top: this.ultimaUbicacion,
+      behavior: "smooth"
+    });
   }
 
   createForm() {
     this.inversionesCuentasValoresForm = this.formBuilder.group({
       ninguno: [false],
       inversion: this.formBuilder.group({
-        tipoInversion: [null, [Validators.required]],
-        subTipoInversion: [null, [Validators.required]],
-        titular: [null, [Validators.required]],
+        tipoInversion: ['', Validators.required],
+        subTipoInversion: ['', Validators.required],
+        titular: ['', Validators.required],
         tercero: this.formBuilder.group({
           tipoPersona: ['FISICA', [Validators.required]],
           nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
           rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
         }),
-        numeroCuentaContrato: [null, [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
+        numeroCuentaContrato: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
         localizacionInversion: this.formBuilder.group({
+          //mexicoExtranjero: ['', [Validators.required]],
           pais: ['', [Validators.required]],
           institucionRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
           rfc: ['', [Validators.required, Validators.pattern(Constantes.VALIDACION_RFC)]],
@@ -118,13 +127,10 @@ export class InversionesComponent implements OnInit {
           moneda: ['MXN'],
         }),
       }),
-      aclaracionesObservaciones: [
-        { disabled: true, value: null },
-        [Validators.required, Validators.pattern(/^\S.*\S$/)],
-      ],
+      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
-    /////////////////////////////
+    ///////////////////////////// OMAR
     this.inversionesCuentasValoresForm.get('inversion.titular').valueChanges.subscribe((val) => {
       if (!val) return;
 
@@ -152,10 +158,15 @@ export class InversionesComponent implements OnInit {
     });
   }
 
-  editItem(index: number) {
+  editItem(event: MouseEvent, index: number) {
     this.setEditMode();
     this.fillForm(this.inversion[index]);
     this.editIndex = index;
+
+    this.ultimaUbicacion = window.scrollY;
+    
+
+    document.getElementById("formEditar").scrollIntoView({behavior: "smooth", block: "start"});
   }
 
   fillForm(inversion: Inversion) {
@@ -164,7 +175,7 @@ export class InversionesComponent implements OnInit {
       .forEach((field) => this.inversionesCuentasValoresForm.get(`inversion.${field}`).patchValue(inversion[field]));
     this.inversionesCuentasValoresForm.get(`inversion.tercero`).patchValue(inversion.tercero[0]);
 
-    ifExistsEnableFields(
+    ifExistEnableFields(
       inversion.localizacionInversion.rfc,
       this.inversionesCuentasValoresForm,
       'inversion.localizacionInversion.rfc'
@@ -172,7 +183,7 @@ export class InversionesComponent implements OnInit {
     if (inversion.localizacionInversion.rfc) {
       this.tipoDomicilio = 'MEXICO';
     }
-    ifExistsEnableFields(
+    ifExistEnableFields(
       inversion.localizacionInversion.pais,
       this.inversionesCuentasValoresForm,
       'inversion.localizacionInversion.pais'
@@ -201,26 +212,6 @@ export class InversionesComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  formHasChanges() {
-    let isDirty = this.inversionesCuentasValoresForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/adeudos']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/adeudos']);
     }
   }
 
@@ -323,18 +314,36 @@ export class InversionesComponent implements OnInit {
   }
 
   setSelectedOptions() {
-    const { tipoInversion, titular } = this.inversionesCuentasValoresForm.value.inversion;
+    const { tipoInversion, titular, subTipoInversion, localizacionInversion } = this.inversionesCuentasValoresForm.value.inversion;
 
     if (tipoInversion) {
       this.inversionesCuentasValoresForm
         .get('inversion.tipoInversion')
-        .setValue(findOption(this.tipoInversionCatalogo, tipoInversion));
+        .setValue(findOption(this.tipoInversionCatalogo, tipoInversion.clave));
     }
 
     if (titular) {
       this.inversionesCuentasValoresForm
         .get('inversion.titular')
-        .setValue(findOption(this.titularBienCatalogo, titular[0]));
+        .setValue(findOption(this.titularBienCatalogo, titular[0].clave));
+    }
+
+    if(subTipoInversion) {
+      this.inversionesCuentasValoresForm
+        .get('inversion.subTipoInversion')
+        .setValue(findOption(this.subTipoInversionCatalogo, subTipoInversion.clave));
+    }
+
+    if(localizacionInversion) {
+      const pais = this.inversionesCuentasValoresForm.get('inversion.localizacionInversion.pais');
+      const rfc = this.inversionesCuentasValoresForm.get('inversion.localizacionInversion.rfc');
+
+      var f = this.inversionesCuentasValoresForm.get("inversion.localizacionInversion.mexicoExtranjero");
+      if(localizacionInversion.pais == null)
+        this.mexicoExtranjero = "MX";
+      else{
+        this.mexicoExtranjero = "EX";
+      }
     }
   }
 

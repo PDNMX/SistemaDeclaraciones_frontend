@@ -3,6 +3,7 @@ import { FormaRecepcion, TipoOperacion, TipoPersona } from './types';
 
 export interface Beneficio {
   tipoOperacion?: TipoOperacion;
+  tipoPersona: TipoPersona;
   tipoBeneficio: Catalogo;
   beneficiario: Catalogo;
   otorgante: Tercero;

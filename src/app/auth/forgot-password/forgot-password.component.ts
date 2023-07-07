@@ -21,25 +21,33 @@ export class ForgotPasswordComponent implements OnInit {
   ngOnInit() {}
 
   async sendEmail() {
-    try {
+    // try {
       this.isLoading = true;
       const { username } = this.passwordForm.value;
-      const { data }: any = await this.apollo
+      
+      this.apollo
         .mutate({
           mutation: forgotPassword,
           variables: {
             username,
           },
         })
-        .toPromise();
-
-      this.passwordForm.markAsPristine();
-      this.openSnackBar('Te hemos enviado un correo electrónico para recuperar tu contraseña', 'Aceptar');
-    } catch (error) {
-      this.openSnackBar('Ocurrió un error al enviar el correo', 'Aceptar');
-    } finally {
-      this.isLoading = false;
-    }
+        .toPromise()
+        .then((response: any)=> {
+          this.isLoading = false;
+        })
+        .catch((err)=> {
+          this.openSnackBar("Error al enviar el correo: " + err, "Ok");
+        })
+        .finally(()=>{
+          this.isLoading = false;
+        })
+        ;
+    // } catch (error) {
+    //   this.openSnackBar('Ocurrió un error al enviar el correo', 'Aceptar');
+    // } finally {
+      
+    // }
   }
 
   openSnackBar(message: string, action: string) {

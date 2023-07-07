@@ -11,8 +11,6 @@ const tooltipData = {
   montoAproximado:
     'Es necesario capturar cantidades sin comas, sin puntos, sin centavos y sin ceros a la izquierda. Indicar cantidad mensual del apoyo, si este no fuera mensual, realizar la operación aritmética a efecto de establecer la cantidad como lo solicita el formato.',
   especifiqueApoyo: 'En caso de haber seleccionado en especie deberá describir en qué consiste el apoyo o beneficio.',
-  aclaracionesObservaciones:
-    'En este espacio el Declarante podrá realizar las aclaraciones u observaciones que considere pertinentes respecto de alguno o algunos de los incisos de este apartado.',
 };
 
 export { tooltipData };

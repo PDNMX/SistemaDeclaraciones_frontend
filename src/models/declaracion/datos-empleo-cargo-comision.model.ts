@@ -21,5 +21,4 @@ export interface DatosEmpleoCargoComision {
   domicilioMexico?: DomicilioMexico;
   domicilioExtranjero?: DomicilioExtranjero;
   aclaracionesObservaciones?: string;
-  cuentaConOtroCargoPublico?: boolean;
 }

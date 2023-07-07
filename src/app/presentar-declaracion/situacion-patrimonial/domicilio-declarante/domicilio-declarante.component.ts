@@ -3,21 +3,20 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
+import { declaracionMutation, domicilioDeclaranteQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { declaracionMutation, domicilioDeclaranteQuery } from '@api/declaracion';
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-import { UntilDestroy, untilDestroyed } from '@core';
-import { Catalogo, DeclaracionOutput, DomicilioDeclarante } from '@models/declaracion';
 import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/paises.json';
+
 import { findOption } from '@utils/utils';
 
-@UntilDestroy()
+import { Catalogo, DomicilioDeclarante } from '@models/declaracion';
+
 @Component({
   selector: 'app-domicilio-declarante',
   templateUrl: './domicilio-declarante.component.html',
@@ -80,7 +79,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
         calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
-        coloniaLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+        coloniaLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
         municipioAlcaldia: [{ disabled: true, value: null }, [Validators.required]],
         entidadFederativa: [null, [Validators.required]],
         codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
@@ -89,19 +88,22 @@ export class DomicilioDeclaranteComponent implements OnInit {
         calle: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         numeroExterior: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
         numeroInterior: [null, [Validators.pattern(/^\S.*$/)]],
-        ciudadLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*$/)]],
+        ciudadLocalidad: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
         estadoProvincia: [null, [Validators.required]],
-        pais: [null, [Validators.required]],
+        pais: [null, Validators.required],
         codigoPostal: [null, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
       }),
-      aclaracionesObservaciones: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
+      aclaracionesObservaciones: [
+        { disabled: true, value: null },
+        [Validators.required, Validators.pattern(/^\S.*\S$/)],
+      ],
     });
 
     this.domicilioDeclaranteForm.get('domicilioExtranjero').disable();
 
-    const estado = this.domicilioDeclaranteForm.get('domicilioMexico.entidadFederativa');
-    estado.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
-      const municipio = this.domicilioDeclaranteForm.get('domicilioMexico.municipioAlcaldia');
+    const estado = this.domicilioDeclaranteForm.get('domicilioMexico').get('entidadFederativa');
+    estado.valueChanges.subscribe((value) => {
+      const municipio = this.domicilioDeclaranteForm.get('domicilioMexico').get('municipioAlcaldia');
 
       if (value) {
         municipio.enable();
@@ -125,8 +127,8 @@ export class DomicilioDeclaranteComponent implements OnInit {
 
   async getUserInfo() {
     try {
-      const { data, errors } = await this.apollo
-        .query<DeclaracionOutput>({
+      const { data }: any = await this.apollo
+        .query({
           query: domicilioDeclaranteQuery,
           variables: {
             tipoDeclaracion: this.tipoDeclaracion.toUpperCase(),
@@ -135,39 +137,10 @@ export class DomicilioDeclaranteComponent implements OnInit {
         })
         .toPromise();
 
-      if (errors) {
-        throw errors;
-      }
-
-      this.declaracionId = data?.declaracion._id;
-      this.fillForm(data?.declaracion.domicilioDeclarante);
+      this.declaracionId = data.declaracion._id;
+      this.fillForm(data.declaracion.domicilioDeclarante);
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
-    }
-  }
-
-  formHasChanges() {
-    let url = '/' + this.tipoDeclaracion;
-    if (this.declaracionSimplificada) url += '/simplificada';
-    let isDirty = this.domicilioDeclaranteForm.dirty;
-    console.log(isDirty);
-
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate([url + '/situacion-patrimonial/datos-curriculares']);
-      });
-    } else {
-      this.router.navigate([url + '/situacion-patrimonial/datos-curriculares']);
     }
   }
 
@@ -187,7 +160,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
         domicilioDeclarante: this.domicilioDeclaranteForm.value,
       };
 
-      const { errors } = await this.apollo
+      const result = await this.apollo
         .mutate({
           mutation: declaracionMutation,
           variables: {
@@ -197,10 +170,6 @@ export class DomicilioDeclaranteComponent implements OnInit {
         })
         .toPromise();
 
-      if (errors) {
-        throw errors;
-      }
-
       this.isLoading = false;
       this.openSnackBar('Información actualizada', 'Aceptar');
 
@@ -208,7 +177,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
         this.router.navigate([this.getLinkSiguiente()]);
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
+      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
     }
   }
 

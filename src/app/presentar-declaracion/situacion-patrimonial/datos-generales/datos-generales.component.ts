@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -10,18 +10,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { datosGeneralesQuery, declaracionMutation } from '@api/declaracion';
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-import { UntilDestroy, untilDestroyed } from '@core';
-import { DatosGenerales, DeclaracionOutput } from '@models/declaracion';
 import Nacionalidades from '@static/catalogos/nacionalidades.json';
 import Paises from '@static/catalogos/paises.json';
 import SituacionPersonalEstadoCivil from '@static/catalogos/situacionPersonalEstadoCivil.json';
 import RegimenMatrimonial from '@static/catalogos/regimenMatrimonial.json';
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-generales';
+
+import { tooltipData } from '@static/tooltips/datos-generales';
+
 import { findOption } from '@utils/utils';
 
-@UntilDestroy()
+import { DatosGenerales, DeclaracionOutput } from '@models/declaracion';
+
 @Component({
   selector: 'app-datos-generales',
   templateUrl: './datos-generales.component.html',
@@ -31,10 +30,6 @@ export class DatosGeneralesComponent implements OnInit {
   aclaraciones = false;
   datosGeneralesForm: FormGroup;
   isLoading = false;
-  currentYear = new Date().getFullYear();
-  anio_ejercicio: number = null;
-
-  @ViewChild('otroRegimenMatrimonial') otroRegimenMatrimonial: ElementRef;
 
   nacionalidadesCatalogo = Nacionalidades;
   paisesCatalogo = Paises;
@@ -46,7 +41,6 @@ export class DatosGeneralesComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   avanzar = false;
 
@@ -109,25 +103,28 @@ export class DatosGeneralesComponent implements OnInit {
       }),
       //rfc con homoclave /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
       correoElectronico: this.formBuilder.group({
-        institucional: [null, [Validators.email]],
+        institucional: [null, [Validators.required, Validators.email]],
         personal: [null, [Validators.required, Validators.email]],
       }),
       telefono: this.formBuilder.group({
-        casa: [null, [Validators.pattern(/^\d{10}$/)]],
+        casa: [null, [Validators.required, Validators.pattern(/^\d{10}$/)]],
         celularPersonal: [null, [Validators.required, Validators.pattern(/^\d{10}$/)]],
       }),
-      situacionPersonalEstadoCivil: [null, [Validators.required]],
-      regimenMatrimonial: [{ disabled: true, value: null }, [Validators.required]],
-      paisNacimiento: [null, [Validators.required]],
+      situacionPersonalEstadoCivil: [null, Validators.required],
+      regimenMatrimonial: [{ disabled: true, value: null }, Validators.required],
+      paisNacimiento: [null, Validators.required],
       nacionalidad: [null, [Validators.required, Validators.pattern(/^[A-Za-zÀ-ÖØ-öø-ÿ]+$/i)]], //solo letras, incluyendo acentos
-      aclaracionesObservaciones: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
+      aclaracionesObservaciones: [
+        { disabled: true, value: null },
+        [Validators.required, Validators.pattern(/^\S.*\S$/)],
+      ],
     });
 
     const situacionPersonal = this.datosGeneralesForm.get('situacionPersonalEstadoCivil');
-    situacionPersonal.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
+    situacionPersonal.valueChanges.subscribe((value) => {
       const regimenMatrimonial = this.datosGeneralesForm.get('regimenMatrimonial');
 
-      if (value?.clave === 'CAS') {
+      if (value && value.clave === 'CAS') {
         regimenMatrimonial.enable();
       } else {
         regimenMatrimonial.disable();
@@ -141,10 +138,6 @@ export class DatosGeneralesComponent implements OnInit {
 
     if (datosGenerales?.aclaracionesObservaciones) {
       this.toggleAclaraciones(true);
-    }
-
-    if (datosGenerales?.regimenMatrimonial?.clave === 'OTR') {
-      this.otroRegimenMatrimonial.nativeElement.value = datosGenerales?.regimenMatrimonial?.valor;
     }
 
     this.setSelectedOptions();
@@ -183,7 +176,7 @@ export class DatosGeneralesComponent implements OnInit {
   async getUserInfo() {
     var declaracion;
     try {
-      const { data, errors } = await this.apollo
+      const { data } = await this.apollo
         .query<DeclaracionOutput>({
           query: datosGeneralesQuery,
           variables: {
@@ -195,55 +188,13 @@ export class DatosGeneralesComponent implements OnInit {
 
         declaracion = data.declaracion;
 
-//  19/07/2021
+// OMAR: 19/07/2021
 // Para copiar la última declaración a esta, se modificó el backend en: repositories>declaracion_repo>getOrCreate
 
       this.declaracionId = declaracion._id;
       this.fillForm(declaracion.datosGenerales);
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
-    }
-  }
-
-  get finalForm() {
-    const form = JSON.parse(JSON.stringify(this.datosGeneralesForm.value)); // Deep copy
-
-    if (form.regimenMatrimonial?.clave === 'OTR') {
-      form.regimenMatrimonial.valor = this.otroRegimenMatrimonial.nativeElement.value;
-    }
-
-    return form;
-  }
-
-  inputsAreValid(): boolean {
-    if (this.datosGeneralesForm.value.regimenMatrimonial?.clave === 'OTR') {
-      return this.otroRegimenMatrimonial.nativeElement.value?.match(/^\S.*$/);
-    }
-
-    return true;
-  }
-
-  formHasChanges() {
-    let url = '/' + this.tipoDeclaracion;
-    if (this.declaracionSimplificada) url += '/simplificada';
-    let isDirty = this.datosGeneralesForm.dirty;
-
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate([url + '/situacion-patrimonial/domicilio-declarante']);
-      });
-    } else {
-      this.router.navigate([url + '/situacion-patrimonial/domicilio-declarante']);
     }
   }
 
@@ -260,11 +211,10 @@ export class DatosGeneralesComponent implements OnInit {
       this.isLoading = true;
 
       const declaracion = {
-        datosGenerales: this.finalForm,
-        anioEjercicio: this.anio_ejercicio,
+        datosGenerales: this.datosGeneralesForm.value,
       };
 
-      const { errors } = await this.apollo
+      const result = await this.apollo
         .mutate({
           mutation: declaracionMutation,
           variables: {
@@ -273,18 +223,13 @@ export class DatosGeneralesComponent implements OnInit {
           },
         })
         .toPromise();
-
-      if (errors) {
-        throw errors;
-      }
-
       this.isLoading = false;
       this.openSnackBar('Información actualizada', 'Aceptar');
       if(this.avanzar)
         this.router.navigate([this.getLinkSiguiente()]);
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
+      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
     }
   }
 

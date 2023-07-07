@@ -3,29 +3,27 @@ import { FormGroup, FormBuilder, Validators, ValidationErrors } from '@angular/f
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
+import { datosParejaMutation, datosParejaQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { datosParejaMutation, datosParejaQuery } from '@api/declaracion';
-import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-import { UntilDestroy, untilDestroyed } from '@core';
-import { Catalogo, DatosPareja, DeclaracionOutput } from '@models/declaracion';
-import ActividadLaboral from '@static/catalogos/actividadLaboral.json';
-import AmbitoPublico from '@static/catalogos/ambitoPublico.json';
-import Estados from '@static/catalogos/estados.json';
-import LugarDondeReside from '@static/catalogos/lugarDondeReside.json';
-import Monedas from '@static/catalogos/monedas.json';
-import Municipios from '@static/catalogos/municipios.json';
-import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
-import Paises from '@static/catalogos/paises.json';
 import RelacionConDeclarante from '@static/catalogos/relacionConDeclarante.json';
+import LugarDondeReside from '@static/catalogos/lugarDondeReside.json';
+import ActividadLaboral from '@static/catalogos/actividadLaboral.json';
+import NivelOrdenGobierno from '@static/catalogos/nivelOrdenGobierno.json';
+import AmbitoPublico from '@static/catalogos/ambitoPublico.json';
 import Sector from '@static/catalogos/sector.json';
-import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-pareja';
+import Estados from '@static/catalogos/estados.json';
+import Municipios from '@static/catalogos/municipios.json';
+import Paises from '@static/catalogos/paises.json';
+
+import { tooltipData } from '@static/tooltips/datos-pareja';
+
+import { Catalogo, DatosPareja, DeclaracionOutput } from '@models/declaracion';
 import { findOption } from '@utils/utils';
 
-@UntilDestroy()
 @Component({
   selector: 'app-datos-pareja',
   templateUrl: './datos-pareja.component.html',
@@ -39,9 +37,6 @@ export class DatosParejaComponent implements OnInit {
   estado: Catalogo = null;
   isLoading = false;
 
-  @ViewChild('otroActividadLaboral') otroActividadLaboral: ElementRef;
-  @ViewChild('otroSector') otroSector: ElementRef;
-
   relacionConDeclaranteCatalogo = RelacionConDeclarante;
   lugarDondeResideCatalogo = LugarDondeReside;
   actividadLaboralCatalogo = ActividadLaboral;
@@ -49,7 +44,6 @@ export class DatosParejaComponent implements OnInit {
   ambitoPublicoCatalogo = AmbitoPublico;
   sectorCatalogo = Sector;
   estadosCatalogo = Estados;
-  monedasCatalogo = Monedas;
   municipiosCatalogo = Municipios;
   paisesCatalogo = Paises;
 
@@ -61,7 +55,6 @@ export class DatosParejaComponent implements OnInit {
   declaracionId: string = null;
 
   tooltipData = tooltipData;
-  errorMatcher = new DeclarationErrorStateMatcher();
 
   constructor(
     private apollo: Apollo,
@@ -75,6 +68,9 @@ export class DatosParejaComponent implements OnInit {
   }
 
   actividadLaboralChanged(value: any) {
+    if(value == null)
+      return;
+
     const actividadLaboralSectorPublico = this.datosParejaForm.get('actividadLaboralSectorPublico');
     const actividadLaboralSectorPrivadoOtro = this.datosParejaForm.get('actividadLaboralSectorPrivadoOtro');
 
@@ -83,7 +79,7 @@ export class DatosParejaComponent implements OnInit {
     if (clave === 'PUB') {
       actividadLaboralSectorPublico.enable();
       actividadLaboralSectorPrivadoOtro.disable();
-    } else if (clave === 'PRI' || clave === 'OTR') {
+    } else if (clave === 'PRI' || clave === 'OTRO') {
       actividadLaboralSectorPublico.disable();
       actividadLaboralSectorPrivadoOtro.enable();
     } else {
@@ -109,7 +105,7 @@ export class DatosParejaComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.saveInfo(this.finalForm);
+        this.saveInfo(this.datosParejaForm.value);
       }
     });
   }
@@ -117,99 +113,74 @@ export class DatosParejaComponent implements OnInit {
   createForm() {
     this.datosParejaForm = this.formBuilder.group({
       ninguno: [false],
-      nombre: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-      primerApellido: [null, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-      segundoApellido: [null, [Validators.pattern(/^\S.*\S$/)]],
-      fechaNacimiento: [null, [Validators.required]],
-      rfc: [
-        null,
-        [
-          Validators.pattern(
-            /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-          ),
-        ],
-      ],
-      relacionConDeclarante: [null, [Validators.required]],
-      ciudadanoExtranjero: [false, [Validators.required]],
+      nombre: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      primerApellido: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      segundoApellido: ['', [Validators.pattern(/^\S.*\S$/)]],
+      fechaNacimiento: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      rfc: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      relacionConDeclarante: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      ciudadanoExtranjero: [false, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
       curp: [
-        null,
+        '',
         [
           Validators.pattern(
             /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/i
           ),
         ],
       ],
-      esDependienteEconomico: [false, [Validators.required]],
-      habitaDomicilioDeclarante: [false, [Validators.required]],
-      lugarDondeReside: [null, [Validators.required]],
+      esDependienteEconomico: [false, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      habitaDomicilioDeclarante: [false, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+      lugarDondeReside: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
       domicilioMexico: this.formBuilder.group({
-        calle: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroExterior: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroInterior: [{ disabled: true, value: null }, [Validators.pattern(/^\S.*$/)]],
-        coloniaLocalidad: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        municipioAlcaldia: [{ disabled: true, value: null }, [Validators.required]],
-        entidadFederativa: [{ disabled: true, value: null }, [Validators.required]],
-        codigoPostal: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
+        calle: ['', [Validators.pattern(/^\S.*$/)]],
+        numeroExterior: ['', [Validators.pattern(/^\S.*$/)]],
+        numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
+        coloniaLocalidad: ['', [Validators.pattern(/^\S.*\S$/)]],
+        municipioAlcaldia: [{ disabled: false, value: { clave: null, valor: null } }, Validators.required],
+        entidadFederativa: [{ clave: null, valor: null }, Validators.required],
+        codigoPostal: ['', [Validators.pattern(/^\d{5}$/i)]],
       }),
       domicilioExtranjero: this.formBuilder.group({
-        calle: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroExterior: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        numeroInterior: [{ disabled: true, value: null }, [Validators.pattern(/^\S.*$/)]],
-        ciudadLocalidad: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        estadoProvincia: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*$/)]],
-        pais: [{ disabled: true, value: null }, [Validators.required]],
-        codigoPostal: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\d{5}$/i)]],
+        calle: ['', [Validators.pattern(/^\S.*$/)]],
+        numeroExterior: ['', [Validators.pattern(/^\S.*$/)]],
+        numeroInterior: ['', [Validators.pattern(/^\S.*$/)]],
+        ciudadLocalidad: ['', [Validators.pattern(/^\S.*\S$/)]],
+        estadoProvincia: ['', Validators.required],
+        pais: ['', Validators.required],
+        codigoPostal: ['', [Validators.pattern(/^\d{5}$/i)]],
       }),
-      actividadLaboral: [null, [Validators.required]],
+      actividadLaboral: [{ clave: '', valor: '' }, [Validators.required]],
       actividadLaboralSectorPublico: this.formBuilder.group({
-        nivelOrdenGobierno: [{ disabled: true, value: null }, [Validators.required]],
-        ambitoPublico: [{ disabled: true, value: null }, [Validators.required]],
-        nombreEntePublico: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        areaAdscripcion: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        empleoCargoComision: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        funcionPrincipal: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        nivelOrdenGobierno: ['', [Validators.required]],
+        ambitoPublico: ['', [Validators.required]],
+        nombreEntePublico: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        areaAdscripcion: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        empleoCargoComision: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        funcionPrincipal: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
         salarioMensualNeto: this.formBuilder.group({
-          valor: [{ disabled: true, value: 0 }, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)]],
-          moneda: [{ disabled: true, value: null }, [Validators.required]],
+          valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
+          moneda: ['MXN'],
         }),
-        fechaIngreso: [{ disabled: true, value: null }, [Validators.required]],
+        fechaIngreso: ['', [Validators.required]],
       }),
       actividadLaboralSectorPrivadoOtro: this.formBuilder.group({
-        nombreEmpresaSociedadAsociacion: [
-          { disabled: true, value: null },
-          [Validators.required, Validators.pattern(/^\S.*\S$/)],
-        ],
-        empleoCargoComision: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        rfc: [
-          { disabled: true, value: null },
-          [
-            Validators.pattern(
-              /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-            ),
-          ],
-        ],
-        fechaIngreso: [{ disabled: true, value: null }, [Validators.required]],
-        sector: [{ disabled: true, value: null }, [Validators.required]],
+        nombreEmpresaSociedadAsociacion: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        empleoCargoComision: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        rfc: ['', [Validators.required, Validators.pattern(/^\S.*\S$/)]],
+        fechaIngreso: ['', [Validators.required]],
+        sector: [{ clave: '', valor: '' }, [Validators.required]],
         salarioMensualNeto: this.formBuilder.group({
-          valor: [{ disabled: true, value: 0 }, [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)]],
-          moneda: [{ disabled: true, value: null }, [Validators.required]],
+          valor: [0, [Validators.required, Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
+          moneda: ['MXN'],
         }),
-        proveedorContratistaGobierno: [{ disabled: true, value: false }],
+        proveedorContratistaGobierno: [false],
       }),
-      aclaracionesObservaciones: [
-        { disabled: true, value: null },
-        [Validators.required, Validators.pattern(/^\S.*\S$/)],
-      ],
+      aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
-    const actividadLaboral = this.datosParejaForm.get('actividadLaboral');
-    actividadLaboral.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
-      this.actividadLaboralChanged(value);
-    });
-
-    const estado = this.datosParejaForm.get('domicilioMexico.entidadFederativa');
-    estado.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
-      const municipio = this.datosParejaForm.get('domicilioMexico.municipioAlcaldia');
+    const estado = this.datosParejaForm.get('domicilioMexico').get('entidadFederativa');
+    estado.valueChanges.subscribe((value) => {
+      const municipio = this.datosParejaForm.get('domicilioMexico').get('municipioAlcaldia');
 
       if (value) {
         municipio.enable();
@@ -219,29 +190,15 @@ export class DatosParejaComponent implements OnInit {
       }
       this.estado = value;
     });
-
-    const habitaDomicilioDeclarante = this.datosParejaForm.get('habitaDomicilioDeclarante');
-    habitaDomicilioDeclarante.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
-      const lugarDondeReside = this.datosParejaForm.get('lugarDondeReside');
-
-      if (value) {
-        lugarDondeReside.disable();
-        lugarDondeReside.reset();
-      } else {
-        lugarDondeReside.enable();
-      }
-    });
-
-    const lugarDondeReside = this.datosParejaForm.get('lugarDondeReside');
-    lugarDondeReside.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
-      this.lugarDondeResideChanged(value);
-    });
   }
 
   fillForm(datosPareja: DatosPareja) {
+    /*Object.keys(datosPareja)
+      .filter((field) => datosPareja[field] !== null)
+      .forEach((field) => this.datosParejaForm.get(field).patchValue(datosPareja[field]));
+    */
     this.datosParejaForm.patchValue(datosPareja || {});
     this.tipoDomicilio = datosPareja.lugarDondeReside;
-
     if (!datosPareja.domicilioExtranjero) {
       this.datosParejaForm.get('domicilioExtranjero').disable();
     }
@@ -250,12 +207,6 @@ export class DatosParejaComponent implements OnInit {
     }
     if (datosPareja.aclaracionesObservaciones) {
       this.toggleAclaraciones(true);
-    }
-    if (datosPareja.actividadLaboral?.clave === 'OTR') {
-      this.otroActividadLaboral.nativeElement.value = datosPareja.actividadLaboral?.valor;
-    }
-    if (datosPareja.actividadLaboralSectorPrivadoOtro?.sector?.clave === 'OTRO') {
-      this.otroSector.nativeElement.value = datosPareja.actividadLaboralSectorPrivadoOtro?.sector?.valor;
     }
 
     this.setSelectedOptions();
@@ -268,7 +219,7 @@ export class DatosParejaComponent implements OnInit {
 
   async getUserInfo() {
     try {
-      const { data, errors } = await this.apollo
+      const { data } = await this.apollo
         .query<DeclaracionOutput>({
           query: datosParejaQuery,
           variables: {
@@ -277,69 +228,16 @@ export class DatosParejaComponent implements OnInit {
         })
         .toPromise();
 
-      if (errors) {
-        throw errors;
-      }
-
       this.declaracionId = data.declaracion._id;
-      if (data?.declaracion.datosPareja) {
-        this.setupForm(data?.declaracion.datosPareja);
+      if (data.declaracion.datosPareja) {
+        this.setupForm(data.declaracion.datosPareja);
       }
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
-  get finalForm() {
-    const form = JSON.parse(JSON.stringify(this.datosParejaForm.value)); // Deep copy
-
-    if (form.actividadLaboral?.clave === 'OTR') {
-      form.actividadLaboral.valor = this.otroActividadLaboral.nativeElement.value;
-    }
-
-    if (form.actividadLaboralSectorPrivadoOtro?.sector?.clave === 'OTRO') {
-      form.actividadLaboralSectorPrivadoOtro.sector.valor = this.otroSector.nativeElement.value;
-    }
-
-    return form;
-  }
-
-  inputsAreValid(): boolean {
-    let result = true;
-
-    if (this.datosParejaForm.value.actividadLaboral?.clave === 'OTR') {
-      result = result && this.otroActividadLaboral.nativeElement.value?.match(/^\S.*\S$/);
-    }
-
-    if (this.datosParejaForm.value.actividadLaboralSectorPrivadoOtro?.sector?.clave === 'OTRO') {
-      result = result && this.otroSector.nativeElement.value?.match(/^\S.*\S$/);
-    }
-
-    return result;
-  }
-
-  formHasChanges() {
-    let isDirty = this.datosParejaForm.dirty;
-    if (isDirty) {
-      const dialogRef = this.dialog.open(DialogComponent, {
-        data: {
-          title: 'Tienes cambios sin guardar',
-          message: '¿Deseas continuar?',
-          falseText: 'Cancelar',
-          trueText: 'Continuar',
-        },
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/datos-dependiente']);
-      });
-    } else {
-      this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/datos-dependiente']);
-    }
-  }
-
-  lugarDondeResideChanged(value?: string) {
+  lugarDondeResideChanged(value: string) {
     const domicilioMexico = this.datosParejaForm.get('domicilioMexico');
     const domicilioExtranjero = this.datosParejaForm.get('domicilioExtranjero');
 
@@ -375,16 +273,6 @@ export class DatosParejaComponent implements OnInit {
     });
   }
 
-  presentSuccessAlert() {
-    this.dialog.open(DialogComponent, {
-      data: {
-        title: 'Información actualizada',
-        message: 'Se han guardado tus cambios',
-        trueText: 'Aceptar',
-      },
-    });
-  }
-
   removeItem() {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {
@@ -410,7 +298,7 @@ export class DatosParejaComponent implements OnInit {
         datosPareja: form,
       };
 
-      const { data, errors } = await this.apollo
+      const { data } = await this.apollo
         .mutate<DeclaracionOutput>({
           mutation: datosParejaMutation,
           variables: {
@@ -419,22 +307,16 @@ export class DatosParejaComponent implements OnInit {
           },
         })
         .toPromise();
-
-      if (errors) {
-        throw errors;
-      }
-
       this.isLoading = false;
-      this.editMode = false;
+      this.openSnackBar('Información actualizada', 'Aceptar');
 
-      if (data?.declaracion.datosPareja) {
-        this.setupForm(data?.declaracion.datosPareja);
+      if (data.declaracion.datosPareja) {
+        this.setupForm(data.declaracion.datosPareja);
       }
-
-      this.presentSuccessAlert();
+      this.editMode = false;
     } catch (error) {
       console.log(error);
-      this.openSnackBar('[ERROR: No se guardaron los cambios]', 'Aceptar');
+      this.openSnackBar('ERROR: No se guardaron los cambios', 'Aceptar');
     }
     finally{
       this.isLoading = false;
@@ -448,24 +330,25 @@ export class DatosParejaComponent implements OnInit {
       this.datosParejaForm
         .get('actividadLaboral')
         .setValue(findOption(this.actividadLaboralCatalogo, actividadLaboral.clave));
-    }
-    if (actividadLaboral.clave === 'PRI' || actividadLaboral.clave === 'OTR') {
-      const { sector } = this.datosParejaForm.value.actividadLaboralSectorPrivadoOtro;
-      if (sector) {
-        this.datosParejaForm
-          .get('actividadLaboralSectorPrivadoOtro.sector')
-          .setValue(findOption(this.sectorCatalogo, sector.clave));
+
+      if (actividadLaboral.clave == 'PRI') {
+        const { sector } = this.datosParejaForm.value.actividadLaboralSectorPrivadoOtro;
+        if (sector) {
+          this.datosParejaForm
+            .get('actividadLaboralSectorPrivadoOtro.sector')
+            .setValue(findOption(this.sectorCatalogo, sector.clave));
+        }
       }
     }
 
     if (domicilioMexico) {
       this.datosParejaForm
         .get('domicilioMexico.entidadFederativa')
-        .setValue(findOption(this.estadosCatalogo, domicilioMexico.entidadFederativa.clave));
+        .setValue(findOption(this.estadosCatalogo, domicilioMexico.entidadFederativa?.clave));
       this.datosParejaForm
         .get('domicilioMexico.municipioAlcaldia')
         .setValue(
-          findOption(this.municipiosCatalogo[this.estado?.clave] || [], domicilioMexico.municipioAlcaldia.clave)
+          findOption(this.municipiosCatalogo[this.estado?.clave] || [], domicilioMexico.municipioAlcaldia?.clave)
         );
       this.lugarDondeResideChanged('MEXICO');
     } else if (domicilioExtranjero) {

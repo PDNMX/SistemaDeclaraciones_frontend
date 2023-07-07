@@ -172,9 +172,9 @@ $mat-dark-theme-background: (
 // Theme Config
 
 body {
-  --primary-color: rgb(127, 112, 63);
-  --primary-lighter-color: #cab87c;
-  --primary-darker-color: #49453c;
+  --primary-color:#4b7338;
+  --primary-lighter-color: #62944b;
+  --primary-darker-color: #446634;
   --text-primary-color: #{$light-primary-text};
   --text-primary-lighter-color: #{$dark-primary-text};
   --text-primary-darker-color: #{$light-primary-text};
@@ -182,10 +182,10 @@ body {
 
 $mat-primary: (
   // main: #34b3eb,
-  main: #635c46,
-  lighter: #cab87c,
-  darker: #49453c,
-  200: #635c46,
+  main: #4b7338,
+  lighter: #62944b,
+  darker: #446634,
+  200: #4b7338,
   // For slide toggle,
   contrast:
     (
@@ -305,7 +305,7 @@ mat-vertical-stepper {
 }
 
 .linea-arriba {
-  background-color: #dedad1;
+  background-color: #dadada;
   margin: 0;
   height: 1em;
 }

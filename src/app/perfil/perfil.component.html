@@ -42,12 +42,6 @@
           Rol: <span class="resaltar">{{ user?.roles }}</span>
         </p>
       </div>
-      <div class="paragraph-flex" *ngIf="user?.institucion">
-        <mat-icon matPrefix class="icon">account_balance</mat-icon>
-        <p>
-          Institución: <span class="resaltar">{{ user?.institucion.valor }}</span>
-        </p>
-      </div>
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions class="boton-agregar">
@@ -73,10 +67,7 @@
         <input matInput type="text" formControlName="segundoApellido" />
       </mat-form-field>
     </div>
-    <div
-      class="grid-margin"
-      [ngClass]="{ 'grid-2-col': !institucionesCatalogo.length, 'grid-3-col': institucionesCatalogo.length }"
-    >
+    <div class="grid-2-col grid-margin">
       <mat-form-field [hideRequiredMarker]="true" appearance="fill">
         <mat-label>CURP</mat-label>
         <mat-icon matPrefix>fingerprint</mat-icon>
@@ -114,19 +105,6 @@
           <span translate>RFC requerido</span>
         </mat-error>
       </mat-form-field>
-
-      <mat-form-field *ngIf="institucionesCatalogo.length" [hideRequiredMarker]="true" appearance="fill">
-        <mat-label>Institución</mat-label>
-        <mat-icon matPrefix>account_balance</mat-icon>
-        <mat-select formControlName="institucion" required>
-          <mat-option *ngFor="let institucion of institucionesCatalogo" [value]="institucion">
-            {{ institucion.ente_publico }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="profileForm.controls.institucion.invalid && profileForm.controls.institucion.touched">
-          <span translate>Institución requerida</span>
-        </mat-error>
-      </mat-form-field>
     </div>
     <div class="grid-2-col grid-margin">
       <mat-form-field appearance="fill">
@@ -140,7 +118,6 @@
         <input matInput type="password" value="********" disabled />
       </mat-form-field>
     </div>
-
     <div class="center">
       <button mat-raised-button color="primary" class="btn-guardar" type="button" (click)="editMode = false">
         CANCELAR
@@ -166,7 +143,7 @@
     <form class="contenedor" (ngSubmit)="confirmChangePassword()" [formGroup]="changePasswordForm">
       <div class="grid-3-col grid-margin">
         <mat-form-field appearance="fill">
-          <mat-label>Contraseña actual</mat-label>
+          <mat-label>Anterior Contraseña</mat-label>
           <input matInput type="password" formControlName="oldPassword" />
         </mat-form-field>
         <mat-form-field appearance="fill">
