@@ -166,7 +166,7 @@ export class IngresosNetosComponent implements OnInit {
     });
   }
 
-  //omar: puente para guardar
+  //puente para guardar
   saveItem() {
     const form: Ingresos = this.ingresosForm.value;
     //sections

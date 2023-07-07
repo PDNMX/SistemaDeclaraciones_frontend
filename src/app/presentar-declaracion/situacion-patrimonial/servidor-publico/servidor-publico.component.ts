@@ -210,7 +210,7 @@ export class ServidorPublicoComponent implements OnInit {
     });
   }
 
-  //omar: puente
+  //puente
   saveItem(){
     const form: ActividadAnualAnterior = this.actividadAnualAnteriorForm.value;
     if(form.servidorPublicoAnioAnterior === true){

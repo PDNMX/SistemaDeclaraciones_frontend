@@ -465,7 +465,7 @@ export const inversionesCuentasValoresMutation = gql`
           subTipoInversion {
             clave
             valor
-            tipoInversion #omar: se agrega
+            tipoInversion se agrega
           }
           titular {
             clave

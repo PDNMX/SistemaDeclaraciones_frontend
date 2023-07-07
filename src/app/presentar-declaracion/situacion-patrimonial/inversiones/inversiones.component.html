@@ -6,7 +6,7 @@
     <mat-divider></mat-divider>
 
     <mat-toolbar class="background-white">
-      <label class="step-title"> 
+      <label class="step-title">
         {{ tipoDeclaracion == 'modificacion' ? '12' : '13' }}
         Inversiones, cuentas bancarias u otro tipo de valores</label>
     </mat-toolbar>
@@ -301,7 +301,7 @@
               <mat-label>Persona Física o Moral</mat-label>
               <mat-icon matPrefix>person</mat-icon>
               <mat-select formControlName="tipoPersona">
-                <!-- OMAR, CAMBIO DE Fisica a FISICA -->
+                <!-- CAMBIO DE Fisica a FISICA -->
                 <mat-option value="FISICA"> Física </mat-option>
                 <mat-option value="MORAL"> Moral </mat-option>
               </mat-select>
@@ -418,12 +418,12 @@
     <mat-divider></mat-divider>
 
     <div class="boton center">
-      <button mat-raised-button color="primary" 
+      <button mat-raised-button color="primary"
       [disabled]="!(inversion?.length > 0 || inversionesCuentasValoresForm.value.ninguno)"
       [routerLink]="'/' + tipoDeclaracion + '/situacion-patrimonial/adeudos'">
-      CONTINUAR 
+      CONTINUAR
       {{ tipoDeclaracion == 'modificacion' ? '13' : '14'}}
-      DE 
+      DE
       {{ tipoDeclaracion == 'modificacion' ? '14' : '15'}}
         <mat-icon matSofix>arrow_forward</mat-icon>
       </button>

@@ -188,7 +188,7 @@ export class DatosGeneralesComponent implements OnInit {
 
         declaracion = data.declaracion;
 
-// OMAR: 19/07/2021
+// 19/07/2021
 // Para copiar la última declaración a esta, se modificó el backend en: repositories>declaracion_repo>getOrCreate
 
       this.declaracionId = declaracion._id;

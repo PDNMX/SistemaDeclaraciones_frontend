@@ -19,7 +19,7 @@ export class ComienzaTuDeclaracionComponent implements OnInit {
     this.tipoDeclaracion = this.router.url.split('/')[1];
   }
 
-  //OMAR: Validar que no se pueda iniciar una declaracion simplificada o completa si ya se tiene una que no se ha terminado
+  //Validar que no se pueda iniciar una declaracion simplificada o completa si ya se tiene una que no se ha terminado
   async iniciarDeclaracion(tipo: String, modo: String) {
     //obtener la ultima declaracion
     if (tipo == 'CONCLUSION' && !(await this.validarDeclaracionDeConclusion())) {
@@ -28,9 +28,9 @@ export class ComienzaTuDeclaracionComponent implements OnInit {
 
     this.validarDeclaracionIniciada(tipo, modo);
 
-    //OMAR: 15/07/2021 --> Cuando inicia una declaración, copiar los datos de la última declaracion que tenga hecha para
+    //15/07/2021 --> Cuando inicia una declaración, copiar los datos de la última declaracion que tenga hecha para
     // que se muestren en la declaración
-    
+
     //this.copiarUltimaDeclaracion();
   }
 

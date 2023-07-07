@@ -97,7 +97,6 @@ export class InversionesComponent implements OnInit {
     this.editIndex = null;
 
     window.scrollTo({
-      
       top: this.ultimaUbicacion,
       behavior: "smooth"
     });
@@ -130,7 +129,7 @@ export class InversionesComponent implements OnInit {
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
-    ///////////////////////////// OMAR
+    /////////////////////////////
     this.inversionesCuentasValoresForm.get('inversion.titular').valueChanges.subscribe((val) => {
       if (!val) return;
 
@@ -164,7 +163,6 @@ export class InversionesComponent implements OnInit {
     this.editIndex = index;
 
     this.ultimaUbicacion = window.scrollY;
-    
 
     document.getElementById("formEditar").scrollIntoView({behavior: "smooth", block: "start"});
   }

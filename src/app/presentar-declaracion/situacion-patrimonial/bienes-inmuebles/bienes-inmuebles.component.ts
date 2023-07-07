@@ -72,7 +72,7 @@ export class BienesInmueblesComponent implements OnInit {
   }
 
   addItem() {
-    //OMAR: al hacer un reset se perdían los valores de la unidad de medida
+    //al hacer un reset se perdían los valores de la unidad de medida
     //por eso, se cambia de reset a createForm, para crear el formulario vacío
     //pero con los valores iniciales que no están en la interfaz
     //this.bienesInmueblesForm.reset();
@@ -129,17 +129,17 @@ export class BienesInmueblesComponent implements OnInit {
         }),
         superficieConstruccion: this.formBuilder.group({
           valor: [0, [Validators.pattern(/^\d+\.?\d{0,2}$/), Validators.min(0)]],
-          unidad: ['m2'], //OMAR: traia m en vez de m2, AUN ASI NO JALA
+          unidad: ['m2'], //traia m en vez de m2, AUN ASI NO JALA
         }),
         tercero: this.formBuilder.group({
-          tipoPersona: ['FISICA', Validators.required], //OMAR: Agregué FÍSICA COMO VALOR POR DEFECTO PARA QUE DEJE GUARDAR
+          tipoPersona: ['FISICA', Validators.required], //Agregué FÍSICA COMO VALOR POR DEFECTO PARA QUE DEJE GUARDAR
           nombreRazonSocial: ['', [Validators.required, Validators.pattern(/^\S.*\S?$/)]],
           rfc: [
             '',
             [
               Validators.required,
               Validators.pattern(
-                // OMAR: SE CAMBIA LA VALIDACIÓN DE RFC YA QUE NO FUNCIONABA PARA PERSONAS MORALES, 16-04-2021
+                // SE CAMBIA LA VALIDACIÓN DE RFC YA QUE NO FUNCIONABA PARA PERSONAS MORALES, 16-04-2021
                 Constantes.VALIDACION_RFC
               ),
             ],
@@ -153,7 +153,7 @@ export class BienesInmueblesComponent implements OnInit {
             [
               Validators.required,
               Validators.pattern(
-                // OMAR: SE CAMBIA LA VALIDACIÓN DE RFC YA QUE NO FUNCIONABA PARA PERSONAS MORALES, 16-04-2021
+                // SE CAMBIA LA VALIDACIÓN DE RFC YA QUE NO FUNCIONABA PARA PERSONAS MORALES, 16-04-2021
                 Constantes.VALIDACION_RFC
               ),
             ],

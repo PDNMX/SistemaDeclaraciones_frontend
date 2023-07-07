@@ -151,7 +151,7 @@ export class UsersComponent implements AfterViewInit {
   }
 
   searchPageChange(ev: any) {
-    //OMAR: Se cambia el método de paginación porque no jalaba el otro
+    //Se cambia el método de paginación porque no jalaba el otro
     this.search();
   }
 
@@ -249,7 +249,7 @@ export class UsersComponent implements AfterViewInit {
           },
         })
         .toPromise()
-        
+
         ;
         this.presentAlert('Usuario actualizado', 'La contraseÃ±a asignada es el la CURP del declarante: ' + usr.curp);
     } catch (error) {
