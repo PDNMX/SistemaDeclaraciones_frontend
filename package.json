@@ -2,6 +2,9 @@
   "name": "declaraciones-patrimoniales",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "^10"
+  },
   "scripts": {
     "ng": "ng",
     "build": "npm run write:env -s && ng build --prod --base-href='./'",
