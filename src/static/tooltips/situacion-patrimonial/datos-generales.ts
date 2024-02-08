@@ -1,4 +1,5 @@
 const tooltipData = {
+  anio_ejercicio: 'De la lista desplegable, el Declarante deberá elegir el ejercicio a declarar',
   nombre:
     'Escribir el nombre o los nombres completos, así como los apellidos completos, sin abreviaturas, sin acentos, ni signos especiales. Si se tiene un solo apellido deberá colocarse en el espacio del primer apellido y dejar el espacio del segundo apellido en blanco.',
   curp:
