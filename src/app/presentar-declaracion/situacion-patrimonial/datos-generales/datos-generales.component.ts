@@ -26,6 +26,7 @@ import { findOption } from '@utils/utils';
   styleUrls: ['./datos-generales.component.scss'],
 })
 export class DatosGeneralesComponent implements OnInit {
+  array_anio_ejercicio: Array<number> = [];
   aclaraciones = false;
   datosGeneralesForm: FormGroup;
   isLoading = false;
@@ -57,8 +58,13 @@ export class DatosGeneralesComponent implements OnInit {
     this.declaracionSimplificada = urlChunks[2] === 'simplificada';
     this.tipoDeclaracion = urlChunks[1] || null;
 
+    for (let index = 0; index < 5; index++) {
+      this.array_anio_ejercicio.push(this.currentYear - index);
+    }
+
     this.createForm();
     this.getUserInfo();
+    this.getUserDataQuery();
   }
 
   confirmSaveInfo() {
@@ -145,6 +151,15 @@ export class DatosGeneralesComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getUserDataQuery() {
+    const credentials = JSON.parse(localStorage.getItem('credentials'));
+    const rfc = credentials.user.rfc.slice(0, 10);
+    const homo = credentials.user.rfc.slice(10, 13);
+    const dataUser = { ...credentials.user, rfc: { rfc, homoClave: homo } };
+
+    this.datosGeneralesForm.patchValue({ ...dataUser } || {});
+  }
+
   async getUserInfo() {
     try {
       const { data, errors } = await this.apollo
@@ -185,7 +200,8 @@ export class DatosGeneralesComponent implements OnInit {
       return this.otroRegimenMatrimonial.nativeElement.value?.match(/^\S.*$/);
     }
 
-    return true;
+    return typeof this.anio_ejercicio === 'number';
+    // return true;
   }
 
   formHasChanges() {
