@@ -128,6 +128,14 @@
         </mat-card-actions>
       </mat-card>
 
+      <div *ngIf="!editMode && aclaracionesText">
+        <div class="paragraph-flex aclaraciones">
+          <mat-icon matPrefix class="icon card-no-public">insert_comment</mat-icon>
+          <p>Aclaraciones / Observaciones</p>
+        </div>
+        <p class="vertical-margin-25">{{ aclaracionesText }}</p>
+      </div>
+
       <div
         class="boton-agregar"
         *ngIf="(participacion.length && !editMode) || participacionTomaDecisionesForm.value.ninguno"

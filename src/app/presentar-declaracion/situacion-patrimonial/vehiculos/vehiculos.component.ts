@@ -35,6 +35,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class VehiculosComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   vehiculosForm: FormGroup;
   editMode = false;
   editIndex: number = null;
@@ -75,6 +76,7 @@ export class VehiculosComponent implements OnInit {
 
   addItem() {
     this.vehiculosForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -179,6 +181,7 @@ export class VehiculosComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -312,6 +315,12 @@ export class VehiculosComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.vehiculosForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.vehiculosForm.reset();
     this.editMode = true;
@@ -353,8 +362,7 @@ export class VehiculosComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.vehiculosForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     //this.editMode = !!!this.vehiculo.length;

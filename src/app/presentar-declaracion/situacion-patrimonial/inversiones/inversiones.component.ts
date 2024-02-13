@@ -34,6 +34,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class InversionesComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   inversionesCuentasValoresForm: FormGroup;
   editMode = false;
   editIndex: number = null;
@@ -73,6 +74,7 @@ export class InversionesComponent implements OnInit {
 
   addItem() {
     this.inversionesCuentasValoresForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -170,6 +172,7 @@ export class InversionesComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -305,6 +308,12 @@ export class InversionesComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.inversionesCuentasValoresForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.inversionesCuentasValoresForm.reset();
     this.editMode = true;
@@ -336,8 +345,7 @@ export class InversionesComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.inversionesCuentasValoresForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     //this.editMode = !!!this.inversion.length;

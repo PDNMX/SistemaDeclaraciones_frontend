@@ -38,6 +38,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class BienesInmueblesComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   bienesInmueblesForm: FormGroup;
   estado: Catalogo = null;
   editMode = false;
@@ -79,6 +80,7 @@ export class BienesInmueblesComponent implements OnInit {
   addItem() {
     this.bienesInmueblesForm.reset();
     this.bienesInmueblesForm.get('ninguno').setValue(false);
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -206,6 +208,7 @@ export class BienesInmueblesComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -356,6 +359,12 @@ export class BienesInmueblesComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.bienesInmueblesForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.bienesInmueblesForm.reset();
     this.editMode = true;
@@ -397,8 +406,7 @@ export class BienesInmueblesComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.bienesInmueblesForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
   }
 

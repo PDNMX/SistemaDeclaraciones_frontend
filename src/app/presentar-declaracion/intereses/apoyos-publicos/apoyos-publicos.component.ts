@@ -29,6 +29,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class ApoyosPublicosComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   apoyo: Apoyo[] = [];
   apoyosForm: FormGroup;
   editMode = false;
@@ -61,6 +62,7 @@ export class ApoyosPublicosComponent implements OnInit {
 
   addItem() {
     this.apoyosForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -103,6 +105,7 @@ export class ApoyosPublicosComponent implements OnInit {
       .filter((field) => apoyo[field] !== null)
       .forEach((field) => this.apoyosForm.get(`apoyo.${field}`).patchValue(apoyo[field]));
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -235,6 +238,12 @@ export class ApoyosPublicosComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.apoyosForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.apoyosForm.reset();
     this.editMode = true;
@@ -264,8 +273,7 @@ export class ApoyosPublicosComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.apoyosForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     // this.editMode = !!!this.apoyo.length;

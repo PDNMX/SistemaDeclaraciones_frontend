@@ -34,6 +34,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class ParticipacionEmpresaComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   participacionForm: FormGroup;
   editMode = false;
   editIndex: number = null;
@@ -69,6 +70,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
 
   addItem() {
     this.participacionForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -164,6 +166,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -299,6 +302,12 @@ export class ParticipacionEmpresaComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.participacionForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.participacionForm.reset();
     this.editMode = true;
@@ -335,8 +344,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.participacionForm.get('aclaracionesObservaciones').patchValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
   }
 
