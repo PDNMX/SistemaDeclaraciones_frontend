@@ -205,7 +205,7 @@
             <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="puestoRol" required />
           </mat-form-field>
 
-          <mat-form-field matTooltip="{{ tooltipData.fechaInicioParticipacion }}" appearance="fill">
+          <!-- <mat-form-field matTooltip="{{ tooltipData.fechaInicioParticipacion }}" appearance="fill">
             <mat-label>Fecha de inicio de participación dentro de la Institución</mat-label>
             <mat-icon matPrefix>beenhere</mat-icon>
             <input
@@ -217,6 +217,20 @@
               required
             />
             <mat-hint>dd/mm/yyyy</mat-hint>
+          </mat-form-field> -->
+
+          <mat-form-field matTooltip="{{ tooltipData.fechaInicioParticipacion }}" appearance="fill">
+            <mat-label>Fecha de Adquisición del Inmueble</mat-label>
+            <input
+              [errorStateMatcher]="errorMatcher"
+              matInput
+              [matDatepicker]="pickerAdquisicion"
+              formControlName="fechaInicioParticipacion"
+              required
+            />
+            <mat-hint>dd/mm/yyyy</mat-hint>
+            <mat-datepicker-toggle matPrefix [for]="pickerAdquisicion"> </mat-datepicker-toggle>
+            <mat-datepicker #pickerAdquisicion></mat-datepicker>
           </mat-form-field>
         </div>
 
