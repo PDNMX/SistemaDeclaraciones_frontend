@@ -185,6 +185,15 @@
           <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
         </mat-card-actions>
       </mat-card>
+
+      <div *ngIf="!editMode && aclaracionesText">
+        <div class="paragraph-flex aclaraciones">
+          <mat-icon matPrefix class="icon card-no-public">insert_comment</mat-icon>
+          <p>Aclaraciones / Observaciones</p>
+        </div>
+        <p class="vertical-margin-25">{{ aclaracionesText }}</p>
+      </div>
+
       <div class="boton-agregar" *ngIf="(bienMueble.length && !editMode) || bienesMueblesForm.value.ninguno">
         <button mat-raised-button color="primary" (click)="addItem()">Agregar Bien Mueble</button>
       </div>

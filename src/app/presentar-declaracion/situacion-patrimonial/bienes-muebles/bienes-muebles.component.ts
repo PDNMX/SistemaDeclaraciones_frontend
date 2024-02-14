@@ -32,6 +32,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class BienesMueblesComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   bienesMueblesForm: FormGroup;
   editMode = false;
   editIndex: number = null;
@@ -68,6 +69,7 @@ export class BienesMueblesComponent implements OnInit {
   addItem() {
     this.bienesMueblesForm.reset();
     this.bienesMueblesForm.get('ninguno').setValue(false);
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -139,6 +141,7 @@ export class BienesMueblesComponent implements OnInit {
     this.bienesMueblesForm.get(`bienMueble.tercero`).patchValue(bienMueble.tercero[0]);
     this.bienesMueblesForm.get(`bienMueble.transmisor`).patchValue(bienMueble.transmisor[0]);
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -274,6 +277,12 @@ export class BienesMueblesComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.bienesMueblesForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.bienesMueblesForm.reset();
     this.bienesMueblesForm.get('ninguno').setValue(false);
@@ -316,8 +325,7 @@ export class BienesMueblesComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.bienesMueblesForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
   }
 

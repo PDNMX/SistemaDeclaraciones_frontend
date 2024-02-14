@@ -33,6 +33,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class TomaDecisionesComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   participacion: ParticipacionTD[] = [];
   participacionTomaDecisionesForm: FormGroup;
   editMode = false;
@@ -68,6 +69,7 @@ export class TomaDecisionesComponent implements OnInit {
 
   addItem() {
     this.participacionTomaDecisionesForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -168,6 +170,7 @@ export class TomaDecisionesComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -303,6 +306,12 @@ export class TomaDecisionesComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.participacionTomaDecisionesForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.participacionTomaDecisionesForm.reset();
     this.editMode = true;
@@ -335,8 +344,7 @@ export class TomaDecisionesComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.participacionTomaDecisionesForm.get('aclaracionesObservaciones').patchValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     // this.editMode = !!!this.experiencia.length;

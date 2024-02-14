@@ -34,6 +34,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class AdeudosComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   adeudosPasivosForm: FormGroup;
   editMode = false;
   editIndex: number = null;
@@ -73,6 +74,7 @@ export class AdeudosComponent implements OnInit {
   addItem() {
     this.adeudosPasivosForm.reset();
     this.adeudosPasivosForm.get('ninguno').setValue(false);
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -155,6 +157,7 @@ export class AdeudosComponent implements OnInit {
 
     this.localizacionChanged(this.adeudosPasivosForm.value.adeudo.localizacionAdeudo.pais);
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -290,6 +293,12 @@ export class AdeudosComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.adeudosPasivosForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.adeudosPasivosForm.reset();
     this.editMode = true;
@@ -314,8 +323,7 @@ export class AdeudosComponent implements OnInit {
     this.adeudosPasivosForm.get('ninguno').setValue(!!adeudosPasivos.ninguno);
 
     if (aclaraciones) {
-      this.adeudosPasivosForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     //this.editMode = !!!this.adeudo.length;

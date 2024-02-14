@@ -34,6 +34,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class RepresentacionComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   representacion: Representacion[] = [];
   representacionForm: FormGroup;
   editMode = false;
@@ -69,6 +70,7 @@ export class RepresentacionComponent implements OnInit {
 
   addItem() {
     this.representacionForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -164,6 +166,7 @@ export class RepresentacionComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -299,6 +302,12 @@ export class RepresentacionComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.representacionForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.representacionForm.reset();
     this.editMode = true;
@@ -329,8 +338,7 @@ export class RepresentacionComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.representacionForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
   }
 

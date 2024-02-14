@@ -35,6 +35,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class PrestamosTercerosComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   prestamoComodatoForm: FormGroup;
   estado: Catalogo;
   editMode = false;
@@ -74,6 +75,7 @@ export class PrestamosTercerosComponent implements OnInit {
 
   addItem() {
     this.prestamoComodatoForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -274,6 +276,7 @@ export class PrestamosTercerosComponent implements OnInit {
       }
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
 
@@ -408,6 +411,12 @@ export class PrestamosTercerosComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.prestamoComodatoForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.prestamoComodatoForm.reset();
     this.editMode = true;
@@ -443,8 +452,7 @@ export class PrestamosTercerosComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.prestamoComodatoForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     //this.editMode = !!!this.prestamo.length;
