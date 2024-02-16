@@ -8,10 +8,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { declaracionMutation, domicilioDeclaranteQuery } from '@api/declaracion';
+import { declaracionMutation, domicilioDeclaranteQuery, lastDeclaracionDomicilioDeclarante } from '@api/declaracion';
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 import { UntilDestroy, untilDestroyed } from '@core';
-import { Catalogo, DeclaracionOutput, DomicilioDeclarante } from '@models/declaracion';
+import { Catalogo, DeclaracionOutput, DomicilioDeclarante, LastDeclaracionOutput } from '@models/declaracion';
 import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
 import Paises from '@static/catalogos/paises.json';
@@ -122,6 +122,26 @@ export class DomicilioDeclaranteComponent implements OnInit {
     this.setSelectedOptions(domicilioDeclarante);
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastDeclaracionDomicilioDeclarante,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.fillForm(data?.lastDeclaracion.domicilioDeclarante);
+      console.log('data: ', data);
+    } catch (error) {
+      console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data, errors } = await this.apollo
@@ -139,7 +159,11 @@ export class DomicilioDeclaranteComponent implements OnInit {
       }
 
       this.declaracionId = data?.declaracion._id;
-      this.fillForm(data?.declaracion.domicilioDeclarante);
+      if (data?.declaracion.domicilioDeclarante === null) {
+        this.getLastUserInfo();
+      } else {
+        this.fillForm(data?.declaracion.domicilioDeclarante);
+      }
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
