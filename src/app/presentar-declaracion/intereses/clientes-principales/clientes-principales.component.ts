@@ -9,9 +9,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { clientesPrincipalesMutation, clientesPrincipalesQuery } from '@api/declaracion';
+import { clientesPrincipalesMutation, clientesPrincipalesQuery, lastClientesPrincipalesQuery } from '@api/declaracion';
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-import { Cliente, ClientesPrincipales, DeclaracionOutput } from '@models/declaracion';
+import { Cliente, ClientesPrincipales, DeclaracionOutput, LastDeclaracionOutput } from '@models/declaracion';
 import Estados from '@static/catalogos/estados.json';
 import Monedas from '@static/catalogos/monedas.json';
 import Paises from '@static/catalogos/paises.json';
@@ -144,6 +144,25 @@ export class ClientesPrincipalesComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastClientesPrincipalesQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.clientesPrincipales);
+    } catch (error) {
+      console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data, errors } = await this.apollo
@@ -160,7 +179,9 @@ export class ClientesPrincipalesComponent implements OnInit {
       }
 
       this.declaracionId = data?.declaracion._id;
-      if (data?.declaracion.clientesPrincipales) {
+      if (data?.declaracion.clientesPrincipales === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data?.declaracion.clientesPrincipales);
       }
     } catch (error) {

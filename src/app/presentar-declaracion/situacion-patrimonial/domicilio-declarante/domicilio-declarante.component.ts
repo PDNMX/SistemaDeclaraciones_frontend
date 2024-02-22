@@ -135,7 +135,6 @@ export class DomicilioDeclaranteComponent implements OnInit {
       }
 
       this.fillForm(data?.lastDeclaracion.domicilioDeclarante);
-      console.log('data: ', data);
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');

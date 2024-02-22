@@ -3,7 +3,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { representacionesMutation, representacionesQuery } from '@api/declaracion';
+import {
+  lastDeclaracionDatosGenerales,
+  lastRepresentacionesQuery,
+  representacionesMutation,
+  representacionesQuery,
+} from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -20,7 +25,7 @@ import Sector from '@static/catalogos/sector.json';
 
 import { tooltipData } from '@static/tooltips/intereses/representacion';
 
-import { DeclaracionOutput, Representacion, Representaciones } from '@models/declaracion';
+import { DeclaracionOutput, LastDeclaracionOutput, Representacion, Representaciones } from '@models/declaracion';
 
 import { findOption, ifExistsEnableFields } from '@utils/utils';
 
@@ -170,6 +175,25 @@ export class RepresentacionComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastRepresentacionesQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.representaciones);
+    } catch (error) {
+      console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data } = await this.apollo
@@ -182,7 +206,9 @@ export class RepresentacionComponent implements OnInit {
         .toPromise();
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.representaciones) {
+      if (data.declaracion.representaciones === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.representaciones);
       }
     } catch (error) {

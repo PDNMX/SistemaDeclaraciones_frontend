@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Apoyo, Apoyos, DeclaracionOutput } from '@models/declaracion';
+import { Apoyo, Apoyos, DeclaracionOutput, LastDeclaracionOutput } from '@models/declaracion';
 
 import { findOption } from '@utils/utils';
 
@@ -18,7 +18,7 @@ import TiposApoyo from '@static/catalogos/tipoApoyo.json';
 import RecepcionApoyo from '@static/catalogos/formaRecepcion.json';
 
 import { tooltipData } from '@static/tooltips/intereses/apoyos';
-import { apoyosQuery, apoyosMutation } from '@api/declaracion';
+import { apoyosQuery, apoyosMutation, lastApoyosQuery } from '@api/declaracion';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -109,6 +109,25 @@ export class ApoyosPublicosComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastApoyosQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.apoyos);
+    } catch (error) {
+      console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data } = await this.apollo
@@ -120,7 +139,9 @@ export class ApoyosPublicosComponent implements OnInit {
         })
         .toPromise();
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.apoyos) {
+      if (data.declaracion.apoyos === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.apoyos);
       }
     } catch (error) {

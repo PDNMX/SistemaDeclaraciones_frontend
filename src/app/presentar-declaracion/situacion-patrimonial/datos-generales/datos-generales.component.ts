@@ -173,7 +173,6 @@ export class DatosGeneralesComponent implements OnInit {
       }
 
       this.fillForm(data?.lastDeclaracion.datosGenerales);
-      console.log('data: ', data);
     } catch (error) {
       console.log(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');

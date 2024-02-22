@@ -3,7 +3,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { inversionesCuentasValoresMutation, inversionesCuentasValoresQuery } from '@api/declaracion';
+import {
+  inversionesCuentasValoresMutation,
+  inversionesCuentasValoresQuery,
+  lastInversionesCuentasValoresQuery,
+} from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -22,7 +26,7 @@ import Monedas from '@static/catalogos/monedas.json';
 
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/inversiones';
 
-import { DeclaracionOutput, Inversion, InversionesCuentasValores } from '@models/declaracion';
+import { DeclaracionOutput, Inversion, InversionesCuentasValores, LastDeclaracionOutput } from '@models/declaracion';
 import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
@@ -176,6 +180,25 @@ export class InversionesComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastInversionesCuentasValoresQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.inversionesCuentasValores);
+    } catch (error) {
+      console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data } = await this.apollo
@@ -188,7 +211,9 @@ export class InversionesComponent implements OnInit {
         .toPromise();
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.inversionesCuentasValores) {
+      if (data.declaracion.inversionesCuentasValores === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.inversionesCuentasValores);
       }
     } catch (error) {
