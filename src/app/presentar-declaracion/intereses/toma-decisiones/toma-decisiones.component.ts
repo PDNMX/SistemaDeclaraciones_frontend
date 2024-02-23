@@ -3,7 +3,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { participacionTomaDecisionesMutation, participacionTomaDecisionesQuery } from '@api/declaracion';
+import {
+  lastParticipacionTomaDecisionesQuery,
+  participacionTomaDecisionesMutation,
+  participacionTomaDecisionesQuery,
+} from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -19,7 +23,12 @@ import Estados from '@static/catalogos/estados.json';
 
 import { tooltipData } from '@static/tooltips/intereses/toma-descisiones';
 
-import { DeclaracionOutput, ParticipacionTD, ParticipacionTomaDecisiones } from '@models/declaracion';
+import {
+  DeclaracionOutput,
+  LastDeclaracionOutput,
+  ParticipacionTD,
+  ParticipacionTomaDecisiones,
+} from '@models/declaracion';
 
 import { findOption, ifExistsEnableFields } from '@utils/utils';
 
@@ -174,6 +183,25 @@ export class TomaDecisionesComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastParticipacionTomaDecisionesQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.participacionTomaDecisiones);
+    } catch (error) {
+      console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data } = await this.apollo
@@ -186,7 +214,9 @@ export class TomaDecisionesComponent implements OnInit {
         .toPromise();
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.participacionTomaDecisiones) {
+      if (data.declaracion.participacionTomaDecisiones === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.participacionTomaDecisiones);
       }
     } catch (error) {

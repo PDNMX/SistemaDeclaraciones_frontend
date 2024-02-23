@@ -55,3 +55,7 @@ export interface Declaracion {
 export interface DeclaracionOutput {
   declaracion: Declaracion;
 }
+
+export interface LastDeclaracionOutput {
+  lastDeclaracion: Declaracion;
+}

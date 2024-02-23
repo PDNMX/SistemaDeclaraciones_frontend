@@ -8,10 +8,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { datosParejaMutation, datosParejaQuery } from '@api/declaracion';
+import { datosParejaMutation, datosParejaQuery, lastDatosParejaQuery } from '@api/declaracion';
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 import { UntilDestroy, untilDestroyed } from '@core';
-import { Catalogo, DatosPareja, DeclaracionOutput } from '@models/declaracion';
+import { Catalogo, DatosPareja, DeclaracionOutput, LastDeclaracionOutput } from '@models/declaracion';
 import ActividadLaboral from '@static/catalogos/actividadLaboral.json';
 import AmbitoPublico from '@static/catalogos/ambitoPublico.json';
 import Estados from '@static/catalogos/estados.json';
@@ -261,6 +261,27 @@ export class DatosParejaComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastDatosParejaQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      if (data?.lastDeclaracion.datosPareja) {
+        this.setupForm(data?.lastDeclaracion.datosPareja);
+      }
+    } catch (error) {
+      console.log(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data, errors } = await this.apollo
@@ -277,7 +298,9 @@ export class DatosParejaComponent implements OnInit {
       }
 
       this.declaracionId = data.declaracion._id;
-      if (data?.declaracion.datosPareja) {
+      if (data?.declaracion.datosPareja === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data?.declaracion.datosPareja);
       }
     } catch (error) {
