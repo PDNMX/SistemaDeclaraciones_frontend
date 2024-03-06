@@ -168,8 +168,8 @@ export class DatosEmpleoComponent implements OnInit {
 
       this.fillForm(data?.lastDeclaracion.datosEmpleoCargoComision);
     } catch (error) {
-      console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -196,7 +196,7 @@ export class DatosEmpleoComponent implements OnInit {
         this.fillForm(data?.declaracion.datosEmpleoCargoComision);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
@@ -205,7 +205,7 @@ export class DatosEmpleoComponent implements OnInit {
     let url = '/' + this.tipoDeclaracion;
     if (this.declaracionSimplificada) url += '/simplificada';
     let isDirty = this.datosEmpleoCargoComisionForm.dirty;
-    console.log(isDirty);
+    //console.log(isDirty);
 
     if (isDirty) {
       const dialogRef = this.dialog.open(DialogComponent, {

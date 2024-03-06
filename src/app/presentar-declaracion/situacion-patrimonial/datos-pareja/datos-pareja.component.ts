@@ -277,8 +277,8 @@ export class DatosParejaComponent implements OnInit {
         this.setupForm(data?.lastDeclaracion.datosPareja);
       }
     } catch (error) {
-      console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -304,7 +304,7 @@ export class DatosParejaComponent implements OnInit {
         this.setupForm(data?.declaracion.datosPareja);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }

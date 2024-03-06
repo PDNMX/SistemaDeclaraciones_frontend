@@ -384,7 +384,7 @@ export class IngresosNetosComponent implements OnInit {
         this.fillForm(data?.declaracion.ingresos);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
@@ -393,7 +393,7 @@ export class IngresosNetosComponent implements OnInit {
     let url = '/' + this.tipoDeclaracion;
     if (this.declaracionSimplificada) url += '/simplificada';
     let isDirty = this.ingresosForm.dirty;
-    console.log(isDirty);
+    //console.log(isDirty);
 
     if (isDirty) {
       const dialogRef = this.dialog.open(DialogComponent, {

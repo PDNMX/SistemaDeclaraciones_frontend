@@ -136,8 +136,8 @@ export class DomicilioDeclaranteComponent implements OnInit {
 
       this.fillForm(data?.lastDeclaracion.domicilioDeclarante);
     } catch (error) {
-      console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -164,7 +164,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
         this.fillForm(data?.declaracion.domicilioDeclarante);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
@@ -173,7 +173,7 @@ export class DomicilioDeclaranteComponent implements OnInit {
     let url = '/' + this.tipoDeclaracion;
     if (this.declaracionSimplificada) url += '/simplificada';
     let isDirty = this.domicilioDeclaranteForm.dirty;
-    console.log(isDirty);
+    //console.log(isDirty);
 
     if (isDirty) {
       const dialogRef = this.dialog.open(DialogComponent, {

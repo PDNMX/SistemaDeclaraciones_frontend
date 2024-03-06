@@ -207,8 +207,8 @@ export class ExperienciaLaboralComponent implements OnInit {
 
       this.setupForm(data?.lastDeclaracion.experienciaLaboral);
     } catch (error) {
-      console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -235,7 +235,7 @@ export class ExperienciaLaboralComponent implements OnInit {
         this.setupForm(data?.declaracion.experienciaLaboral);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
@@ -275,7 +275,7 @@ export class ExperienciaLaboralComponent implements OnInit {
     if (this.declaracionSimplificada) url += '/ingresos-netos';
     else url += '/datos-pareja';
     let isDirty = this.experienciaLaboralForm.dirty;
-    console.log(isDirty);
+    //console.log(isDirty);
 
     if (isDirty) {
       const dialogRef = this.dialog.open(DialogComponent, {
