@@ -1,47 +1,63 @@
 <div fxFill fxLayout="column">
   <app-header></app-header>
-  <div class="contenedor">
-    <mat-toolbar class="background-white title-toolbar">
-      <label class="step-title">Bienvenido al sistema de Declaración Patrimonial y de Intereses</label>
-    </mat-toolbar>
-    <mat-divider class="mg-height-50px-30px"></mat-divider>
+  <ng-container *ngIf="userInstitucion !== null; else registerInstitucion">
+    <div class="contenedor">
+      <mat-toolbar class="background-white title-toolbar">
+        <label class="step-title">Bienvenido al sistema de Declaración Patrimonial y de Intereses</label>
+      </mat-toolbar>
+      <mat-divider class="mg-height-50px-30px"></mat-divider>
 
-    <div class="pd-lateral">
-      <p>Tus declaraciones</p>
+      <div class="pd-lateral">
+        <p>Tus declaraciones</p>
 
-      <div class="flex">
-        <mat-card>
-          <div class="paragraph-flex">
-            <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
-            <p>Declaraciones iniciales</p>
-          </div>
-          <p class="big-text">{{ declaracionesIniciales }}</p>
-        </mat-card>
-        <mat-card>
-          <div class="paragraph-flex">
-            <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
-            <p>Declaraciones de Modificación</p>
-          </div>
-          <p class="big-text">{{ declaracionesModificacion }}</p>
-        </mat-card>
-        <mat-card>
-          <div class="paragraph-flex">
-            <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
-            <p>Declaraciones de Conclusión</p>
-          </div>
-          <p class="big-text">{{ declaracionesFinales }}</p>
-        </mat-card>
+        <div class="flex">
+          <mat-card>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
+              <p>Declaraciones iniciales</p>
+            </div>
+            <p class="big-text">{{ declaracionesIniciales }}</p>
+          </mat-card>
+          <mat-card>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
+              <p>Declaraciones de Modificación</p>
+            </div>
+            <p class="big-text">{{ declaracionesModificacion }}</p>
+          </mat-card>
+          <mat-card>
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">insert_drive_file</mat-icon>
+              <p>Declaraciones de Conclusión</p>
+            </div>
+            <p class="big-text">{{ declaracionesFinales }}</p>
+          </mat-card>
+        </div>
+        <div class="boton-agregar">
+          <button mat-button color="primary" routerLink="/mis-declaraciones">
+            Ver mis declaraciones ({{ declaraciones }})
+          </button>
+        </div>
       </div>
-      <div class="boton-agregar">
-        <button mat-button color="primary" routerLink="/mis-declaraciones">
-          Ver mis declaraciones ({{ declaraciones }})
-        </button>
+      <mat-divider></mat-divider>
+      <div class="center">
+        <button mat-raised-button color="primary" routerLink="/comienza-tu-declaracion">AGREGAR DECLARACIÓN</button>
       </div>
     </div>
-    <mat-divider></mat-divider>
-    <div class="center">
-      <button mat-raised-button color="primary" routerLink="/comienza-tu-declaracion">AGREGAR DECLARACIÓN</button>
+  </ng-container>
+  <ng-template #registerInstitucion>
+    <div class="contenedor">
+      <mat-toolbar class="background-white title-toolbar">
+        <label class="step-title" style="color: red"
+          >Es necesario que registres la institución a la que perteneces en la sección <strong>MI PERFIL</strong> para
+          poder continuar.</label
+        >
+      </mat-toolbar>
+      <mat-divider class="mg-height-50px-30px"></mat-divider>
+      <div class="center">
+        <button mat-raised-button color="primary" routerLink="/perfil">ir a MI PERFIL</button>
+      </div>
     </div>
-  </div>
+  </ng-template>
   <app-footer></app-footer>
 </div>

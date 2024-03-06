@@ -6,6 +6,13 @@
   <mat-divider class="mg-btm-80px"></mat-divider>
 
   <mat-card class="contenedor info" *ngIf="!editMode">
+    <mat-card-header *ngIf="!user?.institucion">
+      <div class="size-20" style="color: red">
+        <p>
+          Para poder continuar con el uso normal de la herramienta, deberá registrar la Institución a la que pertenece.
+        </p>
+      </div>
+    </mat-card-header>
     <mat-card-content>
       <div class="size-20">
         <p>
@@ -42,16 +49,16 @@
           Rol: <span class="resaltar">{{ user?.roles }}</span>
         </p>
       </div>
-      <div class="paragraph-flex" *ngIf="user?.institucion">
+      <div class="paragraph-flex">
         <mat-icon matPrefix class="icon">account_balance</mat-icon>
         <p>
-          Institución: <span class="resaltar">{{ user?.institucion.valor }}</span>
+          Institución: <span class="resaltar">{{ user?.institucion?.valor }}</span>
         </p>
       </div>
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions class="boton-agregar">
-      <button mat-button color="primary" (click)="changeEditMode()">Editar</button>
+      <button mat-raised-button mat-button color="primary" (click)="changeEditMode()">Editar</button>
     </mat-card-actions>
   </mat-card>
 
@@ -155,7 +162,9 @@
   <mat-divider class="grid-margin"></mat-divider>
 
   <div class="contenedor boton" *ngIf="!cambiarContrasena">
-    <button mat-raised-button class="text-primary" (click)="toggleNuevaContrasena(true)">Cambiar Contraseña</button>
+    <button mat-raised-button mat-button color="primary" (click)="toggleNuevaContrasena(true)">
+      Cambiar Contraseña
+    </button>
   </div>
   <div class="contenedor" *ngIf="cambiarContrasena">
     <div class="flex grid-margin">
