@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -33,7 +34,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
   templateUrl: './vehiculos.component.html',
   styleUrls: ['./vehiculos.component.scss'],
 })
-export class VehiculosComponent implements OnInit {
+export class VehiculosComponent {
   aclaraciones = false;
   aclaracionesText: string = null;
   vehiculosForm: FormGroup;
@@ -247,8 +248,6 @@ export class VehiculosComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
-
   noVehicle() {
     this.saveInfo({ ninguno: true });
   }
@@ -351,28 +350,38 @@ export class VehiculosComponent implements OnInit {
   }
 
   setSelectedOptions() {
-    const { tipoVehiculo, titular, formaAdquisicion } = this.vehiculosForm.value.vehiculo;
+    const { tipoVehiculo, titular, formaAdquisicion, lugarRegistro } = this.vehiculosForm.value.vehiculo;
 
     const { relacion } = this.vehiculosForm.value.vehiculo.transmisor;
 
     if (tipoVehiculo) {
-      this.vehiculosForm.get('vehiculo.tipoVehiculo').setValue(findOption(this.tipoVehiculoCatalogo, tipoVehiculo));
+      const optTipoVehiculo = this.tipoVehiculoCatalogo.filter((veh: any) => veh.clave === tipoVehiculo.clave);
+      // this.vehiculosForm.get('vehiculo.tipoVehiculo').setValue(findOption(this.tipoVehiculoCatalogo, tipoVehiculo));
+      this.vehiculosForm.get('vehiculo.tipoVehiculo').setValue(optTipoVehiculo[0]);
     }
 
     if (titular) {
-      this.vehiculosForm.get('vehiculo.titular').setValue(findOption(this.titularBienCatalogo, titular[0]));
+      const optTitular = this.titularBienCatalogo.filter((ti: any) => ti.clave === titular[0].clave);
+      // this.vehiculosForm.get('vehiculo.titular').setValue(findOption(this.titularBienCatalogo, titular[0]));
+      this.vehiculosForm.get('vehiculo.titular').setValue(optTitular[0]);
     }
 
     if (relacion) {
-      this.vehiculosForm
-        .get('vehiculo.transmisor.relacion')
-        .setValue(findOption(this.parentescoRelacionCatalogo, relacion));
+      const optRelacion = this.parentescoRelacionCatalogo.filter((re: any) => re.clave === relacion.clave);
+      // this.vehiculosForm.get('vehiculo.transmisor.relacion').setValue(findOption(this.parentescoRelacionCatalogo, relacion));
+      this.vehiculosForm.get('vehiculo.transmisor.relacion').setValue(optRelacion[0]);
     }
 
     if (formaAdquisicion) {
-      this.vehiculosForm
-        .get('vehiculo.formaAdquisicion')
-        .setValue(findOption(this.formaAdquisicionCatalogo, formaAdquisicion));
+      const optAdquisicion = this.formaAdquisicionCatalogo.filter((ad: any) => ad.clave === formaAdquisicion.clave);
+      // this.vehiculosForm.get('vehiculo.formaAdquisicion').setValue(findOption(this.formaAdquisicionCatalogo, formaAdquisicion));
+      this.vehiculosForm.get('vehiculo.formaAdquisicion').setValue(optAdquisicion[0]);
+    }
+
+    if (lugarRegistro?.entidadFederativa) {
+      const { entidadFederativa } = lugarRegistro;
+      const optEntidad = this.estadosCatalogo.filter((e: any) => e.clave === entidadFederativa.clave);
+      this.vehiculosForm.get('vehiculo.lugarRegistro.entidadFederativa').setValue(optEntidad[0]);
     }
   }
 
