@@ -393,12 +393,16 @@
             <mat-form-field matTooltip="{{ tooltipData.localizaAdeudo }}" appearance="fill">
               <mat-label>¿Dónde se localiza el adeudo?</mat-label>
               <mat-icon matPrefix>public</mat-icon>
-              <mat-select (selectionChange)="localizacionChanged($event.value)" required>
+              <mat-select
+                (selectionChange)="localizacionChanged($event.value)"
+                [value]="tipoDomicilio === 'MX' ? 'MX' : 'EX'"
+                required
+              >
                 <mat-option value="{{ extranjeroCatalogo[0] }}"> EN MÉXICO </mat-option>
                 <mat-option value="{{ extranjeroCatalogo[1] }}"> EN EL EXTRANJERO </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'EX'">
+            <mat-form-field appearance="fill" *ngIf="tipoDomicilio !== 'MX'">
               <mat-label>País donde de ubica</mat-label>
               <mat-icon matPrefix>public</mat-icon>
               <mat-select formControlName="pais" required>
