@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -189,8 +190,8 @@ export class RepresentacionComponent implements OnInit {
 
       this.setupForm(data?.lastDeclaracion.representaciones);
     } catch (error) {
-      console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -212,7 +213,8 @@ export class RepresentacionComponent implements OnInit {
         this.setupForm(data.declaracion.representaciones);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -345,13 +347,15 @@ export class RepresentacionComponent implements OnInit {
     const { entidadFederativa, pais } = this.representacionForm.value.representacion.ubicacion;
 
     if (sector) {
-      this.representacionForm.get('representacion.sector').setValue(findOption(this.sectorCatalogo, sector));
+      const optSector = this.sectorCatalogo.filter((sec: any) => sec.clave === sector.clave);
+      // this.representacionForm.get('representacion.sector').setValue(findOption(this.sectorCatalogo, sector));
+      this.representacionForm.get('representacion.sector').setValue(optSector[0]);
     }
 
     if (entidadFederativa) {
-      this.representacionForm
-        .get('representacion.ubicacion.entidadFederativa')
-        .setValue(findOption(this.estadosCatalogo, entidadFederativa));
+      const optEntidad = this.estadosCatalogo.filter((edo: any) => edo.clave === entidadFederativa.clave);
+      // this.representacionForm.get('representacion.ubicacion.entidadFederativa').setValue(findOption(this.estadosCatalogo, entidadFederativa));
+      this.representacionForm.get('representacion.ubicacion.entidadFederativa').setValue(optEntidad[0]);
     }
   }
 

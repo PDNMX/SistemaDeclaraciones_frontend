@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -197,8 +198,8 @@ export class TomaDecisionesComponent implements OnInit {
 
       this.setupForm(data?.lastDeclaracion.participacionTomaDecisiones);
     } catch (error) {
-      console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -220,7 +221,8 @@ export class TomaDecisionesComponent implements OnInit {
         this.setupForm(data.declaracion.participacionTomaDecisiones);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -353,15 +355,15 @@ export class TomaDecisionesComponent implements OnInit {
     const { entidadFederativa } = this.participacionTomaDecisionesForm.value.participacion.ubicacion;
 
     if (tipoInstitucion) {
-      this.participacionTomaDecisionesForm
-        .get('participacion.tipoInstitucion')
-        .setValue(findOption(this.institucionCatalogo, tipoInstitucion));
+      const optTipoIns = this.institucionCatalogo.filter((ins: any) => ins.clave === tipoInstitucion.clave);
+      // this.participacionTomaDecisionesForm.get('participacion.tipoInstitucion').setValue(findOption(this.institucionCatalogo, tipoInstitucion));
+      this.participacionTomaDecisionesForm.get('participacion.tipoInstitucion').setValue(optTipoIns[0]);
     }
 
     if (entidadFederativa) {
-      this.participacionTomaDecisionesForm
-        .get('participacion.ubicacion.entidadFederativa')
-        .setValue(findOption(this.estadosCatalogo, entidadFederativa));
+      const optEntidad = this.estadosCatalogo.filter((edo: any) => edo.clave === entidadFederativa.clave);
+      // this.participacionTomaDecisionesForm.get('participacion.ubicacion.entidadFederativa').setValue(findOption(this.estadosCatalogo, entidadFederativa));
+      this.participacionTomaDecisionesForm.get('participacion.ubicacion.entidadFederativa').setValue(optEntidad[0]);
     }
   }
 

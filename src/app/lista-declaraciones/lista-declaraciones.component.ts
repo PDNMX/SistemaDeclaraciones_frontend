@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CredentialsService } from '@app/auth';
+import { Catalogo } from '@models/declaracion';
 
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -13,8 +15,11 @@ export class ListaDeclaracionesComponent implements OnInit {
   declaracionesIniciales = 0;
   declaracionesModificacion = 0;
   declaracionesFinales = 0;
+  userInstitucion: Catalogo = null;
 
-  constructor(private apollo: Apollo) {
+  constructor(private apollo: Apollo, private credential: CredentialsService) {
+    this.userInstitucion = credential.credentials.user.institucion;
+
     this.getNumberOfDeclarations();
   }
 

@@ -207,10 +207,7 @@
               <mat-label>Bancaria</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
               <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+                <mat-option *ngFor="let sub of opsBANC" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -224,10 +221,7 @@
               <mat-label>Fondos de Inversión</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
               <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+                <mat-option *ngFor="let sub of opsFINV" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -241,10 +235,7 @@
               <mat-label>Organizaciones Privadas y/o Mercantiles</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
               <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+                <mat-option *ngFor="let sub of opsORPM" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -258,10 +249,7 @@
               <mat-label>Posesión de Monedas y/o Metales</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
               <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+                <mat-option *ngFor="let sub of opsPOMM" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -275,10 +263,7 @@
               <mat-label>Seguros</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
               <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+                <mat-option *ngFor="let sub of opsSEGR" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -292,10 +277,7 @@
               <mat-label>Valores Bursátiles</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
               <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+                <mat-option *ngFor="let sub of opsVBUR" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -309,10 +291,7 @@
               <mat-label>Afores y otros</mat-label>
               <mat-icon matPrefix>aspect_ratio</mat-icon>
               <mat-select formControlName="subTipoInversion" required>
-                <mat-option
-                  *ngFor="let sub of subTipoInversionCatalogo"
-                  [value]="{ clave: sub.clave, valor: sub.valor }"
-                >
+                <mat-option *ngFor="let sub of opsAFOT" [value]="sub">
                   {{ sub.valor }}
                 </mat-option>
               </mat-select>
@@ -366,7 +345,12 @@
             >
               <mat-label>¿Dónde se localiza la inversión, cuenta bancaria y otro tipo de valores/activos? </mat-label>
               <mat-icon matPrefix>public</mat-icon>
-              <mat-select #mexicoExtranjero (selectionChange)="localizacionChanged($event.value)" required>
+              <mat-select
+                #mexicoExtranjero
+                (selectionChange)="localizacionChanged($event.value)"
+                [value]="tipoDomicilio === 'MEXICO' ? 'MX' : 'EX'"
+                required
+              >
                 <mat-option value="{{ extranjeroCatalogo[0] }}"> EN MÉXICO </mat-option>
                 <mat-option value="{{ extranjeroCatalogo[1] }}"> EN EL EXTRANJERO </mat-option>
               </mat-select>

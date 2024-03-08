@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -159,8 +160,8 @@ export class BienesMueblesComponent implements OnInit {
 
       this.setupForm(data?.lastDeclaracion.bienesMuebles);
     } catch (error) {
-      console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -183,7 +184,8 @@ export class BienesMueblesComponent implements OnInit {
         this.setupForm(data.declaracion.bienesMuebles);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -318,9 +320,9 @@ export class BienesMueblesComponent implements OnInit {
     const { relacion } = this.bienesMueblesForm.value.bienMueble.transmisor;
 
     if (tipoBien) {
-      this.bienesMueblesForm
-        .get('bienMueble.tipoBien')
-        .setValue(findOption(this.tipoBienBienesMueblesCatalogo, tipoBien));
+      const optTipoBien = this.tipoBienBienesMueblesCatalogo.filter((b: any) => b.clave === tipoBien.clave);
+      // this.bienesMueblesForm.get('bienMueble.tipoBien').setValue(findOption(this.tipoBienBienesMueblesCatalogo, tipoBien));
+      this.bienesMueblesForm.get('bienMueble.tipoBien').setValue(optTipoBien[0]);
     }
     if (titular) {
       this.bienesMueblesForm.get('bienMueble.titular').setValue(findOption(this.titularBienCatalogo, titular[0].clave));

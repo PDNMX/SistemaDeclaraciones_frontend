@@ -1,3 +1,4 @@
+import { filter, map } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -226,8 +227,8 @@ export class BienesInmueblesComponent implements OnInit {
 
       this.setupForm(data?.lastDeclaracion.bienesInmuebles);
     } catch (error) {
-      console.log(error);
-      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -250,7 +251,8 @@ export class BienesInmueblesComponent implements OnInit {
         this.setupForm(data.declaracion.bienesInmuebles);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -394,28 +396,46 @@ export class BienesInmueblesComponent implements OnInit {
   }
 
   setSelectedOptions() {
-    const { tipoInmueble, titular, formaAdquisicion } = this.bienesInmueblesForm.value.bienInmueble;
+    const { tipoInmueble, titular, formaAdquisicion, domicilioMexico } = this.bienesInmueblesForm.value.bienInmueble;
 
     const { relacion } = this.bienesInmueblesForm.value.bienInmueble.transmisor;
 
     if (tipoInmueble) {
-      this.bienesInmueblesForm
-        .get('bienInmueble.tipoInmueble')
-        .setValue(findOption(this.tipoInmuebleCatalogo, tipoInmueble));
+      const optionTipoInmueble = this.tipoInmuebleCatalogo.filter((i: any) => i.clave === tipoInmueble.clave);
+      this.bienesInmueblesForm.get('bienInmueble.tipoInmueble').setValue(optionTipoInmueble[0]);
     }
+
     if (titular) {
-      this.bienesInmueblesForm.get('bienInmueble.titular').setValue(findOption(this.titularBienCatalogo, titular[0]));
+      const optionTitular = this.titularBienCatalogo.filter((t: any) => t.clave === titular[0].clave);
+      // this.bienesInmueblesForm.get('bienInmueble.titular').setValue(findOption(this.titularBienCatalogo, titular[0]));
+      this.bienesInmueblesForm.get('bienInmueble.titular').setValue(optionTitular[0]);
     }
     if (formaAdquisicion) {
-      this.bienesInmueblesForm
-        .get('bienInmueble.formaAdquisicion')
-        .setValue(findOption(this.formaAdquisicionCatalogo, formaAdquisicion));
+      const optFormaAdquision = this.formaAdquisicionCatalogo.filter((ad: any) => ad.clave === formaAdquisicion.clave);
+      // this.bienesInmueblesForm.get('bienInmueble.formaAdquisicion').setValue(findOption(this.formaAdquisicionCatalogo, formaAdquisicion));
+      this.bienesInmueblesForm.get('bienInmueble.formaAdquisicion').setValue(optFormaAdquision[0]);
     }
 
     if (relacion) {
-      this.bienesInmueblesForm
-        .get('bienInmueble.transmisor.relacion')
-        .setValue(findOption(this.parentescoRelacionCatalogo, relacion));
+      const optRelacion = this.parentescoRelacionCatalogo.filter((par: any) => par.clave === relacion.clave);
+      // this.bienesInmueblesForm.get('bienInmueble.transmisor.relacion').setValue(findOption(this.parentescoRelacionCatalogo, relacion));
+      this.bienesInmueblesForm.get('bienInmueble.transmisor.relacion').setValue(optRelacion[0]);
+    }
+
+    if (domicilioMexico) {
+      const { entidadFederativa, municipioAlcaldia } = domicilioMexico;
+
+      if (entidadFederativa) {
+        const optEntidad = this.estadosCatalogo.filter((edo: any) => edo.clave === entidadFederativa.clave);
+        this.bienesInmueblesForm.get('bienInmueble.domicilioMexico.entidadFederativa').setValue(optEntidad[0]);
+
+        if (municipioAlcaldia) {
+          const optMunicipio = this.municipiosCatalogo[optEntidad[0].clave].filter(
+            (mun: any) => mun.clave === municipioAlcaldia.clave
+          );
+          this.bienesInmueblesForm.get('bienInmueble.domicilioMexico.municipioAlcaldia').setValue(optMunicipio[0]);
+        }
+      }
     }
   }
 

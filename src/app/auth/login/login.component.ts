@@ -47,8 +47,16 @@ export class LoginComponent implements OnInit {
         (credentials) => {
           if (credentials) {
             log.debug(`${credentials.user.username} successfully logged in`);
+
+            const ins = credentials.user.institucion;
+            if (ins === null) {
+              this.router.navigate([this.route.snapshot.queryParams.redirect || '/perfil'], {
+                replaceUrl: true,
+              });
+            } else {
+              this.router.navigate([this.route.snapshot.queryParams.redirect || '/'], { replaceUrl: true });
+            }
           }
-          this.router.navigate([this.route.snapshot.queryParams.redirect || '/'], { replaceUrl: true });
         },
         (error) => {
           log.debug(`Login error: ${error}`);
