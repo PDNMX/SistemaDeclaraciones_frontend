@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -449,19 +450,44 @@ export class PrestamosTercerosComponent implements OnInit {
     const { vehiculo, inmueble } = this.prestamoComodatoForm.value.prestamo.tipoBien;
 
     if (inmueble) {
-      const { tipoInmueble } = this.prestamoComodatoForm.value.prestamo.tipoBien.inmueble;
+      const { tipoInmueble, domicilioMexico } = this.prestamoComodatoForm.value.prestamo.tipoBien.inmueble;
+      const optTInmueble = this.tipoInmuebleCatalogo.filter((ti: any) => ti.clave === tipoInmueble.clave);
+      // this.prestamoComodatoForm.get('prestamo.tipoBien.inmueble.tipoInmueble').setValue(findOption(this.tipoInmuebleCatalogo, tipoInmueble));
+      this.prestamoComodatoForm.get('prestamo.tipoBien.inmueble.tipoInmueble').setValue(optTInmueble[0]);
+      if (domicilioMexico) {
+        const { entidadFederativa, municipioAlcaldia } = domicilioMexico;
+        if (entidadFederativa) {
+          const optEdos = this.estadosCatalogo.filter((ed: any) => ed.clave === entidadFederativa.clave);
+          this.prestamoComodatoForm
+            .get('prestamo.tipoBien.inmueble.domicilioMexico.entidadFederativa')
+            .setValue(optEdos[0]);
 
-      this.prestamoComodatoForm
-        .get('prestamo.tipoBien.inmueble.tipoInmueble')
-        .setValue(findOption(this.tipoInmuebleCatalogo, tipoInmueble));
+          if (municipioAlcaldia) {
+            const optMun = this.municipiosCatalogo[entidadFederativa?.clave].filter(
+              (ed: any) => ed.clave === municipioAlcaldia.clave
+            );
+            this.prestamoComodatoForm
+              .get('prestamo.tipoBien.inmueble.domicilioMexico.municipioAlcaldia')
+              .setValue(optMun[0]);
+          }
+        }
+      }
     }
 
     if (vehiculo) {
-      const { tipo } = this.prestamoComodatoForm.value.prestamo.tipoBien.vehiculo;
+      console.log('vehiculo: ', vehiculo);
+      const { tipo, lugarRegistro } = this.prestamoComodatoForm.value.prestamo.tipoBien.vehiculo;
+      const optTipoVehiculo = this.tipoVehiculoCatalogo.filter((v: any) => (v.clave = tipo.clave));
+      // this.prestamoComodatoForm.get('prestamo.tipoBien.vehiculo.tipo').setValue(findOption(this.tipoVehiculoCatalogo, tipo));
+      this.prestamoComodatoForm.get('prestamo.tipoBien.vehiculo.tipo').setValue(optTipoVehiculo[0]);
 
-      this.prestamoComodatoForm
-        .get('prestamo.tipoBien.vehiculo.tipo')
-        .setValue(findOption(this.tipoVehiculoCatalogo, tipo));
+      if (lugarRegistro?.entidadFederativa) {
+        const { entidadFederativa } = lugarRegistro;
+        const optEntidad = this.estadosCatalogo.filter((e: any) => e.clave === entidadFederativa.clave);
+        this.prestamoComodatoForm
+          .get('prestamo.tipoBien.vehiculo.lugarRegistro.entidadFederativa')
+          .setValue(optEntidad[0]);
+      }
     }
   }
 

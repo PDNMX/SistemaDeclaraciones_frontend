@@ -255,7 +255,7 @@
             <mat-form-field appearance="fill">
               <mat-label>Tipo de bien</mat-label>
               <mat-icon matPrefix>beenhere</mat-icon>
-              <mat-select (selectionChange)="bienChanged($event.value)" required>
+              <mat-select (selectionChange)="bienChanged($event.value)" [value]="tipoBien" required>
                 <mat-option value="inmueble"> Inmueble </mat-option>
                 <mat-option value="vehiculos"> Vehículos </mat-option>
               </mat-select>
@@ -354,7 +354,12 @@
               >
                 <mat-label>¿Donde se encuentra registrado?</mat-label>
                 <mat-icon matPrefix class="no-public">public</mat-icon>
-                <mat-select #ubicacionVehiculo (selectionChange)="localizacionVehiculoChanged($event.value)" required>
+                <mat-select
+                  #ubicacionVehiculo
+                  (selectionChange)="localizacionVehiculoChanged($event.value)"
+                  [value]="tipoDomicilio === 'EXTRANJERO' ? 'EX' : 'MX'"
+                  required
+                >
                   <mat-option value="{{ extranjeroCatalogo[0] }}"> EN MÉXICO </mat-option>
                   <mat-option value="{{ extranjeroCatalogo[1] }}"> EN EL EXTRANJERO </mat-option>
                 </mat-select>
@@ -390,7 +395,11 @@
               <mat-form-field matTooltip="{{ tooltipData.ubicacionInmueble }}" appearance="fill">
                 <mat-label>Ubicación del inmueble</mat-label>
                 <mat-icon matPrefix class="no-public">public</mat-icon>
-                <mat-select (selectionChange)="tipoDomicilioChanged($event.value)" required>
+                <mat-select
+                  (selectionChange)="tipoDomicilioChanged($event.value)"
+                  [value]="tipoDomicilio === 'EXTRANJERO' ? 'EX' : 'MX'"
+                  required
+                >
                   <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
                   <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
                 </mat-select>
@@ -528,7 +537,6 @@
                   <input
                     [errorStateMatcher]="errorMatcher"
                     matInput
-                    #input_curp
                     maxlength="18"
                     type="text"
                     formControlName="numeroInterior"
@@ -566,7 +574,15 @@
                   <mat-label>Municipio/Alcaldia</mat-label>
                   <mat-icon matPrefix class="no-public">beenhere</mat-icon>
                   <mat-select formControlName="municipioAlcaldia" required>
-                    <mat-option *ngFor="let opt of municipiosCatalogo[estado?.clave]" [value]="opt">
+                    <mat-option
+                      *ngFor="
+                        let opt of municipiosCatalogo[
+                          prestamoComodatoForm.value.prestamo.tipoBien.inmueble.domicilioMexico?.entidadFederativa
+                            ?.clave
+                        ]
+                      "
+                      [value]="opt"
+                    >
                       {{ opt.valor }}
                     </mat-option>
                   </mat-select>
@@ -579,7 +595,6 @@
                   <input
                     [errorStateMatcher]="errorMatcher"
                     matInput
-                    #input_localidad
                     type="text"
                     formControlName="coloniaLocalidad"
                     required
