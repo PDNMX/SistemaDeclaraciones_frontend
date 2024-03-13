@@ -59,7 +59,7 @@
 
               <ng-container matColumnDef="createdAt">
                 <th mat-header-cell *matHeaderCellDef>Fecha de registro</th>
-                <td mat-cell *matCellDef="let row">{{ row.createdAt | date: 'dd/MM/yyyy' }}</td>
+                <td mat-cell *matCellDef="let row">{{ row.createdAt | date : 'dd/MM/yyyy' }}</td>
               </ng-container>
 
               <ng-container matColumnDef="roles">
@@ -70,18 +70,12 @@
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
                 <td mat-cell *matCellDef="let row" class="text-center">
-                  <a
-                    mat-icon-button
-                    href="admin/usuarios/{{ row._id }}"
-                    target="_blank"
-                    matTooltip="Ver perfil del usuario"
-                  >
+                  <a mat-icon-button routerLink="/admin/usuarios/{{ row._id }}" matTooltip="Ver perfil del usuario">
                     <mat-icon>visibility</mat-icon>
                   </a>
                   <a
                     mat-icon-button
-                    href="admin/declaraciones/{{ row._id }}"
-                    target="_blank"
+                    routerLink="/admin/declaraciones/{{ row._id }}"
                     [disabled]="!row.roles.includes('USER')"
                     matTooltip="Ver declaraciones del usuario"
                   >
