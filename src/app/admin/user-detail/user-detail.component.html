@@ -5,7 +5,7 @@
       <label class="step-title">Detalle de perfil</label>
     </mat-toolbar>
 
-    <div class="pd-lateral pb-100px">
+    <div class="pd-lateral pb-100px" *ngIf="user">
       <mat-card class="contenedor info">
         <mat-card-content>
           <div class="size-20">
@@ -53,7 +53,16 @@
               </p>
             </div>
           </div>
-          <div>
+          <div class="grid-2-col">
+            <div class="paragraph-flex">
+              <mat-icon matPrefix class="icon">account_balance</mat-icon>
+              <p>
+                Institución: <br />
+                <span class="resaltar">
+                  {{ user?.institucion?.valor || 'Sin seleccionar' | uppercase }}
+                </span>
+              </p>
+            </div>
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">supervisor_account</mat-icon>
               <p>
