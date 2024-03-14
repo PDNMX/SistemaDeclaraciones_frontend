@@ -8,7 +8,7 @@ import { Apollo } from 'apollo-angular';
 
 import { declaracionesMetadata, stats } from '@api/declaracion';
 import { UntilDestroy, untilDestroyed } from '@core';
-import { DeclaracionMetadata, DeclaracionMetadataPage } from '@models/declaracion';
+import { Catalogo, DeclaracionMetadata, DeclaracionMetadataPage } from '@models/declaracion';
 
 import { CredentialsService } from '@app/auth/credentials.service';
 
@@ -47,6 +47,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
   userID: string = null;
 
   PAGE_SIZE = 10;
+  userInstitucion: Catalogo = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -61,6 +62,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
     }
 
     this.userID = this.route.snapshot.paramMap.get('userId') || null;
+    this.userInstitucion = this.credentialsService.credentials.user.institucion;
   }
 
   async getCount() {
@@ -103,139 +105,143 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
   }
 
   setInicialTable() {
-    merge(this.inicialPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.apollo.query<{ declaracionesMetadata: DeclaracionMetadataPage }>({
-            query: declaracionesMetadata,
-            variables: {
-              userID: this.userID,
-              filter: {
-                tipoDeclaracion: 'INICIAL',
+    if (this.inicialPaginator)
+      merge(this.inicialPaginator.page)
+        .pipe(
+          startWith({}),
+          switchMap(() => {
+            this.isLoadingResults = true;
+            return this.apollo.query<{ declaracionesMetadata: DeclaracionMetadataPage }>({
+              query: declaracionesMetadata,
+              variables: {
+                userID: this.userID,
+                filter: {
+                  tipoDeclaracion: 'INICIAL',
+                },
+                pagination: {
+                  page: this.inicialPaginator.pageIndex,
+                  size: this.PAGE_SIZE,
+                },
               },
-              pagination: {
-                page: this.inicialPaginator.pageIndex,
-                size: this.PAGE_SIZE,
-              },
-            },
-          });
-        }),
-        map(({ data }) => {
-          this.isLoadingResults = false;
-          this.isError = false;
-          return data.declaracionesMetadata.docs;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          this.isError = true;
-          return observableOf([]);
-        })
-      )
-      .pipe(untilDestroyed(this))
-      .subscribe((data) => (this.dataInicial = data));
+            });
+          }),
+          map(({ data }) => {
+            this.isLoadingResults = false;
+            this.isError = false;
+            return data.declaracionesMetadata.docs;
+          }),
+          catchError(() => {
+            this.isLoadingResults = false;
+            this.isError = true;
+            return observableOf([]);
+          })
+        )
+        .pipe(untilDestroyed(this))
+        .subscribe((data) => (this.dataInicial = data));
   }
 
   setModificacionTable() {
-    merge(this.modificacionPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.apollo.query<{ declaracionesMetadata: DeclaracionMetadataPage }>({
-            query: declaracionesMetadata,
-            variables: {
-              userID: this.userID,
-              filter: {
-                tipoDeclaracion: 'MODIFICACION',
+    if (this.modificacionPaginator)
+      merge(this.modificacionPaginator.page)
+        .pipe(
+          startWith({}),
+          switchMap(() => {
+            this.isLoadingResults = true;
+            return this.apollo.query<{ declaracionesMetadata: DeclaracionMetadataPage }>({
+              query: declaracionesMetadata,
+              variables: {
+                userID: this.userID,
+                filter: {
+                  tipoDeclaracion: 'MODIFICACION',
+                },
+                pagination: {
+                  page: this.modificacionPaginator.pageIndex,
+                  size: this.PAGE_SIZE,
+                },
               },
-              pagination: {
-                page: this.modificacionPaginator.pageIndex,
-                size: this.PAGE_SIZE,
-              },
-            },
-          });
-        }),
-        map(({ data }) => {
-          this.isLoadingResults = false;
-          this.isError = false;
-          return data.declaracionesMetadata.docs;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          this.isError = true;
-          return observableOf([]);
-        })
-      )
-      .pipe(untilDestroyed(this))
-      .subscribe((data) => (this.dataModificacion = data));
+            });
+          }),
+          map(({ data }) => {
+            this.isLoadingResults = false;
+            this.isError = false;
+            return data.declaracionesMetadata.docs;
+          }),
+          catchError(() => {
+            this.isLoadingResults = false;
+            this.isError = true;
+            return observableOf([]);
+          })
+        )
+        .pipe(untilDestroyed(this))
+        .subscribe((data) => (this.dataModificacion = data));
   }
 
   setConclusionTable() {
-    merge(this.conclusionPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.apollo.query<{ declaracionesMetadata: DeclaracionMetadataPage }>({
-            query: declaracionesMetadata,
-            variables: {
-              userID: this.userID,
-              filter: {
-                tipoDeclaracion: 'CONCLUSION',
+    if (this.conclusionPaginator)
+      merge(this.conclusionPaginator.page)
+        .pipe(
+          startWith({}),
+          switchMap(() => {
+            this.isLoadingResults = true;
+            return this.apollo.query<{ declaracionesMetadata: DeclaracionMetadataPage }>({
+              query: declaracionesMetadata,
+              variables: {
+                userID: this.userID,
+                filter: {
+                  tipoDeclaracion: 'CONCLUSION',
+                },
+                pagination: {
+                  page: this.conclusionPaginator.pageIndex,
+                  size: this.PAGE_SIZE,
+                },
               },
-              pagination: {
-                page: this.conclusionPaginator.pageIndex,
-                size: this.PAGE_SIZE,
-              },
-            },
-          });
-        }),
-        map(({ data }) => {
-          this.isLoadingResults = false;
-          this.isError = false;
-          return data.declaracionesMetadata.docs;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          this.isError = true;
-          return observableOf([]);
-        })
-      )
-      .pipe(untilDestroyed(this))
-      .subscribe((data) => (this.dataConclusion = data));
+            });
+          }),
+          map(({ data }) => {
+            this.isLoadingResults = false;
+            this.isError = false;
+            return data.declaracionesMetadata.docs;
+          }),
+          catchError(() => {
+            this.isLoadingResults = false;
+            this.isError = true;
+            return observableOf([]);
+          })
+        )
+        .pipe(untilDestroyed(this))
+        .subscribe((data) => (this.dataConclusion = data));
   }
 
   setTotalTable() {
-    merge(this.totalPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.apollo.query<{ declaracionesMetadata: DeclaracionMetadataPage }>({
-            query: declaracionesMetadata,
-            variables: {
-              userID: this.userID,
-              pagination: {
-                page: this.totalPaginator.pageIndex,
-                size: this.PAGE_SIZE,
+    if (this.totalPaginator)
+      merge(this.totalPaginator.page)
+        .pipe(
+          startWith({}),
+          switchMap(() => {
+            this.isLoadingResults = true;
+            return this.apollo.query<{ declaracionesMetadata: DeclaracionMetadataPage }>({
+              query: declaracionesMetadata,
+              variables: {
+                userID: this.userID,
+                pagination: {
+                  page: this.totalPaginator.pageIndex,
+                  size: this.PAGE_SIZE,
+                },
               },
-            },
-          });
-        }),
-        map(({ data }) => {
-          this.isLoadingResults = false;
-          this.isError = false;
-          return data.declaracionesMetadata.docs;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          this.isError = true;
-          return observableOf([]);
-        })
-      )
-      .pipe(untilDestroyed(this))
-      .subscribe((data) => (this.data = data));
+            });
+          }),
+          map(({ data }) => {
+            this.isLoadingResults = false;
+            this.isError = false;
+            return data.declaracionesMetadata.docs;
+          }),
+          catchError(() => {
+            this.isLoadingResults = false;
+            this.isError = true;
+            return observableOf([]);
+          })
+        )
+        .pipe(untilDestroyed(this))
+        .subscribe((data) => (this.data = data));
   }
 }

@@ -1,6 +1,6 @@
 <div fxFill fxLayout="column">
   <app-header class="mg-btm-80px"></app-header>
-  <div class="contenedor">
+  <div class="contenedor" *ngIf="userInstitucion !== null; else registerInstitucion">
     <mat-toolbar class="background-white title-toolbar flex mg-top-100px">
       <label class="step-title">Lista de declaraciones {{ userID ? 'usuario' : '' }}</label>
     </mat-toolbar>
@@ -257,6 +257,20 @@
     </div>
     <mat-divider class="mg-top-100px"></mat-divider>
   </div>
-
+  <ng-template #registerInstitucion>
+    <mat-toolbar class="background-white title-toolbar">
+      <label class="step-title" style="color: red"
+        >Es necesario que registres la institución a la que perteneces en la sección <strong>MI PERFIL</strong> para
+        poder continuar.</label
+      >
+    </mat-toolbar>
+    <div class="contenedor">
+      <mat-divider class="mg-height-50px-30px"></mat-divider>
+      <br />
+      <div class="center">
+        <button mat-raised-button color="primary" routerLink="/perfil">ir a MI PERFIL</button>
+      </div>
+    </div>
+  </ng-template>
   <app-footer></app-footer>
 </div>
