@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { PreviewDeclarationComponent } from '@shared/preview-declaration/preview-declaration.component';
 
-import { declaracionesMetadata, deleteDeclaracion } from '@api/declaracion';
+import { deleteDeclaracion, myDeclaracionesMetadata } from '@api/declaracion';
 import { DeclaracionMetadata, TipoDeclaracion } from '@models/declaracion';
 
 import { Apollo } from 'apollo-angular';
@@ -71,7 +71,7 @@ export class MisDeclaracionesComponent implements OnInit {
     try {
       const { data }: any = await this.apollo
         .query({
-          query: declaracionesMetadata,
+          query: myDeclaracionesMetadata,
           variables: {
             filter: {
               tipoDeclaracion,
@@ -80,7 +80,7 @@ export class MisDeclaracionesComponent implements OnInit {
         })
         .toPromise();
 
-      this.listaDeclaraciones = data.declaracionesMetadata.docs || [];
+      this.listaDeclaraciones = data.myDeclaracionesMetadata.docs || [];
     } catch (error) {
       console.log(error);
     }
