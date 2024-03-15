@@ -1,5 +1,46 @@
 import gql from 'graphql-tag';
 
+export const myDeclaracionesMetadata = gql`
+  query myDeclaracionesMetadata(
+    $userID: LimitedString
+    $filter: DeclaracionesFilterInput
+    $pagination: PaginationOptionsInput
+  ) {
+    myDeclaracionesMetadata(userID: $userID, filter: $filter, pagination: $pagination) {
+      totalDocs
+      limit
+      totalPages
+      page
+      pagingCounter
+      hasPrevPage
+      hasNextPage
+      prevPage
+      nextPage
+      hasMore
+      docs {
+        _id
+        firmada
+        declaracionCompleta
+        tipoDeclaracion
+        createdAt
+        updatedAt
+        owner {
+          _id
+          username
+          nombre
+          primerApellido
+          segundoApellido
+          curp
+          rfc
+          roles
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  }
+`;
+
 export const declaracionesMetadata = gql`
   query declaracionesMetadata(
     $userID: LimitedString
