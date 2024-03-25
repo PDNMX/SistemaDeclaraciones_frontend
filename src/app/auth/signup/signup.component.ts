@@ -8,8 +8,7 @@ import { Logger, UntilDestroy, untilDestroyed } from '@core';
 import { AuthenticationService } from '../authentication.service';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-import InstitucionesCatalogo from '@static/custom/instituciones.json';
+import { CatalogosService } from '@app/services/catalogos.service';
 
 const log = new Logger('Signup');
 
@@ -25,24 +24,30 @@ export class SignupComponent implements OnInit, OnDestroy {
   signupForm!: FormGroup;
   isLoading = false;
 
-  institucionesCatalogo = InstitucionesCatalogo;
+  institucionesCatalogo: any[];
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private catalogoService: CatalogosService
   ) {
     this.createForm();
-    if (this.institucionesCatalogo?.length) {
-      this.signupForm.get('institucion').enable();
-    }
+    this.loadInstituciones();
   }
 
   ngOnInit() {}
 
   ngOnDestroy() {}
+
+  async loadInstituciones() {
+    this.institucionesCatalogo = await this.catalogoService.getInstituciones().then((data) => data);
+    if (this.institucionesCatalogo?.length) {
+      this.signupForm.get('institucion').enable();
+    }
+  }
 
   signup() {
     this.isLoading = true;
@@ -51,7 +56,7 @@ export class SignupComponent implements OnInit, OnDestroy {
     if (this.institucionesCatalogo?.length) {
       signupForm.institucion = {
         clave: signupForm.institucion.clave,
-        valor: signupForm.institucion.ente_publico,
+        valor: signupForm.institucion.valor,
       };
     }
 
