@@ -12,7 +12,7 @@ import { changePassword, updateUserProfile, userProfileQuery } from '@api/user';
 
 import { AuthenticationService } from '../auth/authentication.service';
 
-import InstitucionesCatalogo from '@static/custom/instituciones.json';
+import { CatalogosService } from '@app/services/catalogos.service';
 
 @Component({
   selector: 'app-perfil',
@@ -28,7 +28,7 @@ export class PerfilComponent implements OnInit {
 
   user: any = null;
 
-  institucionesCatalogo = InstitucionesCatalogo;
+  institucionesCatalogo: any[];
 
   constructor(
     private apollo: Apollo,
@@ -36,10 +36,16 @@ export class PerfilComponent implements OnInit {
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private catalogoService: CatalogosService
   ) {
     this.createForms();
+    this.loadInstituciones();
     this.getUserInfo();
+  }
+
+  async loadInstituciones() {
+    this.institucionesCatalogo = await this.catalogoService.getInstituciones().then((data) => data);
     if (this.institucionesCatalogo?.length) {
       this.profileForm.get('institucion').enable();
     }
@@ -127,6 +133,12 @@ export class PerfilComponent implements OnInit {
       this.user = data.userProfile || null;
 
       this.profileForm.patchValue(this.user);
+
+      if (this.user.institucion) {
+        const ins = this.user.institucion;
+        const optTitular = this.institucionesCatalogo.filter((ti: any) => ti.clave === ins.clave);
+        this.profileForm.get('institucion').setValue(optTitular[0]);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -166,7 +178,7 @@ export class PerfilComponent implements OnInit {
     if (this.institucionesCatalogo?.length) {
       profile.institucion = {
         clave: profile.institucion.clave,
-        valor: profile.institucion.ente_publico,
+        valor: profile.institucion.valor,
       };
     }
 

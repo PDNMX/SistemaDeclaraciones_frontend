@@ -127,7 +127,7 @@
         <mat-icon matPrefix>account_balance</mat-icon>
         <mat-select formControlName="institucion" required>
           <mat-option *ngFor="let institucion of institucionesCatalogo" [value]="institucion">
-            {{ institucion.ente_publico }}
+            {{ institucion.valor }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="profileForm.controls.institucion.invalid && profileForm.controls.institucion.touched">
