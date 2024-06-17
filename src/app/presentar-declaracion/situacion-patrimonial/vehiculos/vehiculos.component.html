@@ -193,12 +193,14 @@
 
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon card-no-public">location_city</mat-icon>
-              <p *ngIf="v.lugarRegistro.pais">{{ v.lugarRegistro.pais }}</p>
+              <p *ngIf="v.lugarRegistro.pais !== 'MX'">
+                {{ v.lugarRegistro.pais }}
+              </p>
               <p *ngIf="v.lugarRegistro.entidadFederativa">{{ v.lugarRegistro.entidadFederativa.valor }}</p>
             </div>
             <div>
-              <p *ngIf="v.lugarRegistro.entidadFederativa">En México</p>
-              <p *ngIf="v.lugarRegistro.pais">En el extranjero</p>
+              <p *ngIf="v.lugarRegistro.pais === 'MX'">En México</p>
+              <p *ngIf="v.lugarRegistro.pais !== 'MX'">En el extranjero</p>
             </div>
           </div>
 
@@ -221,6 +223,15 @@
           <button mat-button color="primary" (click)="removeItem(i)">Eliminar</button>
         </mat-card-actions>
       </mat-card>
+
+      <div *ngIf="!editMode && aclaracionesText">
+        <div class="paragraph-flex aclaraciones">
+          <mat-icon matPrefix class="icon card-no-public">insert_comment</mat-icon>
+          <p>Aclaraciones / Observaciones</p>
+        </div>
+        <p class="vertical-margin-25">{{ aclaracionesText }}</p>
+      </div>
+
       <div class="boton-agregar" *ngIf="(vehiculo.length && !editMode) || vehiculosForm.value.ninguno">
         <button mat-raised-button color="primary" (click)="addItem()">Agregar Vehículo</button>
       </div>
@@ -393,7 +404,12 @@
             >
               <mat-label>¿Donde se encuentra registrado?</mat-label>
               <mat-icon matPrefix class="no-public">public</mat-icon>
-              <mat-select #location (selectionChange)="locationChanged($event.value)" required>
+              <mat-select
+                #location
+                (selectionChange)="locationChanged($event.value)"
+                [value]="tipoDomicilio === 'MEXICO' ? 'MX' : 'EX'"
+                required
+              >
                 <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
                 <mat-option value="{{ extranjeroCatalogo[1] }}"> En el extranjero </mat-option>
               </mat-select>

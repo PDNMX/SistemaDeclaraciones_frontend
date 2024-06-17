@@ -3,13 +3,19 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { adeudosPasivosMutation, adeudosPasivosQuery } from '@api/declaracion';
+import { adeudosPasivosMutation, adeudosPasivosQuery, lastAdeudosPasivosQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Adeudo, AdeudosPasivos, DeclaracionOutput, MexicoExtranjero } from '@models/declaracion';
+import {
+  Adeudo,
+  AdeudosPasivos,
+  DeclaracionOutput,
+  LastDeclaracionOutput,
+  MexicoExtranjero,
+} from '@models/declaracion';
 
 import TipoAdeudo from '@static/catalogos/tipoAdeudo.json';
 import FormaAdquisicion from '@static/catalogos/formaAdquisicion.json';
@@ -34,6 +40,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class AdeudosComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   adeudosPasivosForm: FormGroup;
   editMode = false;
   editIndex: number = null;
@@ -73,6 +80,7 @@ export class AdeudosComponent implements OnInit {
   addItem() {
     this.adeudosPasivosForm.reset();
     this.adeudosPasivosForm.get('ninguno').setValue(false);
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -155,7 +163,27 @@ export class AdeudosComponent implements OnInit {
 
     this.localizacionChanged(this.adeudosPasivosForm.value.adeudo.localizacionAdeudo.pais);
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
+  }
+
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastAdeudosPasivosQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.adeudosPasivos);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
   }
 
   async getUserInfo() {
@@ -170,11 +198,14 @@ export class AdeudosComponent implements OnInit {
         .toPromise();
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.adeudosPasivos) {
+      if (data.declaracion.adeudosPasivos === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.adeudosPasivos);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -290,6 +321,12 @@ export class AdeudosComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.adeudosPasivosForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.adeudosPasivosForm.reset();
     this.editMode = true;
@@ -314,8 +351,7 @@ export class AdeudosComponent implements OnInit {
     this.adeudosPasivosForm.get('ninguno').setValue(!!adeudosPasivos.ninguno);
 
     if (aclaraciones) {
-      this.adeudosPasivosForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     //this.editMode = !!!this.adeudo.length;

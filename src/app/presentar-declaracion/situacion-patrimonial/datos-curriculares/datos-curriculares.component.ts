@@ -8,9 +8,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { datosCurricularesMutation, datosCurricularesDeclaranteQuery } from '@api/declaracion';
+import {
+  datosCurricularesMutation,
+  datosCurricularesDeclaranteQuery,
+  lastDatosCurricularesDeclaranteQuery,
+} from '@api/declaracion';
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-import { DatosCurricularesDeclarante, DeclaracionOutput, Escolaridad } from '@models/declaracion';
+import {
+  DatosCurricularesDeclarante,
+  DeclaracionOutput,
+  Escolaridad,
+  LastDeclaracionOutput,
+} from '@models/declaracion';
 import DocumentoObtenido from '@static/catalogos/documentoObtenido.json';
 import Estatus from '@static/catalogos/estatus.json';
 import Nivel from '@static/catalogos/nivel.json';
@@ -98,6 +107,25 @@ export class DatosCurricularesComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastDatosCurricularesDeclaranteQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.datosCurricularesDeclarante);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data, errors } = await this.apollo
@@ -115,9 +143,13 @@ export class DatosCurricularesComponent implements OnInit {
       }
 
       this.declaracionId = data?.declaracion._id;
-      this.setupForm(data?.declaracion.datosCurricularesDeclarante);
+      if (data?.declaracion.datosCurricularesDeclarante === null) {
+        this.getLastUserInfo();
+      } else {
+        this.setupForm(data?.declaracion.datosCurricularesDeclarante);
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
@@ -126,7 +158,7 @@ export class DatosCurricularesComponent implements OnInit {
     let url = '/' + this.tipoDeclaracion;
     if (this.declaracionSimplificada) url += '/simplificada';
     let isDirty = this.datosCurricularesDeclaranteForm.dirty;
-    console.log(isDirty);
+    //console.log(isDirty);
 
     if (isDirty) {
       const dialogRef = this.dialog.open(DialogComponent, {

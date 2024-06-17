@@ -1,9 +1,10 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { bienesMueblesMutation, bienesMueblesQuery } from '@api/declaracion';
+import { bienesMueblesMutation, bienesMueblesQuery, lastBienesMueblesQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -19,7 +20,7 @@ import Monedas from '@static/catalogos/monedas.json';
 
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/bienes-muebles';
 
-import { BienMueble, BienesMuebles, DeclaracionOutput } from '@models/declaracion';
+import { BienMueble, BienesMuebles, DeclaracionOutput, LastDeclaracionOutput } from '@models/declaracion';
 
 import { findOption } from '@utils/utils';
 
@@ -32,6 +33,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class BienesMueblesComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   bienesMueblesForm: FormGroup;
   editMode = false;
   editIndex: number = null;
@@ -68,6 +70,7 @@ export class BienesMueblesComponent implements OnInit {
   addItem() {
     this.bienesMueblesForm.reset();
     this.bienesMueblesForm.get('ninguno').setValue(false);
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -139,7 +142,27 @@ export class BienesMueblesComponent implements OnInit {
     this.bienesMueblesForm.get(`bienMueble.tercero`).patchValue(bienMueble.tercero[0]);
     this.bienesMueblesForm.get(`bienMueble.transmisor`).patchValue(bienMueble.transmisor[0]);
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
+  }
+
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastBienesMueblesQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.bienesMuebles);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
   }
 
   async getUserInfo() {
@@ -154,11 +177,15 @@ export class BienesMueblesComponent implements OnInit {
         .toPromise();
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.bienesMuebles) {
+
+      if (data.declaracion.bienesMuebles === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.bienesMuebles);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -274,6 +301,12 @@ export class BienesMueblesComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.bienesMueblesForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.bienesMueblesForm.reset();
     this.bienesMueblesForm.get('ninguno').setValue(false);
@@ -287,9 +320,9 @@ export class BienesMueblesComponent implements OnInit {
     const { relacion } = this.bienesMueblesForm.value.bienMueble.transmisor;
 
     if (tipoBien) {
-      this.bienesMueblesForm
-        .get('bienMueble.tipoBien')
-        .setValue(findOption(this.tipoBienBienesMueblesCatalogo, tipoBien));
+      const optTipoBien = this.tipoBienBienesMueblesCatalogo.filter((b: any) => b.clave === tipoBien.clave);
+      // this.bienesMueblesForm.get('bienMueble.tipoBien').setValue(findOption(this.tipoBienBienesMueblesCatalogo, tipoBien));
+      this.bienesMueblesForm.get('bienMueble.tipoBien').setValue(optTipoBien[0]);
     }
     if (titular) {
       this.bienesMueblesForm.get('bienMueble.titular').setValue(findOption(this.titularBienCatalogo, titular[0].clave));
@@ -316,8 +349,7 @@ export class BienesMueblesComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.bienesMueblesForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
   }
 

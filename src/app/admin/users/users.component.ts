@@ -14,6 +14,7 @@ import { ROLES } from '@utils/constants';
 import { ChangeRolesComponent } from '../change-roles/change-roles.component';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { CredentialsService } from '@app/auth/credentials.service';
+import { Catalogo } from '@models/declaracion';
 
 interface Response {
   data: {
@@ -69,6 +70,7 @@ export class UsersComponent implements AfterViewInit {
   };
 
   PAGE_SIZE = 10;
+  userInstitucion: Catalogo = null;
 
   @ViewChild('usersPaginator') usersPaginator: MatPaginator;
   @ViewChild('searchPaginator') searchPaginator: MatPaginator;
@@ -76,6 +78,7 @@ export class UsersComponent implements AfterViewInit {
 
   constructor(private apollo: Apollo, private credentialsService: CredentialsService, private dialog: MatDialog) {
     this.isRoot = this.credentialsService.isRoot();
+    this.userInstitucion = this.credentialsService.credentials.user.institucion;
   }
 
   changeRoles(user: User) {
@@ -108,7 +111,7 @@ export class UsersComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.setUserTable();
+    if (this.sort) this.setUserTable();
     this.setSearchTable();
   }
 
@@ -143,41 +146,42 @@ export class UsersComponent implements AfterViewInit {
   }
 
   setSearchTable() {
-    merge(this.searchPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          if (this.searchValue.length <= 1) {
-            return observableOf(this.emptyResponse);
-          }
-          this.isLoadingResults = true;
-          return this.apollo.query<{ search: UsersPage }>({
-            query: search,
-            variables: {
-              keyword: this.searchValue,
-              pagination: {
-                page: this.searchPaginator.pageIndex,
-                size: this.PAGE_SIZE,
+    if (this.searchPaginator)
+      merge(this.searchPaginator.page)
+        .pipe(
+          startWith({}),
+          switchMap(() => {
+            if (this.searchValue.length <= 1) {
+              return observableOf(this.emptyResponse);
+            }
+            this.isLoadingResults = true;
+            return this.apollo.query<{ search: UsersPage }>({
+              query: search,
+              variables: {
+                keyword: this.searchValue,
+                pagination: {
+                  page: this.searchPaginator.pageIndex,
+                  size: this.PAGE_SIZE,
+                },
               },
-            },
-          });
-        }),
-        map(({ data }) => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.isError = false;
-          this.resultsLength = data.search.totalDocs || 0;
+            });
+          }),
+          map(({ data }) => {
+            // Flip flag to show that loading has finished.
+            this.isLoadingResults = false;
+            this.isError = false;
+            this.resultsLength = data.search.totalDocs || 0;
 
-          return data.search.docs;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          this.isError = true;
-          return observableOf([]);
-        })
-      )
-      .pipe(untilDestroyed(this))
-      .subscribe((data) => (this.dataSearch = data));
+            return data.search.docs;
+          }),
+          catchError(() => {
+            this.isLoadingResults = false;
+            this.isError = true;
+            return observableOf([]);
+          })
+        )
+        .pipe(untilDestroyed(this))
+        .subscribe((data) => (this.dataSearch = data));
   }
 
   setUserTable() {

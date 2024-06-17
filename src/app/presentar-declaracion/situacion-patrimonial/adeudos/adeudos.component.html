@@ -202,6 +202,14 @@
         </mat-card-actions>
       </mat-card>
 
+      <div *ngIf="!editMode && aclaracionesText">
+        <div class="paragraph-flex aclaraciones">
+          <mat-icon matPrefix class="icon card-no-public">insert_comment</mat-icon>
+          <p>Aclaraciones / Observaciones</p>
+        </div>
+        <p class="vertical-margin-25">{{ aclaracionesText }}</p>
+      </div>
+
       <div class="boton-agregar" *ngIf="(adeudo.length && !editMode) || adeudosPasivosForm.value.ninguno">
         <button mat-raised-button color="primary" (click)="addItem()">Agregar Pasivo</button>
       </div>
@@ -385,12 +393,16 @@
             <mat-form-field matTooltip="{{ tooltipData.localizaAdeudo }}" appearance="fill">
               <mat-label>¿Dónde se localiza el adeudo?</mat-label>
               <mat-icon matPrefix>public</mat-icon>
-              <mat-select (selectionChange)="localizacionChanged($event.value)" required>
+              <mat-select
+                (selectionChange)="localizacionChanged($event.value)"
+                [value]="tipoDomicilio === 'MX' ? 'MX' : 'EX'"
+                required
+              >
                 <mat-option value="{{ extranjeroCatalogo[0] }}"> EN MÉXICO </mat-option>
                 <mat-option value="{{ extranjeroCatalogo[1] }}"> EN EL EXTRANJERO </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="tipoDomicilio === 'EX'">
+            <mat-form-field appearance="fill" *ngIf="tipoDomicilio !== 'MX'">
               <mat-label>País donde de ubica</mat-label>
               <mat-icon matPrefix>public</mat-icon>
               <mat-select formControlName="pais" required>

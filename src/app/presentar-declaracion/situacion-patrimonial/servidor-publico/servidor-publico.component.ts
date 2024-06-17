@@ -491,7 +491,7 @@ export class ServidorPublicoComponent implements OnInit {
         this.fillForm(data?.declaracion.actividadAnualAnterior);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }

@@ -9,9 +9,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { datosEmpleoCargoComisionQuery, declaracionMutation } from '@api/declaracion';
+import {
+  datosEmpleoCargoComisionQuery,
+  declaracionMutation,
+  lastDatosEmpleoCargoComisionQuery,
+} from '@api/declaracion';
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
-import { Catalogo, DatosEmpleoCargoComision, DeclaracionOutput } from '@models/declaracion';
+import { Catalogo, DatosEmpleoCargoComision, DeclaracionOutput, LastDeclaracionOutput } from '@models/declaracion';
 import AmbitoPublico from '@static/catalogos/ambitoPublico.json';
 import Estados from '@static/catalogos/estados.json';
 import Municipios from '@static/catalogos/municipios.json';
@@ -150,6 +154,25 @@ export class DatosEmpleoComponent implements OnInit {
     this.setSelectedOptions(datosEmpleoCargoComision);
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastDatosEmpleoCargoComisionQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.fillForm(data?.lastDeclaracion.datosEmpleoCargoComision);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data, errors } = await this.apollo
@@ -167,9 +190,13 @@ export class DatosEmpleoComponent implements OnInit {
       }
 
       this.declaracionId = data?.declaracion._id;
-      this.fillForm(data?.declaracion.datosEmpleoCargoComision);
+      if (data?.declaracion.datosEmpleoCargoComision === null) {
+        this.getLastUserInfo();
+      } else {
+        this.fillForm(data?.declaracion.datosEmpleoCargoComision);
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
@@ -178,7 +205,7 @@ export class DatosEmpleoComponent implements OnInit {
     let url = '/' + this.tipoDeclaracion;
     if (this.declaracionSimplificada) url += '/simplificada';
     let isDirty = this.datosEmpleoCargoComisionForm.dirty;
-    console.log(isDirty);
+    //console.log(isDirty);
 
     if (isDirty) {
       const dialogRef = this.dialog.open(DialogComponent, {

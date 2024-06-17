@@ -1,9 +1,14 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { participacionTomaDecisionesMutation, participacionTomaDecisionesQuery } from '@api/declaracion';
+import {
+  lastParticipacionTomaDecisionesQuery,
+  participacionTomaDecisionesMutation,
+  participacionTomaDecisionesQuery,
+} from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -19,7 +24,12 @@ import Estados from '@static/catalogos/estados.json';
 
 import { tooltipData } from '@static/tooltips/intereses/toma-descisiones';
 
-import { DeclaracionOutput, ParticipacionTD, ParticipacionTomaDecisiones } from '@models/declaracion';
+import {
+  DeclaracionOutput,
+  LastDeclaracionOutput,
+  ParticipacionTD,
+  ParticipacionTomaDecisiones,
+} from '@models/declaracion';
 
 import { findOption, ifExistsEnableFields } from '@utils/utils';
 
@@ -33,6 +43,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class TomaDecisionesComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   participacion: ParticipacionTD[] = [];
   participacionTomaDecisionesForm: FormGroup;
   editMode = false;
@@ -68,6 +79,7 @@ export class TomaDecisionesComponent implements OnInit {
 
   addItem() {
     this.participacionTomaDecisionesForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -168,7 +180,27 @@ export class TomaDecisionesComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
+  }
+
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastParticipacionTomaDecisionesQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.participacionTomaDecisiones);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
   }
 
   async getUserInfo() {
@@ -183,11 +215,14 @@ export class TomaDecisionesComponent implements OnInit {
         .toPromise();
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.participacionTomaDecisiones) {
+      if (data.declaracion.participacionTomaDecisiones === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.participacionTomaDecisiones);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -303,6 +338,12 @@ export class TomaDecisionesComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.participacionTomaDecisionesForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.participacionTomaDecisionesForm.reset();
     this.editMode = true;
@@ -314,15 +355,15 @@ export class TomaDecisionesComponent implements OnInit {
     const { entidadFederativa } = this.participacionTomaDecisionesForm.value.participacion.ubicacion;
 
     if (tipoInstitucion) {
-      this.participacionTomaDecisionesForm
-        .get('participacion.tipoInstitucion')
-        .setValue(findOption(this.institucionCatalogo, tipoInstitucion));
+      const optTipoIns = this.institucionCatalogo.filter((ins: any) => ins.clave === tipoInstitucion.clave);
+      // this.participacionTomaDecisionesForm.get('participacion.tipoInstitucion').setValue(findOption(this.institucionCatalogo, tipoInstitucion));
+      this.participacionTomaDecisionesForm.get('participacion.tipoInstitucion').setValue(optTipoIns[0]);
     }
 
     if (entidadFederativa) {
-      this.participacionTomaDecisionesForm
-        .get('participacion.ubicacion.entidadFederativa')
-        .setValue(findOption(this.estadosCatalogo, entidadFederativa));
+      const optEntidad = this.estadosCatalogo.filter((edo: any) => edo.clave === entidadFederativa.clave);
+      // this.participacionTomaDecisionesForm.get('participacion.ubicacion.entidadFederativa').setValue(findOption(this.estadosCatalogo, entidadFederativa));
+      this.participacionTomaDecisionesForm.get('participacion.ubicacion.entidadFederativa').setValue(optEntidad[0]);
     }
   }
 
@@ -335,8 +376,7 @@ export class TomaDecisionesComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.participacionTomaDecisionesForm.get('aclaracionesObservaciones').patchValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     // this.editMode = !!!this.experiencia.length;

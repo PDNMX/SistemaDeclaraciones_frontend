@@ -1,9 +1,10 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { prestamoComodatoMutation, prestamoComodatoQuery } from '@api/declaracion';
+import { lastPrestamoComodatoQuery, prestamoComodatoMutation, prestamoComodatoQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -21,7 +22,7 @@ import ParentescoRelacion from '@static/catalogos/parentescoRelacion.json';
 
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/prestamo-terceros';
 
-import { Catalogo, DeclaracionOutput, Prestamo, PrestamoComodato } from '@models/declaracion';
+import { Catalogo, DeclaracionOutput, LastDeclaracionOutput, Prestamo, PrestamoComodato } from '@models/declaracion';
 
 import { findOption, ifExistsEnableFields } from '@utils/utils';
 
@@ -35,6 +36,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class PrestamosTercerosComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   prestamoComodatoForm: FormGroup;
   estado: Catalogo;
   editMode = false;
@@ -74,6 +76,7 @@ export class PrestamosTercerosComponent implements OnInit {
 
   addItem() {
     this.prestamoComodatoForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -274,7 +277,27 @@ export class PrestamosTercerosComponent implements OnInit {
       }
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
+  }
+
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastPrestamoComodatoQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.prestamoComodato);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
   }
 
   async getUserInfo() {
@@ -289,11 +312,14 @@ export class PrestamosTercerosComponent implements OnInit {
         .toPromise();
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.prestamoComodato) {
+      if (data.declaracion.prestamoComodato === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.prestamoComodato);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -408,6 +434,12 @@ export class PrestamosTercerosComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.prestamoComodatoForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.prestamoComodatoForm.reset();
     this.editMode = true;
@@ -418,19 +450,44 @@ export class PrestamosTercerosComponent implements OnInit {
     const { vehiculo, inmueble } = this.prestamoComodatoForm.value.prestamo.tipoBien;
 
     if (inmueble) {
-      const { tipoInmueble } = this.prestamoComodatoForm.value.prestamo.tipoBien.inmueble;
+      const { tipoInmueble, domicilioMexico } = this.prestamoComodatoForm.value.prestamo.tipoBien.inmueble;
+      const optTInmueble = this.tipoInmuebleCatalogo.filter((ti: any) => ti.clave === tipoInmueble.clave);
+      // this.prestamoComodatoForm.get('prestamo.tipoBien.inmueble.tipoInmueble').setValue(findOption(this.tipoInmuebleCatalogo, tipoInmueble));
+      this.prestamoComodatoForm.get('prestamo.tipoBien.inmueble.tipoInmueble').setValue(optTInmueble[0]);
+      if (domicilioMexico) {
+        const { entidadFederativa, municipioAlcaldia } = domicilioMexico;
+        if (entidadFederativa) {
+          const optEdos = this.estadosCatalogo.filter((ed: any) => ed.clave === entidadFederativa.clave);
+          this.prestamoComodatoForm
+            .get('prestamo.tipoBien.inmueble.domicilioMexico.entidadFederativa')
+            .setValue(optEdos[0]);
 
-      this.prestamoComodatoForm
-        .get('prestamo.tipoBien.inmueble.tipoInmueble')
-        .setValue(findOption(this.tipoInmuebleCatalogo, tipoInmueble));
+          if (municipioAlcaldia) {
+            const optMun = this.municipiosCatalogo[entidadFederativa?.clave].filter(
+              (ed: any) => ed.clave === municipioAlcaldia.clave
+            );
+            this.prestamoComodatoForm
+              .get('prestamo.tipoBien.inmueble.domicilioMexico.municipioAlcaldia')
+              .setValue(optMun[0]);
+          }
+        }
+      }
     }
 
     if (vehiculo) {
-      const { tipo } = this.prestamoComodatoForm.value.prestamo.tipoBien.vehiculo;
+      console.log('vehiculo: ', vehiculo);
+      const { tipo, lugarRegistro } = this.prestamoComodatoForm.value.prestamo.tipoBien.vehiculo;
+      const optTipoVehiculo = this.tipoVehiculoCatalogo.filter((v: any) => (v.clave = tipo.clave));
+      // this.prestamoComodatoForm.get('prestamo.tipoBien.vehiculo.tipo').setValue(findOption(this.tipoVehiculoCatalogo, tipo));
+      this.prestamoComodatoForm.get('prestamo.tipoBien.vehiculo.tipo').setValue(optTipoVehiculo[0]);
 
-      this.prestamoComodatoForm
-        .get('prestamo.tipoBien.vehiculo.tipo')
-        .setValue(findOption(this.tipoVehiculoCatalogo, tipo));
+      if (lugarRegistro?.entidadFederativa) {
+        const { entidadFederativa } = lugarRegistro;
+        const optEntidad = this.estadosCatalogo.filter((e: any) => e.clave === entidadFederativa.clave);
+        this.prestamoComodatoForm
+          .get('prestamo.tipoBien.vehiculo.lugarRegistro.entidadFederativa')
+          .setValue(optEntidad[0]);
+      }
     }
   }
 
@@ -443,8 +500,7 @@ export class PrestamosTercerosComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.prestamoComodatoForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     //this.editMode = !!!this.prestamo.length;

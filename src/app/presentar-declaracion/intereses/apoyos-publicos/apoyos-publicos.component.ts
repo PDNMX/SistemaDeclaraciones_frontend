@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Apoyo, Apoyos, DeclaracionOutput } from '@models/declaracion';
+import { Apoyo, Apoyos, DeclaracionOutput, LastDeclaracionOutput } from '@models/declaracion';
 
 import { findOption } from '@utils/utils';
 
@@ -18,7 +18,7 @@ import TiposApoyo from '@static/catalogos/tipoApoyo.json';
 import RecepcionApoyo from '@static/catalogos/formaRecepcion.json';
 
 import { tooltipData } from '@static/tooltips/intereses/apoyos';
-import { apoyosQuery, apoyosMutation } from '@api/declaracion';
+import { apoyosQuery, apoyosMutation, lastApoyosQuery } from '@api/declaracion';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 
@@ -29,6 +29,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class ApoyosPublicosComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   apoyo: Apoyo[] = [];
   apoyosForm: FormGroup;
   editMode = false;
@@ -61,6 +62,7 @@ export class ApoyosPublicosComponent implements OnInit {
 
   addItem() {
     this.apoyosForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -103,7 +105,27 @@ export class ApoyosPublicosComponent implements OnInit {
       .filter((field) => apoyo[field] !== null)
       .forEach((field) => this.apoyosForm.get(`apoyo.${field}`).patchValue(apoyo[field]));
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
+  }
+
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastApoyosQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.apoyos);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
   }
 
   async getUserInfo() {
@@ -117,11 +139,14 @@ export class ApoyosPublicosComponent implements OnInit {
         })
         .toPromise();
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.apoyos) {
+      if (data.declaracion.apoyos === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.apoyos);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -235,6 +260,12 @@ export class ApoyosPublicosComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.apoyosForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.apoyosForm.reset();
     this.editMode = true;
@@ -264,8 +295,7 @@ export class ApoyosPublicosComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.apoyosForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     // this.editMode = !!!this.apoyo.length;

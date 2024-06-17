@@ -1,9 +1,14 @@
+import { filter, map } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { inversionesCuentasValoresMutation, inversionesCuentasValoresQuery } from '@api/declaracion';
+import {
+  inversionesCuentasValoresMutation,
+  inversionesCuentasValoresQuery,
+  lastInversionesCuentasValoresQuery,
+} from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -22,7 +27,13 @@ import Monedas from '@static/catalogos/monedas.json';
 
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/inversiones';
 
-import { DeclaracionOutput, Inversion, InversionesCuentasValores } from '@models/declaracion';
+import {
+  Catalogo,
+  DeclaracionOutput,
+  Inversion,
+  InversionesCuentasValores,
+  LastDeclaracionOutput,
+} from '@models/declaracion';
 import { findOption, ifExistsEnableFields } from '@utils/utils';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
@@ -34,6 +45,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class InversionesComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   inversionesCuentasValoresForm: FormGroup;
   editMode = false;
   editIndex: number = null;
@@ -59,6 +71,28 @@ export class InversionesComponent implements OnInit {
   tooltipData = tooltipData;
   errorMatcher = new DeclarationErrorStateMatcher();
 
+  opsBANC = this.subTipoInversionCatalogo
+    .filter((e: any) => e.tipoInversion === 'BANC')
+    .map((e: any) => ({ clave: e.clave, valor: e.valor }));
+  opsFINV = this.subTipoInversionCatalogo
+    .filter((e: any) => e.tipoInversion === 'FINV')
+    .map((e: any) => ({ clave: e.clave, valor: e.valor }));
+  opsORPM = this.subTipoInversionCatalogo
+    .filter((e: any) => e.tipoInversion === 'ORPM')
+    .map((e: any) => ({ clave: e.clave, valor: e.valor }));
+  opsPOMM = this.subTipoInversionCatalogo
+    .filter((e: any) => e.tipoInversion === 'POMM')
+    .map((e: any) => ({ clave: e.clave, valor: e.valor }));
+  opsSEGR = this.subTipoInversionCatalogo
+    .filter((e: any) => e.tipoInversion === 'SEGR')
+    .map((e: any) => ({ clave: e.clave, valor: e.valor }));
+  opsVBUR = this.subTipoInversionCatalogo
+    .filter((e: any) => e.tipoInversion === 'VBUR')
+    .map((e: any) => ({ clave: e.clave, valor: e.valor }));
+  opsAFOT = this.subTipoInversionCatalogo
+    .filter((e: any) => e.tipoInversion === 'AFOT')
+    .map((e: any) => ({ clave: e.clave, valor: e.valor }));
+
   constructor(
     private apollo: Apollo,
     private dialog: MatDialog,
@@ -73,6 +107,7 @@ export class InversionesComponent implements OnInit {
 
   addItem() {
     this.inversionesCuentasValoresForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -170,7 +205,27 @@ export class InversionesComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
+  }
+
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastInversionesCuentasValoresQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.inversionesCuentasValores);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
   }
 
   async getUserInfo() {
@@ -185,11 +240,14 @@ export class InversionesComponent implements OnInit {
         .toPromise();
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.inversionesCuentasValores) {
+      if (data.declaracion.inversionesCuentasValores === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.inversionesCuentasValores);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -305,6 +363,12 @@ export class InversionesComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.inversionesCuentasValoresForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.inversionesCuentasValoresForm.reset();
     this.editMode = true;
@@ -312,18 +376,55 @@ export class InversionesComponent implements OnInit {
   }
 
   setSelectedOptions() {
-    const { tipoInversion, titular } = this.inversionesCuentasValoresForm.value.inversion;
+    const { tipoInversion, subTipoInversion, titular } = this.inversionesCuentasValoresForm.value.inversion;
 
     if (tipoInversion) {
-      this.inversionesCuentasValoresForm
-        .get('inversion.tipoInversion')
-        .setValue(findOption(this.tipoInversionCatalogo, tipoInversion));
+      const optTipoInversion = this.tipoInversionCatalogo.filter((ti: any) => ti.clave === tipoInversion.clave);
+      // this.inversionesCuentasValoresForm.get('inversion.tipoInversion').setValue(findOption(this.tipoInversionCatalogo, tipoInversion));
+      this.inversionesCuentasValoresForm.get('inversion.tipoInversion').setValue(optTipoInversion[0]);
+
+      if (subTipoInversion) {
+        switch (tipoInversion.clave) {
+          case 'BANC':
+            const opt = this.opsBANC.filter((ban: any) => ban.clave === subTipoInversion.clave);
+            this.inversionesCuentasValoresForm.get('inversion.subTipoInversion').setValue(opt[0]);
+            break;
+          case 'FINV':
+            const optFINV = this.opsFINV.filter((ban: any) => ban.clave === subTipoInversion.clave);
+            this.inversionesCuentasValoresForm.get('inversion.subTipoInversion').setValue(optFINV[0]);
+            break;
+
+          case 'ORPM':
+            const optORPM = this.opsORPM.filter((ban: any) => ban.clave === subTipoInversion.clave);
+            this.inversionesCuentasValoresForm.get('inversion.subTipoInversion').setValue(optORPM[0]);
+            break;
+          case 'POMM':
+            const optPOMM = this.opsPOMM.filter((ban: any) => ban.clave === subTipoInversion.clave);
+            this.inversionesCuentasValoresForm.get('inversion.subTipoInversion').setValue(optPOMM[0]);
+            break;
+          case 'SEGR':
+            const optSEGR = this.opsSEGR.filter((ban: any) => ban.clave === subTipoInversion.clave);
+            this.inversionesCuentasValoresForm.get('inversion.subTipoInversion').setValue(optSEGR[0]);
+            break;
+          case 'VBUR':
+            const optVBUR = this.opsVBUR.filter((ban: any) => ban.clave === subTipoInversion.clave);
+            this.inversionesCuentasValoresForm.get('inversion.subTipoInversion').setValue(optVBUR[0]);
+            break;
+          case 'AFOT':
+            const optAFOT = this.opsAFOT.filter((ban: any) => ban.clave === subTipoInversion.clave);
+            this.inversionesCuentasValoresForm.get('inversion.subTipoInversion').setValue(optAFOT[0]);
+            break;
+          default:
+            console.log('ESTO NO DEBERIA SALIR');
+            break;
+        }
+      }
     }
 
     if (titular) {
-      this.inversionesCuentasValoresForm
-        .get('inversion.titular')
-        .setValue(findOption(this.titularBienCatalogo, titular[0]));
+      const optTitular = this.titularBienCatalogo.filter((ti: any) => ti.clave === titular[0].clave);
+      // this.inversionesCuentasValoresForm.get('inversion.titular').setValue(findOption(this.titularBienCatalogo, titular[0]));
+      this.inversionesCuentasValoresForm.get('inversion.titular').setValue(optTitular[0]);
     }
   }
 
@@ -336,8 +437,7 @@ export class InversionesComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.inversionesCuentasValoresForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     //this.editMode = !!!this.inversion.length;

@@ -8,11 +8,21 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { datosDependientesEconomicosMutation, datosDependientesEconomicosQuery } from '@api/declaracion';
+import {
+  datosDependientesEconomicosMutation,
+  datosDependientesEconomicosQuery,
+  lastDatosDependientesEconomicosQuery,
+} from '@api/declaracion';
 
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 import { UntilDestroy, untilDestroyed } from '@core';
-import { Catalogo, DependienteEconomico, DatosDependientesEconomicos, DeclaracionOutput } from '@models/declaracion';
+import {
+  Catalogo,
+  DependienteEconomico,
+  DatosDependientesEconomicos,
+  DeclaracionOutput,
+  LastDeclaracionOutput,
+} from '@models/declaracion';
 import ActividadLaboral from '@static/catalogos/actividadLaboral.json';
 import AmbitoPublico from '@static/catalogos/ambitoPublico.json';
 import AmbitoSector from '@static/catalogos/ambitoSector.json';
@@ -282,6 +292,27 @@ export class DatosDependienteComponent implements OnInit {
     this.setSelectedOptions();
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastDatosDependientesEconomicosQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      if (data?.lastDeclaracion.datosDependientesEconomicos) {
+        this.setupForm(data?.lastDeclaracion.datosDependientesEconomicos);
+      }
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data, errors } = await this.apollo
@@ -298,11 +329,13 @@ export class DatosDependienteComponent implements OnInit {
       }
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.datosDependientesEconomicos) {
+      if (data.declaracion.datosDependientesEconomicos === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.datosDependientesEconomicos);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }

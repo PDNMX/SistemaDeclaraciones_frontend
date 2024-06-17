@@ -1,9 +1,15 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { representacionesMutation, representacionesQuery } from '@api/declaracion';
+import {
+  lastDeclaracionDatosGenerales,
+  lastRepresentacionesQuery,
+  representacionesMutation,
+  representacionesQuery,
+} from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -20,7 +26,7 @@ import Sector from '@static/catalogos/sector.json';
 
 import { tooltipData } from '@static/tooltips/intereses/representacion';
 
-import { DeclaracionOutput, Representacion, Representaciones } from '@models/declaracion';
+import { DeclaracionOutput, LastDeclaracionOutput, Representacion, Representaciones } from '@models/declaracion';
 
 import { findOption, ifExistsEnableFields } from '@utils/utils';
 
@@ -34,6 +40,7 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
 })
 export class RepresentacionComponent implements OnInit {
   aclaraciones = false;
+  aclaracionesText: string = null;
   representacion: Representacion[] = [];
   representacionForm: FormGroup;
   editMode = false;
@@ -69,6 +76,7 @@ export class RepresentacionComponent implements OnInit {
 
   addItem() {
     this.representacionForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -164,7 +172,27 @@ export class RepresentacionComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
+  }
+
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastRepresentacionesQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.representaciones);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
   }
 
   async getUserInfo() {
@@ -179,11 +207,14 @@ export class RepresentacionComponent implements OnInit {
         .toPromise();
 
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.representaciones) {
+      if (data.declaracion.representaciones === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.representaciones);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -299,6 +330,12 @@ export class RepresentacionComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.representacionForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.representacionForm.reset();
     this.editMode = true;
@@ -310,13 +347,15 @@ export class RepresentacionComponent implements OnInit {
     const { entidadFederativa, pais } = this.representacionForm.value.representacion.ubicacion;
 
     if (sector) {
-      this.representacionForm.get('representacion.sector').setValue(findOption(this.sectorCatalogo, sector));
+      const optSector = this.sectorCatalogo.filter((sec: any) => sec.clave === sector.clave);
+      // this.representacionForm.get('representacion.sector').setValue(findOption(this.sectorCatalogo, sector));
+      this.representacionForm.get('representacion.sector').setValue(optSector[0]);
     }
 
     if (entidadFederativa) {
-      this.representacionForm
-        .get('representacion.ubicacion.entidadFederativa')
-        .setValue(findOption(this.estadosCatalogo, entidadFederativa));
+      const optEntidad = this.estadosCatalogo.filter((edo: any) => edo.clave === entidadFederativa.clave);
+      // this.representacionForm.get('representacion.ubicacion.entidadFederativa').setValue(findOption(this.estadosCatalogo, entidadFederativa));
+      this.representacionForm.get('representacion.ubicacion.entidadFederativa').setValue(optEntidad[0]);
     }
   }
 
@@ -329,8 +368,7 @@ export class RepresentacionComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.representacionForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
   }
 

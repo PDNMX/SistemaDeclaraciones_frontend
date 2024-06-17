@@ -21,18 +21,14 @@
     </p>
 
     <div class="grid-3-col">
-      <mat-form-field appearance="fill">
+      <mat-form-field matTooltip="{{ tooltipData.anio_ejercicio }}" appearance="fill">
         <mat-label>Año del ejercicio</mat-label>
         <mat-icon matPrefix>date_range</mat-icon>
-        <input
-          [errorStateMatcher]="errorMatcher"
-          matInput
-          type="number"
-          [(ngModel)]="anio_ejercicio"
-          min="0"
-          max="{{ currentYear }}"
-          placeholder="{{ currentYear }}"
-        />
+        <mat-select [(ngModel)]="anio_ejercicio" required>
+          <mat-option *ngFor="let num of array_anio_ejercicio" [value]="num">
+            {{ num }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
     <form (ngSubmit)="confirmSaveInfo()" [formGroup]="datosGeneralesForm">
@@ -40,17 +36,24 @@
         <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
           <mat-label>Nombre</mat-label>
           <mat-icon matPrefix>person</mat-icon>
-          <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombre" required />
+          <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="nombre" required readonly />
         </mat-form-field>
         <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
           <mat-label>Primer Apellido</mat-label>
           <mat-icon matPrefix>person</mat-icon>
-          <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="primerApellido" required />
+          <input
+            [errorStateMatcher]="errorMatcher"
+            matInput
+            type="text"
+            formControlName="primerApellido"
+            required
+            readonly
+          />
         </mat-form-field>
         <mat-form-field matTooltip="{{ tooltipData.nombre }}" appearance="fill">
           <mat-label>Segundo Apellido</mat-label>
           <mat-icon matPrefix>person</mat-icon>
-          <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="segundoApellido" />
+          <input [errorStateMatcher]="errorMatcher" matInput type="text" formControlName="segundoApellido" readonly />
         </mat-form-field>
 
         <mat-form-field matTooltip="{{ tooltipData.curp }}" appearance="fill">
@@ -64,6 +67,7 @@
             type="text"
             formControlName="curp"
             required
+            readonly
           />
           <mat-hint align="end">{{ input_curp.value?.length || 0 }}/18</mat-hint>
         </mat-form-field>
@@ -79,6 +83,7 @@
             type="text"
             formControlName="rfc"
             required
+            readonly
           />
           <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/10</mat-hint>
         </mat-form-field>
@@ -93,6 +98,7 @@
             type="text"
             formControlName="homoClave"
             required
+            readonly
           />
           <mat-hint align="end">{{ input_homoclave.value?.length || 0 }}/3</mat-hint>
         </mat-form-field>

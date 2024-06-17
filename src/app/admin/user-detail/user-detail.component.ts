@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
@@ -12,7 +12,7 @@ import { ROLES } from '@utils/constants';
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.scss'],
 })
-export class UserDetailComponent implements OnInit {
+export class UserDetailComponent {
   userID: string = null;
 
   user: User = null;
@@ -38,8 +38,6 @@ export class UserDetailComponent implements OnInit {
       console.log(error);
     }
   }
-
-  ngOnInit(): void {}
 
   transformRoles(roles: Role[]) {
     return roles.map((r) => {

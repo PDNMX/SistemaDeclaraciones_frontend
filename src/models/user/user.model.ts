@@ -1,3 +1,4 @@
+import { Catalogo } from '..';
 import { Role } from './types';
 
 export interface User {
@@ -9,6 +10,7 @@ export interface User {
   curp: string;
   rfc: string;
   roles: Role[];
+  institucion: Catalogo;
   createdAt?: string;
   updatedAt?: string;
 }

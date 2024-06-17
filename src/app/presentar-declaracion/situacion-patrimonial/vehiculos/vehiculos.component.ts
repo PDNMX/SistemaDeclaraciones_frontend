@@ -1,9 +1,10 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
-import { vehiculosMutation, vehiculosQuery } from '@api/declaracion';
+import { lastVehiculosQuery, vehiculosMutation, vehiculosQuery } from '@api/declaracion';
 
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
@@ -22,7 +23,7 @@ import Monedas from '@static/catalogos/monedas.json';
 
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/vehiculos';
 
-import { DeclaracionOutput, Vehiculo, Vehiculos } from '@models/declaracion';
+import { DeclaracionOutput, LastDeclaracionOutput, Vehiculo, Vehiculos } from '@models/declaracion';
 
 import { findOption, ifExistsEnableFields } from '@utils/utils';
 
@@ -33,8 +34,9 @@ import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-
   templateUrl: './vehiculos.component.html',
   styleUrls: ['./vehiculos.component.scss'],
 })
-export class VehiculosComponent implements OnInit {
+export class VehiculosComponent {
   aclaraciones = false;
+  aclaracionesText: string = null;
   vehiculosForm: FormGroup;
   editMode = false;
   editIndex: number = null;
@@ -75,6 +77,7 @@ export class VehiculosComponent implements OnInit {
 
   addItem() {
     this.vehiculosForm.reset();
+    this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
   }
@@ -179,7 +182,27 @@ export class VehiculosComponent implements OnInit {
       this.tipoDomicilio = 'EXTRANJERO';
     }
 
+    this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
+  }
+
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastVehiculosQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.vehiculos);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
   }
 
   async getUserInfo() {
@@ -193,11 +216,15 @@ export class VehiculosComponent implements OnInit {
         })
         .toPromise();
       this.declaracionId = data.declaracion._id;
-      if (data.declaracion.vehiculos) {
+
+      if (data.declaracion.vehiculos === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data.declaracion.vehiculos);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
 
@@ -220,8 +247,6 @@ export class VehiculosComponent implements OnInit {
       this.router.navigate(['/' + this.tipoDeclaracion + '/situacion-patrimonial/bienes-muebles']);
     }
   }
-
-  ngOnInit(): void {}
 
   noVehicle() {
     this.saveInfo({ ninguno: true });
@@ -312,6 +337,12 @@ export class VehiculosComponent implements OnInit {
     this.isLoading = false;
   }
 
+  setAclaraciones(aclaraciones?: string) {
+    this.vehiculosForm.get('aclaracionesObservaciones').patchValue(aclaraciones || null);
+    this.aclaracionesText = aclaraciones || null;
+    this.toggleAclaraciones(!!aclaraciones);
+  }
+
   setEditMode() {
     this.vehiculosForm.reset();
     this.editMode = true;
@@ -319,28 +350,38 @@ export class VehiculosComponent implements OnInit {
   }
 
   setSelectedOptions() {
-    const { tipoVehiculo, titular, formaAdquisicion } = this.vehiculosForm.value.vehiculo;
+    const { tipoVehiculo, titular, formaAdquisicion, lugarRegistro } = this.vehiculosForm.value.vehiculo;
 
     const { relacion } = this.vehiculosForm.value.vehiculo.transmisor;
 
     if (tipoVehiculo) {
-      this.vehiculosForm.get('vehiculo.tipoVehiculo').setValue(findOption(this.tipoVehiculoCatalogo, tipoVehiculo));
+      const optTipoVehiculo = this.tipoVehiculoCatalogo.filter((veh: any) => veh.clave === tipoVehiculo.clave);
+      // this.vehiculosForm.get('vehiculo.tipoVehiculo').setValue(findOption(this.tipoVehiculoCatalogo, tipoVehiculo));
+      this.vehiculosForm.get('vehiculo.tipoVehiculo').setValue(optTipoVehiculo[0]);
     }
 
     if (titular) {
-      this.vehiculosForm.get('vehiculo.titular').setValue(findOption(this.titularBienCatalogo, titular[0]));
+      const optTitular = this.titularBienCatalogo.filter((ti: any) => ti.clave === titular[0].clave);
+      // this.vehiculosForm.get('vehiculo.titular').setValue(findOption(this.titularBienCatalogo, titular[0]));
+      this.vehiculosForm.get('vehiculo.titular').setValue(optTitular[0]);
     }
 
     if (relacion) {
-      this.vehiculosForm
-        .get('vehiculo.transmisor.relacion')
-        .setValue(findOption(this.parentescoRelacionCatalogo, relacion));
+      const optRelacion = this.parentescoRelacionCatalogo.filter((re: any) => re.clave === relacion.clave);
+      // this.vehiculosForm.get('vehiculo.transmisor.relacion').setValue(findOption(this.parentescoRelacionCatalogo, relacion));
+      this.vehiculosForm.get('vehiculo.transmisor.relacion').setValue(optRelacion[0]);
     }
 
     if (formaAdquisicion) {
-      this.vehiculosForm
-        .get('vehiculo.formaAdquisicion')
-        .setValue(findOption(this.formaAdquisicionCatalogo, formaAdquisicion));
+      const optAdquisicion = this.formaAdquisicionCatalogo.filter((ad: any) => ad.clave === formaAdquisicion.clave);
+      // this.vehiculosForm.get('vehiculo.formaAdquisicion').setValue(findOption(this.formaAdquisicionCatalogo, formaAdquisicion));
+      this.vehiculosForm.get('vehiculo.formaAdquisicion').setValue(optAdquisicion[0]);
+    }
+
+    if (lugarRegistro?.entidadFederativa) {
+      const { entidadFederativa } = lugarRegistro;
+      const optEntidad = this.estadosCatalogo.filter((e: any) => e.clave === entidadFederativa.clave);
+      this.vehiculosForm.get('vehiculo.lugarRegistro.entidadFederativa').setValue(optEntidad[0]);
     }
   }
 
@@ -353,8 +394,7 @@ export class VehiculosComponent implements OnInit {
     }
 
     if (aclaraciones) {
-      this.vehiculosForm.get('aclaracionesObservaciones').setValue(aclaraciones);
-      this.toggleAclaraciones(true);
+      this.setAclaraciones(aclaraciones);
     }
 
     //this.editMode = !!!this.vehiculo.length;

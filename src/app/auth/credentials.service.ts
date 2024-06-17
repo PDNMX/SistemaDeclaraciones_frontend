@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { CatalogosService } from '@app/services/catalogos.service';
+import { Catalogo } from '@models/declaracion';
 
 type Roles = 'USER' | 'ADMIN' | 'SUPER_ADMIN' | 'ROOT';
 
@@ -11,6 +13,7 @@ export interface User {
   curp: string;
   rfc: string;
   roles: Roles[];
+  institucion: Catalogo;
 }
 
 export interface Credentials {

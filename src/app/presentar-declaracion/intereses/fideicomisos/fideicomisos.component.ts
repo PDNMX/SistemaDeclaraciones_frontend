@@ -8,10 +8,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { fideicomisosMutation, fideicomisosQuery } from '@api/declaracion';
+import { fideicomisosMutation, fideicomisosQuery, lastFideicomisosQuery } from '@api/declaracion';
 import { DeclarationErrorStateMatcher } from '@app/presentar-declaracion/shared-presentar-declaracion/declaration-error-state-matcher';
 import { UntilDestroy, untilDestroyed } from '@core';
-import { DeclaracionOutput, Fideicomiso, Fideicomisos } from '@models/declaracion';
+import { DeclaracionOutput, Fideicomiso, Fideicomisos, LastDeclaracionOutput } from '@models/declaracion';
 import Extranjero from '@static/catalogos/extranjero.json';
 import Relacion from '@static/catalogos/tipoRelacion.json';
 import Sector from '@static/catalogos/sector.json';
@@ -169,6 +169,25 @@ export class FideicomisosComponent implements OnInit {
     return form;
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastFideicomisosQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      this.setupForm(data?.lastDeclaracion.fideicomisos);
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data, errors } = await this.apollo
@@ -185,11 +204,13 @@ export class FideicomisosComponent implements OnInit {
       }
 
       this.declaracionId = data?.declaracion._id;
-      if (data?.declaracion.fideicomisos) {
+      if (data?.declaracion.fideicomisos === null) {
+        this.getLastUserInfo();
+      } else {
         this.setupForm(data?.declaracion.fideicomisos);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
     }
   }
@@ -290,7 +311,7 @@ export class FideicomisosComponent implements OnInit {
     }
 
     this.isLoading = true;
-    console.log(fideicomiso);
+
     this.saveInfo({
       fideicomiso,
       aclaracionesObservaciones,
