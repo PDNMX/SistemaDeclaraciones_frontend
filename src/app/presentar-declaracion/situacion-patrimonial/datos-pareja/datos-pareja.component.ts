@@ -24,6 +24,7 @@ import RelacionConDeclarante from '@static/catalogos/relacionConDeclarante.json'
 import Sector from '@static/catalogos/sector.json';
 import { tooltipData } from '@static/tooltips/situacion-patrimonial/datos-pareja';
 import { findOption } from '@utils/utils';
+import { updateFormDirtyTouched } from '@utils/form-utils';
 
 @UntilDestroy()
 @Component({
@@ -500,6 +501,8 @@ export class DatosParejaComponent implements OnInit {
       this.fillForm(datosPareja);
       this.datosParejaForm.get('ninguno').patchValue(false);
     }
+
+    updateFormDirtyTouched(this.datosParejaForm)
   }
 
   toggleAclaraciones(value: boolean) {
