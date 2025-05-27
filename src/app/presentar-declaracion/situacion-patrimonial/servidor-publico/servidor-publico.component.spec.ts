@@ -6,13 +6,11 @@ describe('ServidorPublicoComponent', () => {
   let component: ServidorPublicoComponent;
   let fixture: ComponentFixture<ServidorPublicoComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ServidorPublicoComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ServidorPublicoComponent],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ServidorPublicoComponent);
