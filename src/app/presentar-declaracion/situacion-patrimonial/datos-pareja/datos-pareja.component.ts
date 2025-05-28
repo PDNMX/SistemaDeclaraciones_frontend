@@ -274,7 +274,7 @@ export class DatosParejaComponent implements OnInit {
       }
 
       if (data?.lastDeclaracion.datosPareja) {
-        this.setupForm(data?.lastDeclaracion.datosPareja);
+        this.loadDataOldDeclaration(data?.lastDeclaracion.datosPareja);
       }
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
@@ -488,6 +488,14 @@ export class DatosParejaComponent implements OnInit {
         .get('domicilioExtranjero.pais')
         .setValue(findOption(this.paisesCatalogo, domicilioExtranjero.pais).clave);
       this.lugarDondeResideChanged('EXTRANJERO');
+    }
+  }
+
+  loadDataOldDeclaration(datosPareja: DatosPareja) {
+    if (!datosPareja.ninguno) {
+      this.pareja = datosPareja;
+      this.fillForm(datosPareja);
+      this.datosParejaForm.get('ninguno').patchValue(false);
     }
   }
 

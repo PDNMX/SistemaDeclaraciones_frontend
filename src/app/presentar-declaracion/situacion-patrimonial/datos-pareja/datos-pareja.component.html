@@ -56,13 +56,13 @@
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">date_range</mat-icon>
               <p>
-                Fecha de nacimiento: <span>{{ pareja.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
+                Fecha de nacimiento: <span>{{ pareja.fechaNacimiento | date : 'dd/MM/yyyy' }}</span>
               </p>
             </div>
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">supervisor_account</mat-icon>
               <p>
-                Relación con el declarante: <span>{{ pareja.relacionConDeclarante | replace: '_':' ' }}</span>
+                Relación con el declarante: <span>{{ pareja.relacionConDeclarante | replace : '_' : ' ' }}</span>
               </p>
             </div>
             <div class="paragraph-flex">
@@ -111,7 +111,7 @@
                 <p>Domicilio de la pareja</p>
               </div>
               <div class="">
-                <p>{{ (pareja.lugarDondeReside | replace: '_':' ') || 'MISMO QUE EL DEL DECLARANTE' }}</p>
+                <p>{{ (pareja.lugarDondeReside | replace : '_' : ' ') || 'MISMO QUE EL DEL DECLARANTE' }}</p>
               </div>
               <div class="">
                 <p>{{ pareja.habitaDomicilioDeclarante ? 'SÍ' : 'NO' }}</p>
@@ -149,7 +149,7 @@
                 <p>
                   Nivel:
                   <span class="resaltar">{{
-                    pareja.actividadLaboralSectorPublico.nivelOrdenGobierno | replace: '_':' '
+                    pareja.actividadLaboralSectorPublico.nivelOrdenGobierno | replace : '_' : ' '
                   }}</span>
                 </p>
               </div>
@@ -158,7 +158,7 @@
                 <p>
                   Ámbito:
                   <span class="resaltar">{{
-                    pareja.actividadLaboralSectorPublico.ambitoPublico | replace: '_':' '
+                    pareja.actividadLaboralSectorPublico.ambitoPublico | replace : '_' : ' '
                   }}</span>
                 </p>
               </div>
@@ -183,7 +183,7 @@
                 <mat-icon matPrefix class="icon">date_range</mat-icon>
                 <p>
                   Fecha de ingreso:
-                  <span>{{ pareja.actividadLaboralSectorPublico.fechaIngreso | date: 'dd/MM/yyyy' }}</span>
+                  <span>{{ pareja.actividadLaboralSectorPublico.fechaIngreso | date : 'dd/MM/yyyy' }}</span>
                 </p>
               </div>
 
@@ -243,7 +243,7 @@
                 <p>
                   Fecha de ingreso:
                   <span class="size-16">{{
-                    pareja.actividadLaboralSectorPrivadoOtro?.fechaIngreso | date: 'dd/MM/yyyy'
+                    pareja.actividadLaboralSectorPrivadoOtro?.fechaIngreso | date : 'dd/MM/yyyy'
                   }}</span>
                 </p>
               </div>
@@ -351,7 +351,7 @@
               <mat-icon matPrefix class="no-public">supervisor_account</mat-icon>
               <mat-select formControlName="relacionConDeclarante" required>
                 <mat-option *ngFor="let relacion of relacionConDeclaranteCatalogo" value="{{ relacion }}">
-                  {{ relacion | replace: '_':' ' }}
+                  {{ relacion | replace : '_' : ' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -432,7 +432,7 @@
               <mat-icon matPrefix class="no-public">public</mat-icon>
               <mat-select formControlName="lugarDondeReside" required>
                 <mat-option *ngFor="let lugar of lugarDondeResideCatalogo" value="{{ lugar }}">
-                  {{ lugar | replace: '_':' ' }}
+                  {{ lugar | replace : '_' : ' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -664,7 +664,7 @@
               <mat-icon matPrefix class="no-public">aspect_ratio</mat-icon>
               <mat-select formControlName="nivelOrdenGobierno" required>
                 <mat-option *ngFor="let orden of nivelOrdenGobiernoCatalogo" value="{{ orden }}">
-                  {{ orden | replace: '_':' ' }}
+                  {{ orden | replace : '_' : ' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -673,7 +673,7 @@
               <mat-icon matPrefix class="no-public">meeting_room</mat-icon>
               <mat-select formControlName="ambitoPublico" required>
                 <mat-option *ngFor="let ambito of ambitoPublicoCatalogo" value="{{ ambito }}">
-                  {{ ambito | replace: '_':' ' }}
+                  {{ ambito | replace : '_' : ' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

@@ -4,8 +4,7 @@ const tooltipData = {
     'Son las personas que reciben el apoyo o beneficio privado. De las opciones del catálogo indicar quien o quienes son los beneficiarios, señalar las veces que sean necesarias.',
   otorgante: 'Seleccionar si es persona física o moral.',
   nombreRazonSocialOtorgante: 'Proporcionar el nombre o razón social completos de quien otorga el beneficio.',
-  rfc:
-    'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del otorgante del beneficio.',
+  rfc: 'En caso de personas físicas proporcionar los trece dígitos. En caso de personas morales establecer los doce dígitos del otorgante del beneficio.',
   formaRecepcion: 'Señalar si el apoyo recibido es monetario o en especie.',
   especifiqueBeneficio: 'En caso de haber seleccionado en especie deberá describir en que consiste el beneficio.',
   montoMensualAproximado:
