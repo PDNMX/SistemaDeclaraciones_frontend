@@ -5,8 +5,7 @@ const tooltipData = {
   rfc: 'Escribir los diez caracteres básicos.',
   relacionDeclarante: 'Seleccionar de la lista desplegable el parentesco o tipo de relación con el Declarante.',
   ciudadanoExtranjero: 'Deberá indicar sí o no, según el caso.',
-  curp:
-    'Escribir los dieciocho caracteres como la emitió la Secretaría de Gobernación. En caso de no contar con ella, podrá consultarla en la página de la Secretaría de Gobernación, en el apartado de Trámites.',
+  curp: 'Escribir los dieciocho caracteres como la emitió la Secretaría de Gobernación. En caso de no contar con ella, podrá consultarla en la página de la Secretaría de Gobernación, en el apartado de Trámites.',
   habitaDomicilioDeclarante: 'Indicar sí o no, el dependiente económico vive en el domicilio del Declarante.',
   lugarDondeReside: 'Indicar si vive en México, en el extranjero o si se desconoce.',
   actividadLaboral:

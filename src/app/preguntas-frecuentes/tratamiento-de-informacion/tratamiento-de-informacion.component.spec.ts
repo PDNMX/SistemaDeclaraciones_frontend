@@ -6,13 +6,11 @@ describe('TratamientoDeInformacionComponent', () => {
   let component: TratamientoDeInformacionComponent;
   let fixture: ComponentFixture<TratamientoDeInformacionComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [TratamientoDeInformacionComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [TratamientoDeInformacionComponent],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TratamientoDeInformacionComponent);

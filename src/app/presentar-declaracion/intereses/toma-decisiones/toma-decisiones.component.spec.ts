@@ -6,13 +6,11 @@ describe('TomaDecisionesComponent', () => {
   let component: TomaDecisionesComponent;
   let fixture: ComponentFixture<TomaDecisionesComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [TomaDecisionesComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [TomaDecisionesComponent],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TomaDecisionesComponent);

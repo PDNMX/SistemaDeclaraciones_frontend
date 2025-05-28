@@ -6,13 +6,11 @@ describe('SectionHeaderComponent', () => {
   let component: SectionHeaderComponent;
   let fixture: ComponentFixture<SectionHeaderComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [SectionHeaderComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [SectionHeaderComponent],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SectionHeaderComponent);

@@ -6,13 +6,11 @@ describe('FideicomisosComponent', () => {
   let component: FideicomisosComponent;
   let fixture: ComponentFixture<FideicomisosComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [FideicomisosComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [FideicomisosComponent],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FideicomisosComponent);

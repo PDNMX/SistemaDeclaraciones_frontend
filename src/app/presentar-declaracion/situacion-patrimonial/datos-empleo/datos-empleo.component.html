@@ -155,7 +155,7 @@
             <mat-icon matPrefix>star</mat-icon>
             <mat-select formControlName="nivelOrdenGobierno" required>
               <mat-option *ngFor="let orden of nivelOrdenGobiernoCatalogo" [value]="orden">
-                {{ orden | replace: '_':' ' }}
+                {{ orden | replace : '_' : ' ' }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -164,7 +164,7 @@
             <mat-icon matPrefix>aspect_ratio</mat-icon>
             <mat-select formControlName="ambitoPublico" required>
               <mat-option *ngFor="let ambito of ambitoPublicoCatalogo" [value]="ambito">
-                {{ ambito | replace: '_':' ' }}
+                {{ ambito | replace : '_' : ' ' }}
               </mat-option>
             </mat-select>
           </mat-form-field>

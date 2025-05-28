@@ -140,7 +140,7 @@
             <mat-icon matPrefix>beenhere</mat-icon>
             <mat-select formControlName="tipoOperacion" required>
               <mat-option *ngFor="let tipoOperacion of tipoOperacionCatalogo" [value]="tipoOperacion">
-                {{ tipoOperacion | replace: '_':' ' }}
+                {{ tipoOperacion | replace : '_' : ' ' }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -163,7 +163,7 @@
             <mat-icon matPrefix>beenhere</mat-icon>
             <mat-select formControlName="tipoRelacion" required>
               <mat-option *ngFor="let relacion of relacionCatalogo" [value]="relacion">{{
-                relacion | replace: '_':' '
+                relacion | replace : '_' : ' '
               }}</mat-option>
             </mat-select>
           </mat-form-field>

@@ -6,8 +6,7 @@ const tooltipData = {
   relacionDeclarante:
     'Seleccionar el tipo de relación entre las siguientes opciones: cónyuge, concubina/concubinario/unión libre o sociedad de convivencia.',
   ciudadanoExtranjero: 'Deberá indicar sí o no, según el caso.',
-  curp:
-    'Escribir los dieciocho caracteres como la emitió la Secretaría de Gobernación. En caso de no contar con ella, podrá consultarla en la página de la Secretaría de Gobernación, en el apartado de Trámites.',
+  curp: 'Escribir los dieciocho caracteres como la emitió la Secretaría de Gobernación. En caso de no contar con ella, podrá consultarla en la página de la Secretaría de Gobernación, en el apartado de Trámites.',
   dependienteEconomico:
     'Si la manutención depende principalmente de los ingresos de la persona servidora pública Declarante, señalará sí, en caso contrario señalará no.',
   domicilioDependiente: 'Indicar sí o no, la Pareja vive en el domicilio del Declarante.',
@@ -31,8 +30,7 @@ const tooltipData = {
   sectorPrivado: {
     nombreEmpresaSociedadAsociacion: 'Proporcionar el nombre de la empresa, sociedad o asociación en la que labora.',
     empleoCargoComision: 'Proporcionar el nombre del puesto que desempeña.',
-    rfc:
-      'Proporcionar los 12 dígitos de la empresa en que labora su cónyuge, concubina/concubinario o sociedad de convivencia.',
+    rfc: 'Proporcionar los 12 dígitos de la empresa en que labora su cónyuge, concubina/concubinario o sociedad de convivencia.',
     fechaIngreso: 'Señalar la fecha en que inició empleo, cargo o comisión.',
     sectorPertenece:
       'Elegir el sector al que pertenece la empresa, sociedad o asociación. En caso de señalar otros, especifique.',
