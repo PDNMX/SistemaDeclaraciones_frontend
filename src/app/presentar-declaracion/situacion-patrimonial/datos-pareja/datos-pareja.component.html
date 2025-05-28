@@ -796,9 +796,10 @@
                 #input_rfc_empresa
                 type="text"
                 formControlName="rfc"
-                maxlength="12"
+                maxlength="13"
+                minlength="12"
               />
-              <mat-hint align="end">{{ input_rfc_empresa.value?.length || 0 }}/12</mat-hint>
+              <mat-hint align="end">{{ input_rfc_empresa.value?.length || 0 }}/13</mat-hint>
             </mat-form-field>
             <mat-form-field matTooltip="{{ tooltipData.sectorPrivado.empleoCargoComision }}" appearance="fill">
               <mat-label>Empleo, cargo o comisión</mat-label>
