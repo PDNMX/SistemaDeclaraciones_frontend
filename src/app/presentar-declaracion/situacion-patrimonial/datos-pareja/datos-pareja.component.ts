@@ -39,6 +39,11 @@ export class DatosParejaComponent implements OnInit {
   estado: Catalogo = null;
   isLoading = false;
 
+  rfcMoral = '([A-ZÑ&]{4}) ?(?:- ?)?(\\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])) ?(?:- ?)?([A-Z\\d]{2})([A\\d])';
+  rfcFisica = '([A-ZÑ&]{3}) ?(?:- ?)?(\\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])) ?(?:- ?)?([A-Z\\d]{2})([A\\d])';
+
+  combinedRFCRegex = new RegExp(`^(${this.rfcMoral}|${this.rfcFisica})$`, 'i');
+
   @ViewChild('otroActividadLaboral') otroActividadLaboral: ElementRef;
   @ViewChild('otroSector') otroSector: ElementRef;
 
@@ -180,14 +185,7 @@ export class DatosParejaComponent implements OnInit {
           [Validators.required, Validators.pattern(/^\S.*\S$/)],
         ],
         empleoCargoComision: [{ disabled: true, value: null }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
-        rfc: [
-          { disabled: true, value: null },
-          [
-            Validators.pattern(
-              /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/i
-            ),
-          ],
-        ],
+        rfc: [{ disabled: true, value: null }, [Validators.pattern(this.combinedRFCRegex)]],
         fechaIngreso: [{ disabled: true, value: null }, [Validators.required]],
         sector: [{ disabled: true, value: null }, [Validators.required]],
         salarioMensualNeto: this.formBuilder.group({
