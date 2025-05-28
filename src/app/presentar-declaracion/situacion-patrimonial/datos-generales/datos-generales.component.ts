@@ -64,7 +64,6 @@ export class DatosGeneralesComponent implements OnInit {
 
     this.createForm();
     this.getUserInfo();
-    this.getUserDataQuery();
   }
 
   confirmSaveInfo() {
@@ -173,6 +172,7 @@ export class DatosGeneralesComponent implements OnInit {
       }
 
       this.fillForm(data?.lastDeclaracion.datosGenerales);
+      this.getUserDataQuery();
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -202,6 +202,7 @@ export class DatosGeneralesComponent implements OnInit {
         this.getLastUserInfo();
       } else {
         this.fillForm(data?.declaracion.datosGenerales);
+        this.getUserDataQuery();
       }
     } catch (error) {
       console.error(error);
