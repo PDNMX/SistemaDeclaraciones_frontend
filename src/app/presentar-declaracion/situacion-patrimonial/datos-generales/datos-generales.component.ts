@@ -202,8 +202,9 @@ export class DatosGeneralesComponent implements OnInit {
         this.getLastUserInfo();
       } else {
         this.fillForm(data?.declaracion.datosGenerales);
-        this.getUserDataQuery();
       }
+
+      this.getUserDataQuery();
     } catch (error) {
       console.error(error);
       this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
