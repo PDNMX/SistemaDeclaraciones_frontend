@@ -6,11 +6,13 @@ describe('DatosDependienteComponent', () => {
   let component: DatosDependienteComponent;
   let fixture: ComponentFixture<DatosDependienteComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [DatosDependienteComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [DatosDependienteComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DatosDependienteComponent);

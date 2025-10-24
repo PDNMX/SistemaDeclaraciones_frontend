@@ -18,22 +18,24 @@ describe('ResetPasswordComponent', () => {
   let component: ResetPasswordComponent;
   let fixture: ComponentFixture<ResetPasswordComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        FlexLayoutModule,
-        MaterialModule,
-        SharedModule,
-        RouterTestingModule,
-        TranslateModule.forRoot(),
-        I18nModule,
-        ReactiveFormsModule,
-        CoreModule,
-      ],
-      declarations: [ResetPasswordComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          BrowserAnimationsModule,
+          FlexLayoutModule,
+          MaterialModule,
+          SharedModule,
+          RouterTestingModule,
+          TranslateModule.forRoot(),
+          I18nModule,
+          ReactiveFormsModule,
+          CoreModule,
+        ],
+        declarations: [ResetPasswordComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ResetPasswordComponent);

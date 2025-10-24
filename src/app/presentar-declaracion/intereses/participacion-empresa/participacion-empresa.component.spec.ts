@@ -6,11 +6,13 @@ describe('ParticipacionEmpresaComponent', () => {
   let component: ParticipacionEmpresaComponent;
   let fixture: ComponentFixture<ParticipacionEmpresaComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ParticipacionEmpresaComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ParticipacionEmpresaComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ParticipacionEmpresaComponent);

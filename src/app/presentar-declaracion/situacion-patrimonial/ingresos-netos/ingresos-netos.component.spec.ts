@@ -6,11 +6,13 @@ describe('IngresosNetosComponent', () => {
   let component: IngresosNetosComponent;
   let fixture: ComponentFixture<IngresosNetosComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [IngresosNetosComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [IngresosNetosComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(IngresosNetosComponent);

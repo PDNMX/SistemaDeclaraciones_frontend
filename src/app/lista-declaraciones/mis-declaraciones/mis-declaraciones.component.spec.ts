@@ -6,11 +6,13 @@ describe('MisDeclaracionesComponent', () => {
   let component: MisDeclaracionesComponent;
   let fixture: ComponentFixture<MisDeclaracionesComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [MisDeclaracionesComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [MisDeclaracionesComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MisDeclaracionesComponent);
