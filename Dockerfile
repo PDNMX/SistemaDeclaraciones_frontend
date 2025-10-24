@@ -8,8 +8,8 @@ WORKDIR /build
 # RUN npm install
 
 COPY . ./
-RUN npm install
-RUN npm run build --prod
+RUN yarn install
+RUN yarn build --prod
 
 #serve
 FROM nginx:alpine
