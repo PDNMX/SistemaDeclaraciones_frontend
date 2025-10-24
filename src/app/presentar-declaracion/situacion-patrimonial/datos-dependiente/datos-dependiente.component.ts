@@ -529,8 +529,12 @@ export class DatosDependienteComponent implements OnInit {
   }
 
   setSelectedOptions() {
-    const { actividadLaboral, parentescoRelacion, domicilioExtranjero, domicilioMexico } =
-      this.datosDependientesEconomicosForm.value.dependienteEconomico;
+    const {
+      actividadLaboral,
+      parentescoRelacion,
+      domicilioExtranjero,
+      domicilioMexico,
+    } = this.datosDependientesEconomicosForm.value.dependienteEconomico;
 
     if (actividadLaboral) {
       this.datosDependientesEconomicosForm
@@ -543,8 +547,9 @@ export class DatosDependienteComponent implements OnInit {
         .setValue(findOption(this.parentescoRelacionCatalogo, parentescoRelacion.clave));
     }
     if (actividadLaboral.clave == 'PRI' || actividadLaboral.clave === 'OTR') {
-      const { sector } =
-        this.datosDependientesEconomicosForm.value.dependienteEconomico.actividadLaboralSectorPrivadoOtro;
+      const {
+        sector,
+      } = this.datosDependientesEconomicosForm.value.dependienteEconomico.actividadLaboralSectorPrivadoOtro;
       if (sector) {
         this.datosDependientesEconomicosForm
           .get('dependienteEconomico.actividadLaboralSectorPrivadoOtro.sector')
