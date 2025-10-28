@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CoreModule } from '@core';
 import { SharedModule } from '@shared';
@@ -52,7 +51,6 @@ import { CatalogosService } from '../../services/catalogos.service';
     TranslateModule,
     CoreModule,
     SharedModule,
-    FlexLayoutModule,
     MaterialModule,
     SharedPresentarDeclaracionModule,
     SituacionPatrimonialRoutingModule,

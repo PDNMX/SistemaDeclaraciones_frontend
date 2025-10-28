@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CoreModule } from '@core';
 import { SharedModule } from '@shared';
@@ -17,7 +16,6 @@ import { PerfilComponent } from './perfil.component';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
-    FlexLayoutModule,
     CoreModule,
     SharedModule,
     MaterialModule,

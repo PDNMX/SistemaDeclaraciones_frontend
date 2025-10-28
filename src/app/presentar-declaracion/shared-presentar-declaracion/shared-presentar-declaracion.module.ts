@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
+
 import { FormsModule } from '@angular/forms';
 
 import { MaterialModule } from '@app/material.module';
@@ -9,7 +9,7 @@ import { SectionFooterComponent } from './section-footer/section-footer.componen
 import { SignDeclarationComponent } from './sign-declaration/sign-declaration.component';
 
 @NgModule({
-  imports: [FlexLayoutModule, MaterialModule, CommonModule, FormsModule],
+  imports: [MaterialModule, CommonModule, FormsModule],
   declarations: [SectionHeaderComponent, SectionFooterComponent, SignDeclarationComponent],
   exports: [SectionHeaderComponent, SectionFooterComponent, SignDeclarationComponent],
 })

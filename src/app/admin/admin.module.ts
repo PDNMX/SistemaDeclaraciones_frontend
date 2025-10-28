@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '@shared';
@@ -20,7 +20,6 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
     ReactiveFormsModule,
     TranslateModule,
     SharedModule,
-    FlexLayoutModule,
     MaterialModule,
     AdminRoutingModule,
   ],
