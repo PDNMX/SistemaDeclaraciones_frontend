@@ -221,7 +221,11 @@ export class InversionesComponent implements OnInit {
         throw errors;
       }
 
-      this.setupForm(data?.lastDeclaracion.inversionesCuentasValores);
+      const lastInversionesCuentasValoresData = data?.lastDeclaracion.inversionesCuentasValores;
+       if (lastInversionesCuentasValoresData && !lastInversionesCuentasValoresData.ninguno) {
+        this.setupForm(lastInversionesCuentasValoresData);
+      }
+      
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');

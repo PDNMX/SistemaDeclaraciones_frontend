@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Apollo } from 'apollo-angular';
 import { lastParticipacionQuery, participacionMutation, participacionQuery } from '@api/declaracion';
 
+import { MatSelect } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '@shared/dialog/dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -40,6 +41,8 @@ export class ParticipacionEmpresaComponent implements OnInit {
   editIndex: number = null;
   participacion: Participacion[] = [];
   isLoading = false;
+
+  @ViewChild('locationSelect', { static: false }) locationSelect: MatSelect;
 
   relacionCatalogo = Relacion;
   tipoParticipacionCatalogo = TipoParticipacion;
@@ -151,42 +154,17 @@ export class ParticipacionEmpresaComponent implements OnInit {
   fillForm(participacion: Participacion) {
     Object.keys(participacion)
       .filter((field) => participacion[field] !== null)
-      .forEach((field) => this.participacionForm.get(`participacion.${field}`).patchValue(participacion[field]));
-    ifExistsEnableFields(
-      participacion.ubicacion.entidadFederativa,
-      this.participacionForm,
-      'participacion.ubicacion.entidadFederativa'
-    );
+      .forEach((field) => {
+        this.participacionForm.get(`participacion.${field}`).patchValue(participacion[field]);
+      });
+
     if (participacion.ubicacion.entidadFederativa) {
-      this.tipoDomicilio = 'MEXICO';
+      this.locationChanged('MX');
+    } else if (participacion.ubicacion.pais) {
+      this.locationChanged('EX');
     }
-
-    ifExistsEnableFields(participacion.ubicacion.pais, this.participacionForm, 'participacion.ubicacion.pais');
-    if (participacion.ubicacion.pais) {
-      this.tipoDomicilio = 'EXTRANJERO';
-    }
-
     this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
-  }
-
-  async getLastUserInfo() {
-    try {
-      const { data, errors } = await this.apollo
-        .query<LastDeclaracionOutput>({
-          query: lastParticipacionQuery,
-        })
-        .toPromise();
-
-      if (errors) {
-        throw errors;
-      }
-
-      this.setupForm(data?.lastDeclaracion.participacion);
-    } catch (error) {
-      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
-      // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
-    }
   }
 
   async getUserInfo() {
@@ -330,6 +308,27 @@ export class ParticipacionEmpresaComponent implements OnInit {
     this.toggleAclaraciones(!!aclaraciones);
   }
 
+  async getLastUserInfo() {
+    try {
+      const { data, errors } = await this.apollo
+        .query<LastDeclaracionOutput>({
+          query: lastParticipacionQuery,
+        })
+        .toPromise();
+
+      if (errors) {
+        throw errors;
+      }
+
+      const lastParticipacionData = data?.lastDeclaracion?.participacion;
+      if (lastParticipacionData && !lastParticipacionData.ninguno) {
+        this.setupForm(lastParticipacionData);
+      }
+    } catch (error) {
+      console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
+    }
+  }
+
   setEditMode() {
     this.participacionForm.reset();
     this.editMode = true;
@@ -355,6 +354,12 @@ export class ParticipacionEmpresaComponent implements OnInit {
         .get('participacion.ubicacion.entidadFederativa')
         .setValue(findOption(this.estadosCatalogo, entidadFederativa.clave));
     }
+
+    if (pais) {
+      this.participacionForm
+        .get('participacion.ubicacion.pais')
+        .setValue(findOption(this.paisesCatalogo, pais).clave);
+    }
   }
 
   setupForm(participacion: Participaciones) {
@@ -363,6 +368,8 @@ export class ParticipacionEmpresaComponent implements OnInit {
 
     if (participacion.ninguno) {
       this.participacionForm.get('ninguno').patchValue(true);
+    } else {
+      this.participacionForm.get('ninguno').patchValue(false);
     }
 
     if (aclaraciones) {

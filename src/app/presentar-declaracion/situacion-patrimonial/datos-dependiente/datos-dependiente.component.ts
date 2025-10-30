@@ -303,9 +303,10 @@ export class DatosDependienteComponent implements OnInit {
       if (errors) {
         throw errors;
       }
-
-      if (data?.lastDeclaracion.datosDependientesEconomicos) {
-        this.setupForm(data?.lastDeclaracion.datosDependientesEconomicos);
+      
+      const lastdatosDependientesEconomicosData = data?.lastDeclaracion.datosDependientesEconomicos;
+       if (lastdatosDependientesEconomicosData && !lastdatosDependientesEconomicosData.ninguno) {
+        this.setupForm(lastdatosDependientesEconomicosData);
       }
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
@@ -380,14 +381,18 @@ export class DatosDependienteComponent implements OnInit {
     switch (value) {
       case 'MEXICO':
         domicilioMexico.enable();
+        domicilioExtranjero.reset({ value: null, disabled: true });
         domicilioExtranjero.disable();
         break;
       case 'EXTRANJERO':
+        domicilioMexico.reset({ value: null, disabled: true });
         domicilioMexico.disable();
         domicilioExtranjero.enable();
         break;
       default:
+        domicilioMexico.reset({ value: null, disabled: true });
         domicilioMexico.disable();
+        domicilioExtranjero.reset({ value: null, disabled: true });
         domicilioExtranjero.disable();
         break;
     }

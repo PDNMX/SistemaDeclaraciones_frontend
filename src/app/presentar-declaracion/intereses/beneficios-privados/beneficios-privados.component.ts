@@ -170,7 +170,11 @@ export class BeneficiosPrivadosComponent implements OnInit {
         throw errors;
       }
 
-      this.setupForm(data?.lastDeclaracion.beneficiosPrivados);
+      const lastBeneficiosPrivadosData = data?.lastDeclaracion?.beneficiosPrivados;
+      if (lastBeneficiosPrivadosData && !lastBeneficiosPrivadosData.ninguno) {
+        this.setupForm(lastBeneficiosPrivadosData);
+      }
+
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');

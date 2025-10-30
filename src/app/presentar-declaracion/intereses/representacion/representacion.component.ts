@@ -188,7 +188,11 @@ export class RepresentacionComponent implements OnInit {
         throw errors;
       }
 
-      this.setupForm(data?.lastDeclaracion.representaciones);
+      const lastRepresentacionesData = data?.lastDeclaracion?.representaciones;
+      if (lastRepresentacionesData && !lastRepresentacionesData.ninguno) {
+        this.setupForm(lastRepresentacionesData);
+      }
+
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -365,6 +369,8 @@ export class RepresentacionComponent implements OnInit {
 
     if (representaciones.ninguno) {
       this.representacionForm.get('ninguno').patchValue(true);
+    } else {
+      this.representacionForm.get('ninguno').patchValue(false);
     }
 
     if (aclaraciones) {
