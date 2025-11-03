@@ -56,7 +56,7 @@ export class VehiculosComponent {
   monedasCatalogo = Monedas;
 
   tipoDeclaracion: string = null;
-  tipoDomicilio: string;
+  tipoDomicilio: string = 'MEXICO'; // 'MEXICO' estado predeterminado
 
   declaracionId: string = null;
 
@@ -77,6 +77,7 @@ export class VehiculosComponent {
 
   addItem() {
     this.vehiculosForm.reset();
+    this.locationChanged('MX'); // Asegura restablecer el estado predeterminado
     this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
@@ -141,7 +142,8 @@ export class VehiculosComponent {
           ],
         }),
         lugarRegistro: this.formBuilder.group({
-          pais: [null, [Validators.required]],
+           // Establezca el campo 'pais' para que esté deshabilitado de forma predeterminada.
+          pais: [{ value: null, disabled: true }, [Validators.required]],
           entidadFederativa: [null, [Validators.required]],
         }),
         formaAdquisicion: [null, [Validators.required]],
@@ -154,6 +156,11 @@ export class VehiculosComponent {
       }),
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
+
+    // Inicia con la opción de México seleccionada por defecto
+    this.vehiculosForm.get('vehiculo.lugarRegistro.pais').disable();
+    this.vehiculosForm.get('vehiculo.lugarRegistro.entidadFederativa').enable();
+    this.tipoDomicilio = 'MEXICO';
   }
 
   editItem(index: number) {
@@ -198,7 +205,10 @@ export class VehiculosComponent {
         throw errors;
       }
 
-      this.setupForm(data?.lastDeclaracion.vehiculos);
+      const lastVehiculosData = data?.lastDeclaracion?.vehiculos;
+      if (lastVehiculosData && !lastVehiculosData.ninguno) {
+        this.setupForm(lastVehiculosData);
+      }
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -391,6 +401,8 @@ export class VehiculosComponent {
 
     if (vehiculos.ninguno) {
       this.vehiculosForm.get('ninguno').patchValue(true);
+    } else {
+      this.vehiculosForm.get('ninguno').patchValue(false);
     }
 
     if (aclaraciones) {

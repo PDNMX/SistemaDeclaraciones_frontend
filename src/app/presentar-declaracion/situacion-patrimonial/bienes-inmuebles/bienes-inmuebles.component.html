@@ -524,7 +524,7 @@
               <mat-label>Ubicación del inmueble</mat-label>
               <mat-icon matPrefix class="no-public">public</mat-icon>
               <mat-select
-                value="MEXICO"
+                [value]="tipoDomicilio"
                 (selectionChange)="tipoDomicilioChanged($event.value)"
                 required
                 data-test="ubicacion"
@@ -596,8 +596,8 @@
                 <mat-label>País</mat-label>
                 <mat-icon matPrefix class="no-public">location_city</mat-icon>
                 <mat-select formControlName="pais" required>
-                  <mat-option *ngFor="let opt of paisesCatalogo" value="{{ opt.alpha2 }}">
-                    {{ opt.name }}
+                  <mat-option *ngFor="let opt of paisesCatalogo" [value]="opt.clave">
+                    {{ opt.valor }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

@@ -181,7 +181,11 @@ export class FideicomisosComponent implements OnInit {
         throw errors;
       }
 
-      this.setupForm(data?.lastDeclaracion.fideicomisos);
+      const lastFideicomisosData = data?.lastDeclaracion?.fideicomisos;
+      if (lastFideicomisosData && !lastFideicomisosData.ninguno) {
+        this.setupForm(lastFideicomisosData);
+      }
+
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -346,6 +350,8 @@ export class FideicomisosComponent implements OnInit {
 
     if (fideicomisos?.ninguno) {
       this.fideicomisosForm.get('ninguno').patchValue(true);
+    } else {
+      this.fideicomisosForm.get('ninguno').patchValue(false);
     }
 
     if (aclaraciones) {

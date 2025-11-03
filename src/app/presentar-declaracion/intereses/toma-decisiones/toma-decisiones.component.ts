@@ -138,6 +138,14 @@ export class TomaDecisionesComponent implements OnInit {
       aclaracionesObservaciones: [{ disabled: true, value: '' }, [Validators.required, Validators.pattern(/^\S.*\S$/)]],
     });
 
+    // Inicia con la opción de México seleccionada por defecto
+    this.participacionTomaDecisionesForm
+      .get('participacion.ubicacion.pais')
+      .disable();
+    this.participacionTomaDecisionesForm
+      .get('participacion.ubicacion.entidadFederativa')
+      .enable();
+
     const montoMensual = this.participacionTomaDecisionesForm.get('participacion').get('montoMensual');
     this.participacionTomaDecisionesForm
       .get('participacion')
@@ -196,7 +204,11 @@ export class TomaDecisionesComponent implements OnInit {
         throw errors;
       }
 
-      this.setupForm(data?.lastDeclaracion.participacionTomaDecisiones);
+      const lastParticipacionparticipacionTomaDecisionesData = data?.lastDeclaracion?.participacionTomaDecisiones;
+      if (lastParticipacionparticipacionTomaDecisionesData && !lastParticipacionparticipacionTomaDecisionesData.ninguno) {
+        this.setupForm(lastParticipacionparticipacionTomaDecisionesData);
+      }
+      
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -373,6 +385,8 @@ export class TomaDecisionesComponent implements OnInit {
 
     if (participacion.ninguno) {
       this.participacionTomaDecisionesForm.get('ninguno').patchValue(true);
+    } else {
+      this.participacionTomaDecisionesForm.get('ninguno').patchValue(false);
     }
 
     if (aclaraciones) {

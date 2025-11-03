@@ -191,7 +191,7 @@
               <div class="paragraph-flex">
                 <mat-icon matPrefix class="icon">dns</mat-icon>
                 <p>
-                  RFC: <span class="resaltar">{{ d.actividadLaboralSectorPrivadoOtro.rfc }} </span>
+                 <mat-label>RFC</mat-label> <span class="resaltar">{{ d.actividadLaboralSectorPrivadoOtro.rfc }} </span>
                 </p>
               </div>
               <div class="paragraph-flex double-row">
@@ -345,7 +345,7 @@
 
           <div class="grid-3-col grid-margin">
             <mat-form-field matTooltip="{{ tooltipData.rfc }}" appearance="fill">
-              <mat-label>RFC</mat-label>
+              <mat-label>RFC *</mat-label>
               <mat-icon matPrefix class="no-public">fingerprint</mat-icon>
               <input
                 [errorStateMatcher]="errorMatcher"
@@ -355,6 +355,7 @@
                 minlength="10"
                 maxlength="13"
                 formControlName="rfc"
+                required
               />
               <mat-hint align="end">{{ input_rfc.value?.length || 0 }}/10-13</mat-hint>
             </mat-form-field>

@@ -171,7 +171,7 @@ export class DatosGeneralesComponent implements OnInit {
         throw errors;
       }
 
-      this.fillForm(data?.lastDeclaracion.datosGenerales);
+      this.fillForm(data?.lastDeclaracion?.datosGenerales);
       this.getUserDataQuery();
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);

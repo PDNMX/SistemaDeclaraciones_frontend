@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -26,7 +26,7 @@ import { findOption } from '@utils/utils';
   templateUrl: './clientes-principales.component.html',
   styleUrls: ['./clientes-principales.component.scss'],
 })
-export class ClientesPrincipalesComponent implements OnInit {
+export class ClientesPrincipalesComponent implements OnInit, AfterViewInit {
   aclaraciones = false;
   aclaracionesText: string = null;
   cliente: Cliente[] = [];
@@ -35,7 +35,7 @@ export class ClientesPrincipalesComponent implements OnInit {
   editIndex: number = null;
   isLoading = false;
 
-  @ViewChild('locationSelect') locationSelect: MatSelect;
+  @ViewChild('locationSelect', { static: false }) locationSelect: MatSelect;
   @ViewChild('otroSector') otroSector: ElementRef;
 
   estadosCatalogo = Estados;
@@ -156,7 +156,11 @@ export class ClientesPrincipalesComponent implements OnInit {
         throw errors;
       }
 
-      this.setupForm(data?.lastDeclaracion.clientesPrincipales);
+      const lastClientesPrincipalesData = data?.lastDeclaracion?.clientesPrincipales;
+      if (lastClientesPrincipalesData && !lastClientesPrincipalesData.ninguno) {
+        this.setupForm(lastClientesPrincipalesData);
+      }
+
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -249,6 +253,19 @@ export class ClientesPrincipalesComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    const { ubicacion } = this.clientesPrincipalesForm.value.cliente;
+    if (this.editMode) {
+      if (ubicacion.entidadFederativa) {
+        this.locationChanged('MEXICO');
+        this.locationSelect.writeValue('MEXICO');
+      } else if (ubicacion.pais) {
+        this.locationChanged('EXTRANJERO');
+        this.locationSelect.writeValue('EXTRANJERO');
+      }
+    }
+  }
 
   noClients() {
     this.saveInfo({ ninguno: true });
@@ -368,14 +385,10 @@ export class ClientesPrincipalesComponent implements OnInit {
       this.clientesPrincipalesForm
         .get('cliente.ubicacion.entidadFederativa')
         .setValue(findOption(this.estadosCatalogo, entidadFederativa.clave));
-      this.locationSelect.writeValue('MEXICO');
-      this.locationChanged('MEXICO');
     }
 
     if (pais) {
       this.clientesPrincipalesForm.get('cliente.ubicacion.pais').setValue(findOption(this.paisesCatalogo, pais).clave);
-      this.locationSelect.writeValue('EXTRANJERO');
-      this.locationChanged('EXTRANJERO');
     }
   }
 
@@ -385,6 +398,8 @@ export class ClientesPrincipalesComponent implements OnInit {
 
     if (clientes.ninguno) {
       this.clientesPrincipalesForm.get('ninguno').patchValue(true);
+    } else {
+      this.clientesPrincipalesForm.get('ninguno').patchValue(false);
     }
 
     if (aclaraciones) {

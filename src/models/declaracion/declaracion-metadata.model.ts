@@ -12,5 +12,15 @@ export interface DeclaracionMetadata {
 
 export interface DeclaracionMetadataPage {
   docs: DeclaracionMetadata[];
-  pageNumber: number;
+  // Se actualiza la interfaz para que coincida con la respuesta de paginación del backend (mongoose-paginate-v2).
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
+  hasMore: boolean;
 }

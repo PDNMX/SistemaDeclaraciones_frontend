@@ -79,20 +79,35 @@ export class PrestamosTercerosComponent implements OnInit {
     this.setAclaraciones(this.aclaracionesText);
     this.editMode = true;
     this.editIndex = null;
+    // Limpiar variables de estado para un formulario limpio
+    this.tipoBien = undefined;
+    this.tipoDomicilio = undefined;
   }
 
   bienChanged(value: string) {
     const tipoBien = this.prestamoComodatoForm.get('prestamo').get('tipoBien');
     const inmueble = tipoBien.get('inmueble');
     const vehiculo = tipoBien.get('vehiculo');
+
     if (value === 'inmueble') {
       inmueble.enable();
       vehiculo.disable();
+      vehiculo.reset(); // LIMPIAR campos de vehiculo
       this.tipoBien = 'inmueble';
+      // --- CORRECCIÓN ---
+      // Se establece la propiedad `tipoDomicilio` explícitamente a 'MEXICO'.
+      // Esto asegura que el `*ngIf` en la plantilla reaccione inmediatamente,
+      // mostrando los campos de México por defecto.
+      this.tipoDomicilio = 'MEXICO';
+      this.tipoDomicilioChanged('MX');
     } else {
       inmueble.disable();
+      inmueble.reset(); // LIMPIAR campos de inmueble
       vehiculo.enable();
       this.tipoBien = 'vehiculos';
+      // Misma lógica para vehículos
+      this.tipoDomicilio = 'MEXICO';
+      this.localizacionVehiculoChanged('MX');
     }
   }
 
@@ -102,27 +117,29 @@ export class PrestamosTercerosComponent implements OnInit {
     const extranjero = localizacion.get('domicilioExtranjero');
     if (value === 'EX') {
       extranjero.enable();
-      this.tipoDomicilio = 'EXTRANJERO';
       mexico.disable();
+      mexico.reset(); // LIMPIAR campos de Mexico
+      this.tipoDomicilio = 'EXTRANJERO';
     } else {
       extranjero.disable();
+      extranjero.reset(); // LIMPIAR campos de Extranjero
       mexico.enable();
       this.tipoDomicilio = 'MEXICO';
       const estado = this.prestamoComodatoForm
         .get('prestamo.tipoBien.inmueble.domicilioMexico')
         .get('entidadFederativa');
-      estado.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
+      estado.valueChanges.pipe(untilDestroyed(this)).subscribe((val) => {
         const municipio = this.prestamoComodatoForm
           .get('prestamo.tipoBien.inmueble.domicilioMexico')
           .get('municipioAlcaldia');
 
-        if (value) {
+        if (val) {
           municipio.enable();
         } else {
           municipio.disable();
           municipio.reset();
         }
-        this.estado = value;
+        this.estado = val;
       });
     }
   }
@@ -134,9 +151,11 @@ export class PrestamosTercerosComponent implements OnInit {
     if (value === 'MX') {
       entidadFederativa.enable();
       pais.disable();
+      pais.reset(); // LIMPIAR campo pais
       this.tipoDomicilio = 'MEXICO';
     } else {
       entidadFederativa.disable();
+      entidadFederativa.reset(); // LIMPIAR campo entidadFederativa
       pais.enable();
       this.tipoDomicilio = 'EXTRANJERO';
     }
@@ -277,6 +296,15 @@ export class PrestamosTercerosComponent implements OnInit {
       }
     }
 
+    // Llama a los manejadores de cambios para asegurar que la UI se muestre correctamente
+    if (this.tipoBien === 'inmueble') {
+      const location = this.tipoDomicilio === 'EXTRANJERO' ? 'EX' : 'MX';
+      this.tipoDomicilioChanged(location);
+    } else if (this.tipoBien === 'vehiculos') {
+      const location = this.tipoDomicilio === 'EXTRANJERO' ? 'EX' : 'MX';
+      this.localizacionVehiculoChanged(location);
+    }
+
     this.setAclaraciones(this.aclaracionesText);
     this.setSelectedOptions();
   }
@@ -289,11 +317,15 @@ export class PrestamosTercerosComponent implements OnInit {
         })
         .toPromise();
 
-      if (errors) {
+      if (errors) { 
         throw errors;
       }
 
-      this.setupForm(data?.lastDeclaracion.prestamoComodato);
+     const lastPrestamoComodatoData = data?.lastDeclaracion?.prestamoComodato;
+       if (lastPrestamoComodatoData && !lastPrestamoComodatoData.ninguno) {
+        this.setupForm(lastPrestamoComodatoData);
+      }
+
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -517,3 +549,4 @@ export class PrestamosTercerosComponent implements OnInit {
     this.aclaraciones = value;
   }
 }
+

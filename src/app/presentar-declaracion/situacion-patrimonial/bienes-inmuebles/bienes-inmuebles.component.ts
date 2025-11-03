@@ -225,7 +225,8 @@ export class BienesInmueblesComponent implements OnInit {
         throw errors;
       }
 
-      this.setupForm(data?.lastDeclaracion.bienesInmuebles);
+      // Se agrega encadenamiento opcional para evitar errores si no hay declaración anterior
+      this.setupForm(data?.lastDeclaracion?.bienesInmuebles);
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -364,8 +365,15 @@ export class BienesInmueblesComponent implements OnInit {
 
   saveItem() {
     let bienInmueble = [...this.bienInmueble];
-    const aclaracionesObservaciones = this.bienesInmueblesForm.value.aclaracionesObservaciones;
-    const newItem = this.bienesInmueblesForm.value.bienInmueble;
+    const aclaracionesObservaciones = this.bienesInmueblesForm.get('aclaracionesObservaciones').value;
+     const newItem = this.bienesInmueblesForm.value.bienInmueble;
+
+
+    if (this.tipoDomicilio === 'MEXICO') {
+      newItem.domicilioExtranjero = null;
+    } else {
+      newItem.domicilioMexico = null;
+    }
 
     if (this.editIndex === null) {
       bienInmueble = [...bienInmueble, newItem];
@@ -440,6 +448,10 @@ export class BienesInmueblesComponent implements OnInit {
   }
 
   setupForm(bienesInmuebles: BienesInmuebles) {
+    // Se agrega una validación para evitar errores si no hay declaración anterior
+    if (!bienesInmuebles) {
+      return;
+    }
     this.bienInmueble = bienesInmuebles.bienInmueble;
     const aclaraciones = bienesInmuebles.aclaracionesObservaciones;
 

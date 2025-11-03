@@ -272,7 +272,7 @@
             <mat-select
               #location
               (selectionChange)="locationChanged($event.value)"
-              [value]="tipoDomicilio === 'MEXICO' ? 'MX' : 'EX'"
+              [value]="tipoDomicilio === 'MEXICO' ? 'MX' : tipoDomicilio === 'EXTRANJERO' ? 'EX' : null"
               required
             >
               <mat-option value="{{ extranjeroCatalogo[0] }}"> En México </mat-option>
