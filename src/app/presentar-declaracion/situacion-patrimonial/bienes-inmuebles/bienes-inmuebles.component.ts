@@ -225,8 +225,10 @@ export class BienesInmueblesComponent implements OnInit {
         throw errors;
       }
 
-      // Se agrega encadenamiento opcional para evitar errores si no hay declaración anterior
-      this.setupForm(data?.lastDeclaracion?.bienesInmuebles);
+      const lastBienesInmueblesData = data?.lastDeclaracion?.bienesInmuebles;
+      if (lastBienesInmueblesData && !lastBienesInmueblesData.ninguno) {
+        this.setupForm(lastBienesInmueblesData);
+      }
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');

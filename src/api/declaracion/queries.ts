@@ -93,6 +93,14 @@ export const stats = gql`
     }
   }
 `;
+export const getDeclaracionId = gql`
+  query declaracion($tipoDeclaracion: TipoDeclaracion!, $declaracionCompleta: Boolean) {
+    declaracion(tipoDeclaracion: $tipoDeclaracion, declaracionCompleta: $declaracionCompleta) {
+      _id
+    }
+  }
+`;
+
 /*** PRESENTAR DECLARACION ***/
 
 export const actividadAnualAnteriorQuery = gql`
