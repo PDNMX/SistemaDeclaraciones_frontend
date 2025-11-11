@@ -317,15 +317,14 @@ export class PrestamosTercerosComponent implements OnInit {
         })
         .toPromise();
 
-      if (errors) { 
+      if (errors) {
         throw errors;
       }
 
-     const lastPrestamoComodatoData = data?.lastDeclaracion?.prestamoComodato;
-       if (lastPrestamoComodatoData && !lastPrestamoComodatoData.ninguno) {
+      const lastPrestamoComodatoData = data?.lastDeclaracion?.prestamoComodato;
+      if (lastPrestamoComodatoData && !lastPrestamoComodatoData.ninguno) {
         this.setupForm(lastPrestamoComodatoData);
       }
-
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');
@@ -549,4 +548,3 @@ export class PrestamosTercerosComponent implements OnInit {
     this.aclaraciones = value;
   }
 }
-

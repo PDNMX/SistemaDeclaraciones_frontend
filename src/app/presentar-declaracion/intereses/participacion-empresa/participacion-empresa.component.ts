@@ -356,9 +356,7 @@ export class ParticipacionEmpresaComponent implements OnInit {
     }
 
     if (pais) {
-      this.participacionForm
-        .get('participacion.ubicacion.pais')
-        .setValue(findOption(this.paisesCatalogo, pais).clave);
+      this.participacionForm.get('participacion.ubicacion.pais').setValue(findOption(this.paisesCatalogo, pais).clave);
     }
   }
 

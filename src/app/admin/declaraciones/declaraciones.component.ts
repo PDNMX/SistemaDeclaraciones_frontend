@@ -62,7 +62,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
   private currentPaginator: MatPaginator;
   private currentSort: MatSort;
   private currentFilterType: string | null = null;
-  
+
   constructor(
     private route: ActivatedRoute,
     private apollo: Apollo,
@@ -100,7 +100,7 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     // Configura la tabla inicial
     this.updateCurrentTable(0);
-    
+
     // Una única suscripción que reacciona a los cambios
     this.tableUpdate$
       .pipe(
@@ -131,10 +131,18 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
           const docs = data.declaracionesMetadata.docs;
           // Asigna los datos al dataSource correcto
           switch (this.tabGroup.selectedIndex) {
-            case 0: this.data = docs; break;
-            case 1: this.dataInicial = docs; break;
-            case 2: this.dataModificacion = docs; break;
-            case 3: this.dataConclusion = docs; break;
+            case 0:
+              this.data = docs;
+              break;
+            case 1:
+              this.dataInicial = docs;
+              break;
+            case 2:
+              this.dataModificacion = docs;
+              break;
+            case 3:
+              this.dataConclusion = docs;
+              break;
           }
           // No necesitamos devolver nada aquí porque ya actualizamos el dataSource
           return;

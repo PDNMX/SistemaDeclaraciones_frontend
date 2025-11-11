@@ -303,9 +303,9 @@ export class DatosDependienteComponent implements OnInit {
       if (errors) {
         throw errors;
       }
-      
+
       const lastdatosDependientesEconomicosData = data?.lastDeclaracion.datosDependientesEconomicos;
-       if (lastdatosDependientesEconomicosData && !lastdatosDependientesEconomicosData.ninguno) {
+      if (lastdatosDependientesEconomicosData && !lastdatosDependientesEconomicosData.ninguno) {
         this.setupForm(lastdatosDependientesEconomicosData);
       }
     } catch (error) {

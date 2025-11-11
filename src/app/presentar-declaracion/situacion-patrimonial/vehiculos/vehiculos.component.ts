@@ -142,7 +142,7 @@ export class VehiculosComponent {
           ],
         }),
         lugarRegistro: this.formBuilder.group({
-           // Establezca el campo 'pais' para que esté deshabilitado de forma predeterminada.
+          // Establezca el campo 'pais' para que esté deshabilitado de forma predeterminada.
           pais: [{ value: null, disabled: true }, [Validators.required]],
           entidadFederativa: [null, [Validators.required]],
         }),

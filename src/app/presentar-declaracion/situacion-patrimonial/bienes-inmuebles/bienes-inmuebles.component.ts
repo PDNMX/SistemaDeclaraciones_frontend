@@ -368,8 +368,7 @@ export class BienesInmueblesComponent implements OnInit {
   saveItem() {
     let bienInmueble = [...this.bienInmueble];
     const aclaracionesObservaciones = this.bienesInmueblesForm.get('aclaracionesObservaciones').value;
-     const newItem = this.bienesInmueblesForm.value.bienInmueble;
-
+    const newItem = this.bienesInmueblesForm.value.bienInmueble;
 
     if (this.tipoDomicilio === 'MEXICO') {
       newItem.domicilioExtranjero = null;

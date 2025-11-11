@@ -139,12 +139,8 @@ export class TomaDecisionesComponent implements OnInit {
     });
 
     // Inicia con la opción de México seleccionada por defecto
-    this.participacionTomaDecisionesForm
-      .get('participacion.ubicacion.pais')
-      .disable();
-    this.participacionTomaDecisionesForm
-      .get('participacion.ubicacion.entidadFederativa')
-      .enable();
+    this.participacionTomaDecisionesForm.get('participacion.ubicacion.pais').disable();
+    this.participacionTomaDecisionesForm.get('participacion.ubicacion.entidadFederativa').enable();
 
     const montoMensual = this.participacionTomaDecisionesForm.get('participacion').get('montoMensual');
     this.participacionTomaDecisionesForm
@@ -205,10 +201,12 @@ export class TomaDecisionesComponent implements OnInit {
       }
 
       const lastParticipacionparticipacionTomaDecisionesData = data?.lastDeclaracion?.participacionTomaDecisiones;
-      if (lastParticipacionparticipacionTomaDecisionesData && !lastParticipacionparticipacionTomaDecisionesData.ninguno) {
+      if (
+        lastParticipacionparticipacionTomaDecisionesData &&
+        !lastParticipacionparticipacionTomaDecisionesData.ninguno
+      ) {
         this.setupForm(lastParticipacionparticipacionTomaDecisionesData);
       }
-      
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');

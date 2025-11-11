@@ -162,7 +162,6 @@ export class BienesMueblesComponent implements OnInit {
       if (lastBienesMueblesData && !lastBienesMueblesData.ninguno) {
         this.setupForm(lastBienesMueblesData);
       }
-      
     } catch (error) {
       console.warn('El usuario probablemente no tienen una declaración anterior', error.message);
       // this.openSnackBar('[ERROR: No se pudo recuperar la información]', 'Aceptar');

@@ -22,7 +22,16 @@
                   - (matSortChange): Evento que se dispara al hacer clic en un encabezado para ordenar.
                                      Llama al nuevo manejador central 'triggerTableUpdate'.
                  -->
-                <table mat-table [dataSource]="data" matSort matSortDisableClear matSortActive="updatedAt" matSortDirection="desc" #totalSort="matSort" (matSortChange)="triggerTableUpdate($event)">
+                <table
+                  mat-table
+                  [dataSource]="data"
+                  matSort
+                  matSortDisableClear
+                  matSortActive="updatedAt"
+                  matSortDirection="desc"
+                  #totalSort="matSort"
+                  (matSortChange)="triggerTableUpdate($event)"
+                >
                   <ng-container matColumnDef="tipoDeclaracion">
                     <!-- mat-sort-header: Hace que esta cabecera de columna sea clickeable para ordenar. -->
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
@@ -78,7 +87,13 @@
                   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
                 </table>
               </div>
-              <mat-paginator [length]="total" [pageSize]="pageSizeOptions[0]" [pageSizeOptions]="pageSizeOptions" #totalPaginator (page)="triggerTableUpdate($event)"></mat-paginator>
+              <mat-paginator
+                [length]="total"
+                [pageSize]="pageSizeOptions[0]"
+                [pageSizeOptions]="pageSizeOptions"
+                #totalPaginator
+                (page)="triggerTableUpdate($event)"
+              ></mat-paginator>
             </div>
           </ng-template>
         </mat-tab>
@@ -86,7 +101,16 @@
         <mat-tab label="Inicial">
           <div class="main-table-container mat-elevation-z8">
             <div class="table-container">
-              <table mat-table [dataSource]="dataInicial" matSort matSortDisableClear matSortActive="updatedAt" matSortDirection="desc" #inicialSort="matSort" (matSortChange)="triggerTableUpdate($event)">
+              <table
+                mat-table
+                [dataSource]="dataInicial"
+                matSort
+                matSortDisableClear
+                matSortActive="updatedAt"
+                matSortDirection="desc"
+                #inicialSort="matSort"
+                (matSortChange)="triggerTableUpdate($event)"
+              >
                 <ng-container matColumnDef="tipoDeclaracion">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
                   <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
@@ -140,14 +164,29 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
               </table>
             </div>
-            <mat-paginator [length]="totalInicial" [pageSize]="pageSizeOptions[0]" [pageSizeOptions]="pageSizeOptions" #inicialPaginator (page)="triggerTableUpdate($event)"></mat-paginator>
+            <mat-paginator
+              [length]="totalInicial"
+              [pageSize]="pageSizeOptions[0]"
+              [pageSizeOptions]="pageSizeOptions"
+              #inicialPaginator
+              (page)="triggerTableUpdate($event)"
+            ></mat-paginator>
           </div>
         </mat-tab>
 
         <mat-tab label="Modificación">
           <div class="main-table-container mat-elevation-z8">
             <div class="table-container">
-              <table mat-table [dataSource]="dataModificacion" matSort matSortDisableClear matSortActive="updatedAt" matSortDirection="desc" #modificacionSort="matSort" (matSortChange)="triggerTableUpdate($event)">
+              <table
+                mat-table
+                [dataSource]="dataModificacion"
+                matSort
+                matSortDisableClear
+                matSortActive="updatedAt"
+                matSortDirection="desc"
+                #modificacionSort="matSort"
+                (matSortChange)="triggerTableUpdate($event)"
+              >
                 <ng-container matColumnDef="tipoDeclaracion">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
                   <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
@@ -201,14 +240,29 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
               </table>
             </div>
-            <mat-paginator [length]="totalModificacion" [pageSize]="pageSizeOptions[0]" [pageSizeOptions]="pageSizeOptions" #modificacionPaginator (page)="triggerTableUpdate($event)"></mat-paginator>
+            <mat-paginator
+              [length]="totalModificacion"
+              [pageSize]="pageSizeOptions[0]"
+              [pageSizeOptions]="pageSizeOptions"
+              #modificacionPaginator
+              (page)="triggerTableUpdate($event)"
+            ></mat-paginator>
           </div>
         </mat-tab>
 
         <mat-tab label="Final">
           <div class="main-table-container mat-elevation-z8">
             <div class="table-container">
-              <table mat-table [dataSource]="dataConclusion" matSort matSortDisableClear matSortActive="updatedAt" matSortDirection="desc" #conclusionSort="matSort" (matSortChange)="triggerTableUpdate($event)">
+              <table
+                mat-table
+                [dataSource]="dataConclusion"
+                matSort
+                matSortDisableClear
+                matSortActive="updatedAt"
+                matSortDirection="desc"
+                #conclusionSort="matSort"
+                (matSortChange)="triggerTableUpdate($event)"
+              >
                 <ng-container matColumnDef="tipoDeclaracion">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
                   <td mat-cell *matCellDef="let row">{{ row.tipoDeclaracion }}</td>
@@ -262,7 +316,13 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
               </table>
             </div>
-            <mat-paginator [length]="totalConclusion" [pageSize]="pageSizeOptions[0]" [pageSizeOptions]="pageSizeOptions" #conclusionPaginator (page)="triggerTableUpdate($event)"></mat-paginator>
+            <mat-paginator
+              [length]="totalConclusion"
+              [pageSize]="pageSizeOptions[0]"
+              [pageSizeOptions]="pageSizeOptions"
+              #conclusionPaginator
+              (page)="triggerTableUpdate($event)"
+            ></mat-paginator>
           </div>
         </mat-tab>
       </mat-tab-group>
