@@ -50,7 +50,7 @@
             </div>
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">dns</mat-icon>
-              <p>{{ a.nivelOrdenGobierno | replace : '_' : ' ' }}</p>
+              <p>{{ a.nivelOrdenGobierno | replace: '_':' ' }}</p>
             </div>
 
             <div class="paragraph-flex size-20">
@@ -162,7 +162,7 @@
             <mat-icon matPrefix>dns</mat-icon>
             <mat-select formControlName="nivelOrdenGobierno" required>
               <mat-option *ngFor="let NivelGobierno of NivelGobiernoCatalogo" value="{{ NivelGobierno }}">
-                {{ NivelGobierno | replace : '_' : ' ' }}
+                {{ NivelGobierno | replace: '_':' ' }}
               </mat-option>
             </mat-select>
           </mat-form-field>

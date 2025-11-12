@@ -52,7 +52,7 @@
             <div class="paragraph-flex size-20">
               <mat-icon matPrefix class="icon">work</mat-icon>
               <p>
-                <span class="negritas">{{ r.tipoRelacion | replace : '_' : ' ' }}</span>
+                <span class="negritas">{{ r.tipoRelacion | replace: '_':' ' }}</span>
               </p>
             </div>
             <div class="paragraph-flex">
@@ -108,7 +108,7 @@
                 {{ r.ubicacion.pais ? r.ubicacion.pais : r.ubicacion.entidadFederativa.valor }}
               </p>
             </div>
-            <p>{{ r.fechaInicioRepresentacion | date : 'dd/MM/yyyy' }}</p>
+            <p>{{ r.fechaInicioRepresentacion | date: 'dd/MM/yyyy' }}</p>
           </div>
 
           <!-- <mat-divider></mat-divider>
@@ -159,7 +159,7 @@
             <mat-icon matPrefix>person</mat-icon>
             <mat-select formControlName="tipoRelacion" required>
               <mat-option *ngFor="let relacion of relacionCatalogo" value="{{ relacion }}">
-                {{ relacion | replace : '_' : ' ' }}
+                {{ relacion | replace: '_':' ' }}
               </mat-option>
             </mat-select>
           </mat-form-field>

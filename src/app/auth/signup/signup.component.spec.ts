@@ -18,22 +18,24 @@ describe('SignupComponent', () => {
   let component: SignupComponent;
   let fixture: ComponentFixture<SignupComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        FlexLayoutModule,
-        MaterialModule,
-        SharedModule,
-        RouterTestingModule,
-        TranslateModule.forRoot(),
-        I18nModule,
-        ReactiveFormsModule,
-        CoreModule,
-      ],
-      declarations: [SignupComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          BrowserAnimationsModule,
+          FlexLayoutModule,
+          MaterialModule,
+          SharedModule,
+          RouterTestingModule,
+          TranslateModule.forRoot(),
+          I18nModule,
+          ReactiveFormsModule,
+          CoreModule,
+        ],
+        declarations: [SignupComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SignupComponent);

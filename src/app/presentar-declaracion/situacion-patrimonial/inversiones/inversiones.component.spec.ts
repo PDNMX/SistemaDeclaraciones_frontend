@@ -6,11 +6,13 @@ describe('InversionesComponent', () => {
   let component: InversionesComponent;
   let fixture: ComponentFixture<InversionesComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [InversionesComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [InversionesComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(InversionesComponent);

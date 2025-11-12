@@ -6,11 +6,13 @@ describe('ListaDeclaracionesComponent', () => {
   let component: ListaDeclaracionesComponent;
   let fixture: ComponentFixture<ListaDeclaracionesComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ListaDeclaracionesComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ListaDeclaracionesComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ListaDeclaracionesComponent);

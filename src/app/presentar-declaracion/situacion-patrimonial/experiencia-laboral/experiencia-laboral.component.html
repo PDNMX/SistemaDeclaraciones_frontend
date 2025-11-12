@@ -57,14 +57,14 @@
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">start</mat-icon>
               <p>
-                Nivel: <span class="resaltar">{{ e.nivelOrdenGobierno | replace : '_' : ' ' }}</span>
+                Nivel: <span class="resaltar">{{ e.nivelOrdenGobierno | replace: '_':' ' }}</span>
               </p>
             </div>
 
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">dns</mat-icon>
               <p>
-                Ámbito: <span class="resaltar">{{ e.ambitoPublico | replace : '_' : ' ' }}</span>
+                Ámbito: <span class="resaltar">{{ e.ambitoPublico | replace: '_':' ' }}</span>
               </p>
             </div>
             <div class="paragraph-flex double-row">
@@ -149,10 +149,10 @@
               <p>Lugar donde se ubica</p>
             </div>
             <div class="">
-              <p>{{ e.fechaIngreso | date : 'dd/MM/yyyy' }}</p>
+              <p>{{ e.fechaIngreso | date: 'dd/MM/yyyy' }}</p>
             </div>
             <div class="">
-              <p>{{ e.fechaEgreso | date : 'dd/MM/yyyy' }}</p>
+              <p>{{ e.fechaEgreso | date: 'dd/MM/yyyy' }}</p>
             </div>
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">public</mat-icon>
@@ -219,7 +219,7 @@
                 required
               >
                 <mat-option *ngFor="let orden of nivelOrdenGobiernoCatalogo" value="{{ orden }}">
-                  {{ orden | replace : '_' : ' ' }}
+                  {{ orden | replace: '_':' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -228,7 +228,7 @@
               <mat-icon matPrefix>meeting_room</mat-icon>
               <mat-select formControlName="ambitoPublico" required>
                 <mat-option *ngFor="let publico of ambitoPublicoCatalogo" value="{{ publico }}">
-                  {{ publico | replace : '_' : ' ' }}
+                  {{ publico | replace: '_':' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
