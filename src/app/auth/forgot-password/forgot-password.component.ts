@@ -24,7 +24,7 @@ export class ForgotPasswordComponent implements OnInit {
     try {
       this.isLoading = true;
       const { username } = this.passwordForm.value;
-      const { data }: any = await this.apollo
+      const { data } = await this.apollo
         .mutate({
           mutation: forgotPassword,
           variables: {

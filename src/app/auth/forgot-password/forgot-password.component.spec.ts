@@ -15,24 +15,22 @@ describe('ForgotPasswordComponent', () => {
   let component: ForgotPasswordComponent;
   let fixture: ComponentFixture<ForgotPasswordComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          BrowserAnimationsModule,
-          FlexLayoutModule,
-          MaterialModule,
-          SharedModule,
-          RouterTestingModule,
-          TranslateModule.forRoot(),
-          I18nModule,
-          ReactiveFormsModule,
-          CoreModule,
-        ],
-        declarations: [ForgotPasswordComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        BrowserAnimationsModule,
+        FlexLayoutModule,
+        MaterialModule,
+        SharedModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        I18nModule,
+        ReactiveFormsModule,
+        CoreModule,
+      ],
+      declarations: [ForgotPasswordComponent],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotPasswordComponent);

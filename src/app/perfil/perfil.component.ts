@@ -124,13 +124,14 @@ export class PerfilComponent implements OnInit {
 
   async getUserInfo() {
     try {
-      const { data }: any = await this.apollo
+      const { data } = await this.apollo
         .query({
           query: userProfileQuery,
         })
         .toPromise();
 
-      this.user = data.userProfile || null;
+      const result = data as any;
+      this.user = result.userProfile || null;
 
       this.profileForm.patchValue(this.user);
 

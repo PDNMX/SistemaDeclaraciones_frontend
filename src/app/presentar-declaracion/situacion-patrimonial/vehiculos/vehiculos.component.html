@@ -165,7 +165,7 @@
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">credit_card</mat-icon>
               <p>
-                Forma de pago: <span class="resaltar">{{ v.formaPago | replace: '_':' ' }}</span>
+                Forma de pago: <span class="resaltar">{{ v.formaPago | replace : '_' : ' ' }}</span>
               </p>
             </div>
             <div class="paragraph-flex">
@@ -452,7 +452,7 @@
               <mat-icon matPrefix>credit_card</mat-icon>
               <mat-select formControlName="formaPago" required>
                 <mat-option *ngFor="let formaPago of formaPagoCatalogo" value="{{ formaPago }}">
-                  {{ formaPago | replace: '_':' ' }}
+                  {{ formaPago | replace : '_' : ' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

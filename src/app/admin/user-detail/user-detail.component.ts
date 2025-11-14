@@ -24,7 +24,7 @@ export class UserDetailComponent {
 
   async getUserInfo(id: string) {
     try {
-      const { data }: any = await this.apollo
+      const { data } = await this.apollo
         .query({
           query: userProfileQuery,
           variables: {
@@ -33,7 +33,8 @@ export class UserDetailComponent {
         })
         .toPromise();
 
-      this.user = data.userProfile || null;
+      const result = data as any;
+      this.user = result.userProfile || null;
     } catch (error) {
       console.log(error);
     }

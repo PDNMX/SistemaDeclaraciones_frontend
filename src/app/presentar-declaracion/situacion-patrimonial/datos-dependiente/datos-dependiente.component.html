@@ -71,7 +71,7 @@
             <div class="paragraph-flex">
               <mat-icon matPrefix class="icon">date_range</mat-icon>
               <p>
-                Fecha de nacimiento: <span class="size-16">{{ d.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
+                Fecha de nacimiento: <span class="size-16">{{ d.fechaNacimiento | date : 'dd/MM/yyyy' }}</span>
               </p>
             </div>
             <div class="paragraph-flex">
@@ -102,7 +102,7 @@
                 <p>Domicilio de la pareja</p>
               </div>
               <div class="">
-                <p>{{ d.lugarDondeReside | replace: '_':' ' }}</p>
+                <p>{{ d.lugarDondeReside | replace : '_' : ' ' }}</p>
               </div>
               <div class="">
                 <p>{{ d.habitaDomicilioDeclarante ? 'Sí' : 'No' }}</p>
@@ -148,7 +148,7 @@
                 <p>
                   Nivel:
                   <span class="resaltar">{{
-                    d.actividadLaboralSectorPublico.nivelOrdenGobierno | replace: '_':' '
+                    d.actividadLaboralSectorPublico.nivelOrdenGobierno | replace : '_' : ' '
                   }}</span>
                 </p>
               </div>
@@ -156,7 +156,9 @@
                 <mat-icon matPrefix class="icon">dns</mat-icon>
                 <p>
                   Ámbito:
-                  <span class="resaltar">{{ d.actividadLaboralSectorPublico.ambitoPublico | replace: '_':' ' }}</span>
+                  <span class="resaltar">{{
+                    d.actividadLaboralSectorPublico.ambitoPublico | replace : '_' : ' '
+                  }}</span>
                 </p>
               </div>
               <div class="paragraph-flex double-row">
@@ -180,7 +182,7 @@
                 <mat-icon matPrefix class="icon">date_range</mat-icon>
                 <p>
                   Fecha de ingreso:
-                  <span class="size-16">{{ d.actividadLaboralSectorPublico.fechaIngreso | date: 'dd/MM/yyyy' }}</span>
+                  <span class="size-16">{{ d.actividadLaboralSectorPublico.fechaIngreso | date : 'dd/MM/yyyy' }}</span>
                 </p>
               </div>
             </div>
@@ -216,7 +218,7 @@
                 <p>
                   Fecha de ingreso:
                   <span class="size-16">{{
-                    d.actividadLaboralSectorPrivadoOtro.fechaIngreso | date: 'dd/MM/yyyy'
+                    d.actividadLaboralSectorPrivadoOtro.fechaIngreso | date : 'dd/MM/yyyy'
                   }}</span>
                 </p>
               </div>
@@ -403,7 +405,7 @@
               <mat-icon matPrefix class="no-public">public</mat-icon>
               <mat-select formControlName="lugarDondeReside" required>
                 <mat-option *ngFor="let opt of lugarDondeResideCatalogo" value="{{ opt }}">
-                  {{ opt | replace: '_':' ' }}
+                  {{ opt | replace : '_' : ' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -629,7 +631,7 @@
               <mat-icon matPrefix class="no-public">aspect_ratio</mat-icon>
               <mat-select formControlName="nivelOrdenGobierno" required>
                 <mat-option *ngFor="let orden of nivelOrdenGobiernoCatalogo" value="{{ orden }}">
-                  {{ orden | replace: '_':' ' }}
+                  {{ orden | replace : '_' : ' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -638,7 +640,7 @@
               <mat-icon matPrefix class="no-public">meeting_room</mat-icon>
               <mat-select formControlName="ambitoPublico" required>
                 <mat-option *ngFor="let ambito of ambitoPublicoCatalogo" value="{{ ambito }}">
-                  {{ ambito | replace: '_':' ' }}
+                  {{ ambito | replace : '_' : ' ' }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

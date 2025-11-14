@@ -6,13 +6,11 @@ describe('ExperienciaLaboralComponent', () => {
   let component: ExperienciaLaboralComponent;
   let fixture: ComponentFixture<ExperienciaLaboralComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ExperienciaLaboralComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ExperienciaLaboralComponent],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ExperienciaLaboralComponent);

@@ -81,17 +81,18 @@ export class DeclaracionesComponent implements AfterViewInit, OnInit {
 
   async getCount() {
     try {
-      const { data }: any = await this.apollo
+      const { data } = await this.apollo
         .query({
           query: stats,
           fetchPolicy: 'no-cache', // Evita caché para tener siempre los totales actualizados
         })
         .toPromise();
 
-      this.total = data.stats.total || 0;
-      this.totalInicial = data.stats.counters.find((d: any) => d.tipoDeclaracion === 'INICIAL')?.count || 0;
-      this.totalModificacion = data.stats.counters.find((d: any) => d.tipoDeclaracion === 'MODIFICACION')?.count || 0;
-      this.totalConclusion = data.stats.counters.find((d: any) => d.tipoDeclaracion === 'CONCLUSION')?.count || 0;
+      const result = data as any;
+      this.total = result.stats.total || 0;
+      this.totalInicial = result.stats.counters.find((d: any) => d.tipoDeclaracion === 'INICIAL')?.count || 0;
+      this.totalModificacion = result.stats.counters.find((d: any) => d.tipoDeclaracion === 'MODIFICACION')?.count || 0;
+      this.totalConclusion = result.stats.counters.find((d: any) => d.tipoDeclaracion === 'CONCLUSION')?.count || 0;
     } catch (error) {
       console.log(error);
     }

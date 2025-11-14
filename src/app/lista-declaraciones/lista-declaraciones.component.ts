@@ -31,7 +31,7 @@ export class ListaDeclaracionesComponent implements OnInit {
       let decModificacion: number = 0;
       let decConclucion: number = 0;
 
-      const { data: data1 }: any = await this.apollo
+      const { data: data1 } = await this.apollo
         .query({
           query: myDeclaracionesMetadata,
           variables: {
@@ -40,7 +40,8 @@ export class ListaDeclaracionesComponent implements OnInit {
         })
         .toPromise();
 
-      listaDeclaraciones = data1.myDeclaracionesMetadata.docs || [];
+      const result1 = data1 as any;
+      listaDeclaraciones = result1.myDeclaracionesMetadata.docs || [];
 
       decInicial = listaDeclaraciones.filter((d) => d.tipoDeclaracion === 'INICIAL').length;
       decModificacion = listaDeclaraciones.filter((d) => d.tipoDeclaracion === 'MODIFICACION').length;
@@ -54,7 +55,7 @@ export class ListaDeclaracionesComponent implements OnInit {
 
       // console.log('listaDeclaraciones: ', listaDeclaraciones);
 
-      // const { data }: any = await this.apollo
+      // const { data }  = await this.apollo
       //   .query({
       //     query: gql`
       //       query {

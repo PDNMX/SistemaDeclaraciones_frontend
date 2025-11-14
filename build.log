@@ -1,0 +1,361 @@
+
+> declaraciones-patrimoniales@1.0.0 build
+> npm run write:env -s && ng build --configuration production --base-href='./'
+
+- Generating browser application bundles (phase: setup)...
+Processing legacy "View Engine" libraries:
+- @angular/flex-layout/core [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @ngx-translate/core [es2015/esm2015] (git+https://github.com/ngx-translate/core.git)
+- @ngneat/until-destroy [es2015/esm2015] (git+https://github.com/ngneat/until-destroy.git)
+- @angular/flex-layout/extended [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/flex [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/grid [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @biesbjerg/ngx-translate-extract-marker [es2015/esm2015] (https://github.com/biesbjerg/ngx-translate-extract-marker.git)
+- @angular/flex-layout [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+Encourage the library authors to publish an Ivy distribution.
+✔ Browser application bundle generation complete.
+✔ Browser application bundle generation complete.
+
+Error: node_modules/@apollo/client/cache/index.d.ts:19:1 - error TS1383: Only named exports may use 'export type'.
+
+19 export type * from "./inmemory/types.js";
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/@apollo/client/core/index.d.ts:7:1 - error TS1383: Only named exports may use 'export type'.
+
+7 export type * from "./types.js";
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/@apollo/client/core/index.d.ts:12:1 - error TS1383: Only named exports may use 'export type'.
+
+12 export type * from "../cache/inmemory/types.js";
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/@apollo/client/link/core/index.d.ts:8:1 - error TS1383: Only named exports may use 'export type'.
+
+8 export type * from "./types.js";
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:113:32 - error TS1005: '?' expected.
+
+113         infer TK extends object,
+                                   ~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:115:5 - error TS1005: '?' expected.
+
+115     ]) ? TK extends unknown[] ? UK extends unknown[] ? CombineIntersection<TK[number] | UK[number]>[] | Extract<T[k] | U[k], undefined | null> : T[k] : CombineIntersection<TK | UK> | Extract<T[k] | U[k], undefined | null> : T[k] : T[k];
+        ~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:119:12 - error TS1139: Type parameter declaration expected.
+
+119 type Exact<in out T> = (x: T) => T;
+               ~~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:119:12 - error TS2304: Cannot find name 'in'.
+
+119 type Exact<in out T> = (x: T) => T;
+               ~~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:119:15 - error TS1005: ';' expected.
+
+119 type Exact<in out T> = (x: T) => T;
+                  ~~~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:119:15 - error TS2304: Cannot find name 'out'.
+
+119 type Exact<in out T> = (x: T) => T;
+                  ~~~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:119:19 - error TS2304: Cannot find name 'T'.
+
+119 type Exact<in out T> = (x: T) => T;
+                      ~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:119:22 - error TS1109: Expression expected.
+
+119 type Exact<in out T> = (x: T) => T;
+                         ~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:119:28 - error TS2304: Cannot find name 'T'.
+
+119 type Exact<in out T> = (x: T) => T;
+                               ~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:119:34 - error TS2304: Cannot find name 'T'.
+
+119 type Exact<in out T> = (x: T) => T;
+                                     ~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:120:119 - error TS2315: Type 'Exact' is not generic.
+
+120 export type ContainsFragmentsRefs<TData, Seen = never> = true extends (IsAny<TData>) ? false : TData extends object ? Exact<TData> extends Seen ? false : " $fragmentRefs" extends keyof RemoveIndexSignature<TData> ? true : ContainsFragmentsRefs<TData[keyof TData], Seen | Exact<TData>> : false;
+                                                                                                                          ~~~~~~~~~~~~
+
+
+Error: node_modules/@apollo/client/masking/internal/types.d.ts:120:272 - error TS2315: Type 'Exact' is not generic.
+
+120 export type ContainsFragmentsRefs<TData, Seen = never> = true extends (IsAny<TData>) ? false : TData extends object ? Exact<TData> extends Seen ? false : " $fragmentRefs" extends keyof RemoveIndexSignature<TData> ? true : ContainsFragmentsRefs<TData[keyof TData], Seen | Exact<TData>> : false;
+                                                                                                                                                                                                                                                                                   ~~~~~~~~~~~~
+
+
+Error: node_modules/@apollo/client/utilities/index.d.ts:40:1 - error TS1383: Only named exports may use 'export type'.
+
+40 export type * from "./types/IsStrictlyAny.js";
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/apollo-angular/query-ref.d.ts:21:58 - error TS2314: Generic type 'UpdateQueryOptions' requires 2 type argument(s).
+
+21     updateQuery(mapFn: (previousQueryResult: T, options: UpdateQueryOptions<V>) => T): void;
+                                                            ~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/apollo-angular/types.d.ts:11:54 - error TS2312: An interface can only extend an object type or intersection of object types with statically known members.
+
+11 export interface MutationResult<TData = any> extends FetchResult<TData> {
+                                                        ~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/admin/declaraciones/declaraciones.component.ts:91:25 - error TS2339: Property 'stats' does not exist on type 'unknown'.
+
+91       this.total = data.stats.total || 0;
+                           ~~~~~
+
+
+Error: src/app/admin/declaraciones/declaraciones.component.ts:92:32 - error TS2339: Property 'stats' does not exist on type 'unknown'.
+
+92       this.totalInicial = data.stats.counters.find((d: any) => d.tipoDeclaracion === 'INICIAL')?.count || 0;
+                                  ~~~~~
+
+
+Error: src/app/admin/declaraciones/declaraciones.component.ts:93:37 - error TS2339: Property 'stats' does not exist on type 'unknown'.
+
+93       this.totalModificacion = data.stats.counters.find((d: any) => d.tipoDeclaracion === 'MODIFICACION')?.count || 0;
+                                       ~~~~~
+
+
+Error: src/app/admin/declaraciones/declaraciones.component.ts:94:35 - error TS2339: Property 'stats' does not exist on type 'unknown'.
+
+94       this.totalConclusion = data.stats.counters.find((d: any) => d.tipoDeclaracion === 'CONCLUSION')?.count || 0;
+                                     ~~~~~
+
+
+Error: src/app/admin/user-detail/user-detail.component.ts:36:24 - error TS2339: Property 'userProfile' does not exist on type 'unknown'.
+
+36       this.user = data.userProfile || null;
+                          ~~~~~~~~~~~
+
+
+Error: src/app/auth/forgot-password/forgot-password.component.ts:27:15 - 1merror TS2339: Property 'data' does not exist on type 'MutationResult<unknown>'.
+
+27       const { data } = await this.apollo
+                 ~~~~
+
+
+Error: src/app/lista-declaraciones/lista-declaraciones.component.ts:43:34 - error TS2339: Property 'myDeclaracionesMetadata' does not exist on type 'unknown'.
+
+43       listaDeclaraciones = data1.myDeclaracionesMetadata.docs || [];
+                                    ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/lista-declaraciones/mis-declaraciones/mis-declaraciones.component.ts:83:38 - error TS2339: Property 'myDeclaracionesMetadata' does not exist on type 'unknown'.
+
+83       this.listaDeclaraciones = data.myDeclaracionesMetadata.docs || [];
+                                        ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/perfil/perfil.component.ts:133:24 - error TS2339: Property 'userProfile' does not exist on type 'unknown'.
+
+133       this.user = data.userProfile || null;
+                           ~~~~~~~~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/apoyos-publicos/apoyos-publicos.component.ts:226:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+226       const { data } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/beneficios-privados/beneficios-privados.component.ts:295:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+295       const { data, errors } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/beneficios-privados/beneficios-privados.component.ts:295:21 - error TS2339: Property 'errors' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+295       const { data, errors } = await this.apollo
+                        ~~~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/clientes-principales/clientes-principales.component.ts:317:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+317       const { data, errors } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/clientes-principales/clientes-principales.component.ts:317:21 - error TS2339: Property 'errors' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+317       const { data, errors } = await this.apollo
+                        ~~~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/fideicomisos/fideicomisos.component.ts:282:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+282       const { data, errors } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/fideicomisos/fideicomisos.component.ts:282:21 - error TS2339: Property 'errors' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+282       const { data, errors } = await this.apollo
+                        ~~~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/participacion-empresa/participacion-empresa.component.ts:263:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+263       const { data } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/representacion/representacion.component.ts:294:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+294       const { data } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/intereses/toma-decisiones/toma-decisiones.component.ts:309:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+309       const { data } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/adeudos/adeudos.component.ts:285:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+285       const { data } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/bienes-inmuebles/bienes-inmuebles.component.ts:332:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+332       const { data } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/bienes-muebles/bienes-muebles.component.ts:265:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+265       const { data } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/datos-curriculares/datos-curriculares.component.ts:227:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+227       const { data, errors } = await this.apollo
+    [91m              ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/datos-curriculares/datos-curriculares.component.ts:227:21 - error TS2339: Property 'errors' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+227       const { data, errors } = await this.apollo
+                        ~~~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/datos-dependiente/datos-dependiente.component.ts:477:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+477       const { data, errors } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/datos-dependiente/datos-dependiente.component.ts:477:21 - error TS2339: Property 'errors' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+477       const { data, errors } = await this.apollo
+                        ~~~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/datos-empleo/datos-empleo.component.ts:243:15 - error TS2339: Property 'errors' does not exist on type 'MutationResult<unknown>'.
+
+243       const { errors } = await this.apollo
+                  ~~~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/datos-generales/datos-generales.component.ts:273:15 - error TS2339: Property 'errors' does not exist on type 'MutationResult<unknown>'.
+
+273       const { errors } = await this.apollo
+                  ~~~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/datos-pareja/datos-pareja.component.ts:429:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+429       const { data, errors } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/datos-pareja/datos-pareja.component.ts:429:21 - error TS2339: Property 'errors' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+429       const { data, errors } = await this.apollo
+                        ~~~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/domicilio-declarante/domicilio-declarante.component.ts:212:15 - error TS2339: Property 'errors' does not exist on type 'MutationResult<unknown>'.
+
+212       const { errors } = await this.apollo
+                  ~~~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/experiencia-laboral/experiencia-laboral.component.ts:351:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+351       const { data, errors } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/experiencia-laboral/experiencia-laboral.component.ts:351:21 - error TS2339: Property 'errors' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+351       const { data, errors } = await this.apollo
+                        ~~~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/ingresos-netos/ingresos-netos.component.ts:442:15 - error TS2339: Property 'errors' does not exist on type 'MutationResult<unknown>'.
+
+442       const { errors } = await this.apollo
+                  ~~~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/inversiones/inversiones.component.ts:327:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+327       const { data } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/prestamos-terceros/prestamos-terceros.component.ts:427:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+427       const { data } = await this.apollo
+                  ~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/servidor-publico/servidor-publico.component.ts:545:15 - error TS2339: Property 'errors' does not exist on type 'MutationResult<unknown>'.
+
+545       const { errors } = await this.apollo
+                  ~~~~~~
+
+
+Error: src/app/presentar-declaracion/situacion-patrimonial/vehiculos/vehiculos.component.ts:309:15 - error TS2339: Property 'data' does not exist on type 'MutationResult<DeclaracionOutput>'.
+
+309       const { data } = await this.apollo
+                  ~~~~
+
+
+

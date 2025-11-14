@@ -69,7 +69,7 @@ export class MisDeclaracionesComponent implements OnInit {
 
   async getList(tipoDeclaracion: TipoDeclaracion = null) {
     try {
-      const { data }: any = await this.apollo
+      const { data } = await this.apollo
         .query({
           query: myDeclaracionesMetadata,
           variables: {
@@ -80,7 +80,8 @@ export class MisDeclaracionesComponent implements OnInit {
         })
         .toPromise();
 
-      this.listaDeclaraciones = data.myDeclaracionesMetadata.docs || [];
+      const result = data as any;
+      this.listaDeclaraciones = result.myDeclaracionesMetadata.docs || [];
     } catch (error) {
       console.log(error);
     }
